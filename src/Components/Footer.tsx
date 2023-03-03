@@ -29,7 +29,7 @@ const Footer = () => {
     <div>
       {/* Footer */}
       <Box
-        sx={{ bgcolor: "background", p: 6, color: "#ffffff" }}
+        sx={{ bgcolor: "#222629", p: 6, color: "#ffffff" }}
         component="footer"
       >
         <Grid container justifyContent={"space-between"}>
