@@ -39,7 +39,7 @@ const Footer = () => {
               RRDAO
             </Typography>
           </Grid>
-          <Grid item xs={6} xl={3}>
+          <Grid item xs={6} xl={3} md={3}>
             <Box>
               <Typography variant="overline" sx={{ color: "#ffffff" }}>
                 Home
@@ -56,7 +56,7 @@ const Footer = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={6} xl={3}>
+          <Grid item xs={6} xl={3} md={3}>
             <Box>
               <Typography variant="overline" sx={{}}>
                 Terms of use
@@ -74,7 +74,7 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={6} xl={3}>
+          <Grid item xs={6} xl={3} md={3}>
             <Box>
               <Typography variant="overline" sx={{}}>
                 Team
@@ -96,7 +96,7 @@ const Footer = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={6} xl={3}></Grid>
+          <Grid item xs={6} xl={3} md={3}></Grid>
         </Grid>
         <Grid container justifyContent={"center"}>
           <Box mt={6}>
