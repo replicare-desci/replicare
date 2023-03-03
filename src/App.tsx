@@ -30,11 +30,6 @@ export default function App() {
       <CssBaseline />
       <Navbar />
       <main>
-        <button className="bottom-right">
-          <Fab disabled aria-label="like">
-            <FavoriteIcon />
-          </Fab>
-        </button>
         {/* Hero unit */}
         <Container>
           <Grid
