@@ -40,11 +40,12 @@ export default function Sidebar() {
   const list = (anchor: Anchor) => (
     <Box
       sx={{ width: 500 }}
+      className="sidebar-mobile-width"
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List sx={{ padding: 10 }}>
+      <List sx={{ padding: 10 }} className="sidebar-mobile">
         <Typography variant="h4" component={"p"}>
           <span className="hover-underline-animation ">Home</span>
         </Typography>

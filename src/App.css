@@ -25,3 +25,12 @@
 
   transform-origin: bottom left;
 }
+
+@media screen and (max-width: 901px) {
+  .sidebar-mobile {
+    text-align: center;
+  }
+  .sidebar-mobile-width {
+    width: 100% !important;
+  }
+}
