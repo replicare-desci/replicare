@@ -14,12 +14,17 @@ const Navbar = () => {
       <AppBar position="relative">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {/* <CameraIcon sx={{ mr: 2 }} /> */}
-          <Button sx={{ color: "#ffffff" }}>Signup</Button>
-          <Typography variant="h6" color="inherit" noWrap>
+          <Sidebar />
+          {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}
+          <Typography
+            variant="h4"
+            color="inherit"
+            noWrap
+            justifyContent={"center"}
+          >
             RRDAO
           </Typography>
           <ConnectionWallet />
-          <Sidebar />
         </Toolbar>
       </AppBar>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Provider, ethers } from "ethers";
+import { Button } from "@mui/material";
 // import "./styles/App.css";
 
 function ConnectionWallet(): JSX.Element {
@@ -34,12 +35,23 @@ function ConnectionWallet(): JSX.Element {
       <div className="App App-header">
         {isMetamaskInstalled ? (
           <div>
-            <button onClick={connectMetamaskWallet}>
-              Connect Your Metamask Wallet
-            </button>
+            <Button
+              variant="outlined"
+              aria-disabled={true}
+              sx={{
+                backgroundColor: "#222629",
+                ":hover": {
+                  bgcolor: "#222629",
+                  color: "white",
+                },
+              }}
+              onClick={connectMetamaskWallet}
+            >
+              Connect
+            </Button>
           </div>
         ) : (
-          <p>Install Your Metamask wallet</p>
+          <p>Please install wallet</p>
         )}
       </div>
     );
@@ -48,7 +60,24 @@ function ConnectionWallet(): JSX.Element {
   return (
     <div className="App">
       <header className="App-header">
-        <p>ETH wallet connected as: {ethereumAccount}</p>
+        <Button
+          variant="outlined"
+          aria-disabled={true}
+          sx={{
+            backgroundColor: "#222629",
+            textTransform: "unset",
+            ":hover": {
+              bgcolor: "#222629",
+              color: "white",
+            },
+          }}
+          onClick={connectMetamaskWallet}
+        >
+          {/* ETH wallet connected as:  */}
+          {/* {ethereumAccount} */}
+
+          {ethereumAccount.slice(0, 6) + ".." + ethereumAccount.slice(38, 42)}
+        </Button>
       </header>
     </div>
   );
