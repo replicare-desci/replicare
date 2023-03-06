@@ -9,7 +9,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 
 import { Typography } from "@mui/material";
 import { fontSize } from "@mui/system";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import ClearIcon from "@mui/icons-material/Clear";
 import MenuIcon from "@mui/icons-material/Menu";
 
 type Anchor = "right";
@@ -128,12 +128,12 @@ export default function Sidebar() {
             sx={{ color: "#ffffff", zIndex: 2 }}
             onClick={toggleDrawer(anchor, true)}
           >
-            {menuIconClicked ? <MenuOpenIcon /> : <MenuIcon />}
+            {menuIconClicked ? <ClearIcon /> : <MenuIcon />}
           </Button>
           <SwipeableDrawer
             sx={{ zIndex: 1 }}
             anchor={anchor}
-            open={state[anchor]}
+            open={menuIconClicked}
             onClose={toggleDrawer(anchor, false)}
             onOpen={toggleDrawer(anchor, true)}
           >
