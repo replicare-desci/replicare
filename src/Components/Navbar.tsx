@@ -6,6 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Sidebar from "./Sidebar";
 import Box from "@mui/material";
+import ConnectionWallet from "../ConnectionWallet";
 
 const Navbar = () => {
   return (
@@ -17,6 +18,7 @@ const Navbar = () => {
           <Typography variant="h6" color="inherit" noWrap>
             RRDAO
           </Typography>
+          <ConnectionWallet />
           <Sidebar />
         </Toolbar>
       </AppBar>

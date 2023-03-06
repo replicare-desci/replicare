@@ -19,9 +19,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Fab from "@mui/material/Fab";
 import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";
-import "./App.css";
+import "./styles/App.css";
 import { List, ListItem, ListItemText } from "@mui/material";
 import Search from "./Components/Search";
+
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function App() {
