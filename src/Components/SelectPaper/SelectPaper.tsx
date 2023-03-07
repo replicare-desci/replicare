@@ -3,12 +3,17 @@ import { fetchDoi } from "../../api/fetchDOI";
 import { camelizeKeys } from "../../utils/changeCase";
 import AdditionalInfo from "../AdditionalInfo";
 import {
-  addUserPaperData,
   appendUserPaperData,
   getSelectUserPaperData,
 } from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+
+import {
+  paperData,
+  DoiData,
+  original_reproduction_packages,
+} from "../../types/index.d";
 
 import {
   TextField,
@@ -27,12 +32,12 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
-import { doiData } from "../../types/index.d";
-import { type } from "@testing-library/user-event/dist/type";
 
 type checkBoxOption = {
   label: string;
 };
+
+const userID: string = sessionStorage.getItem("id") as string;
 
 const SelectPaper = () => {
   const { pageType, userPaperID } = useParams();
@@ -67,17 +72,11 @@ const SelectPaper = () => {
   ];
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
-  const [isDisabled12, setDisabled12] = useState<boolean>(false);
-  const [isDisabled13, setDisabled13] = useState<boolean>(false);
-  const [isDisabled16, setDisabled16] = useState<boolean>(false);
-  const [isChecked141, setChecked141] = useState<boolean>(false);
 
-  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
-    useState<boolean>(false);
   const [isError, setError] = useState<boolean>(false);
 
   // DOI response state
-  const [doiResponse, setDoiResponse] = useState<doiData>({
+  const [doiResponse, setDoiResponse] = useState<DoiData>({
     title: "",
     author: "",
     doi: "",
@@ -87,130 +86,154 @@ const SelectPaper = () => {
   });
   const [checkedState, setCheckedState] = useState<string[]>([]);
 
+  const [originalPackages, setOriginalPackages] = useState<
+    original_reproduction_packages[]
+  >([
+    {
+      name: "",
+      url: "",
+      stage: "original",
+      content_type: "code",
+    },
+  ]);
+
   // TODO: add type
-  const [formData, setFormData] = useState({
-    reproduction_package_available: "no",
-    authors_contacted: "yes",
+  const [formData, setFormData] = useState<paperData>({
+    id: userPaperID as string,
+    userID: userID,
+    reproduction_package_available: "",
+    authors_contacted: "",
     authors_available: false,
-    reproduction_package_from_scratch: "yes",
-    original_reproduction_packages: [],
+    reproduction_package_from_scratch: "",
+    original_reproduction_packages: [
+      {
+        content_type: "code",
+        name: "",
+        stage: "revised",
+        url: "",
+      },
+    ],
+    revised_reproduction_packages: [
+      {
+        content_type: "code",
+        name: "",
+        stage: "revised",
+        url: "",
+      },
+    ],
     authors_response: [],
+    paper: doiResponse ? doiResponse : null,
+    start_date: "",
+    shareable_link: false,
+    is_author: true,
+    is_creator: true,
+    claim_type: "",
+    claim_type_other_description: "",
+    familiarity_level: "",
+    expected_total_hours: 1,
+    paper_type: "candidate",
+    workflow_stage: "select_paper",
   });
 
   useEffect(() => {
-    if (
-      userPaperID !== undefined &&
-      pageType !== undefined &&
-      pageType === "edit"
-    ) {
+    if (userPaperID !== undefined && pageType !== undefined) {
       getSelectUserPaperData(userPaperID)
-        .then((paperResponse) => {
-          setFormData((prev) => {
-            return {
-              ...prev,
-              ...paperResponse,
-            };
-          });
-          setDoiResponse((prev) => {
-            return {
-              ...prev,
-              ...paperResponse.paper,
-            };
-          });
-          setDoi(true);
+        .then((paperResponse: paperData) => {
+          if (paperResponse !== undefined) {
+            setFormData(paperResponse);
+            if (
+              paperResponse?.paper &&
+              Object.keys(paperResponse?.paper).length > 0
+            ) {
+              setDoiResponse(paperResponse?.paper);
+              setDoi(true);
+            }
+
+            if (
+              paperResponse?.authors_response !== undefined &&
+              paperResponse?.authors_response.length > 0
+            ) {
+              setCheckedState(paperResponse?.authors_response);
+            }
+
+            if (
+              paperResponse?.original_reproduction_packages !== undefined &&
+              paperResponse?.original_reproduction_packages.length > 0
+            ) {
+              setOriginalPackages(
+                paperResponse?.original_reproduction_packages
+              );
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
+          setDoi(false);
         });
     }
   }, [userPaperID, pageType]);
 
-  const formDataHandler = (event: any) => {
+  const formDataHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
     setFormData((prev) => {
       return {
         ...prev,
-        [event.target.name]: event.target.value,
+        [name]: value,
       };
     });
-
-    // console.log("formData", formData);
   };
 
-  const userID: string = sessionStorage.getItem("id") as string;
-  const submitSelectPaperData = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const submitSelectPaperData = (event: React.FormEvent<HTMLFormElement>) => {
     // send form data to fireStore database on button click
     event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const data = Object.fromEntries(new FormData(form));
-    // console.log("data", data);
 
-    // console.log(116, formData);
+    console.log(checkedState);
 
-    setFormData((prev: any) => {
-      return {
-        ...prev,
-        userID: userID,
-        paper: doiResponse,
-        paper_type: "candidate",
-        workflow_stage: "select_paper",
-        start_date: new Date().toString(),
-        shareable_link: false,
-        is_author: true,
-        is_creator: true,
-        expected_total_hours: 1,
-        claim_type: "",
-        claim_type_other_description: "",
-        familiarity_level: "",
-        authors_response: checkedState,
-      };
-    });
-    // send data to firebase
-
-    addUserPaperData(formData, userID, doiResponse)
-      .then((res) => {
-        console.log("res", res);
-        if (typeof res !== "undefined") {
-          if (res.success) {
-            toast.success("Data submitted");
-            navigate(`/reproductions/edit/${res?.userPaperID}`);
-          } else {
-            toast.error("Error submitting data");
-          }
-        }
-      })
-      .catch((err) => {
-        console.log("err", err);
-        // toast.error("Error submitting data");
+    if (
+      originalPackages &&
+      originalPackages[0].name !== "" &&
+      originalPackages[0].url !== "" &&
+      checkedState.length > 0
+    ) {
+      console.log("execute");
+      setFormData((prev: any) => {
+        return {
+          ...prev,
+          userID: userID,
+          paper: doiResponse,
+          start_date: new Date().toString(),
+          shareable_link: false,
+          is_author: true,
+          is_creator: true,
+          expected_total_hours: 1,
+          claim_type: "",
+          claim_type_other_description: "",
+          familiarity_level: "",
+          authors_response: checkedState,
+          project_nickname: "",
+          authors_response_other: "",
+          summary: "",
+          whole_population: "",
+          additional_population: "",
+          original_reproduction_packages: originalPackages,
+        };
       });
 
-    console.log(formData, userID, doiResponse);
+      if (userPaperID !== undefined && pageType !== undefined) {
+        console.log(formData);
 
-    // setSelectPaperData("submitted");
-  };
-
-  const disableClick = (toggle: boolean, count: string) => {
-    if (count === "1.2") {
-      setDisabled12(toggle);
-    } else if (count === "1.3") {
-      setDisabled13(toggle);
-    } else if (count === "1.6") {
-      setDisabled16(toggle);
-    } else if (count === "1.41") {
-      setChecked141(toggle);
+        appendUserPaperData(userPaperID, formData)
+          .then(() => {
+            toast.success("Data Save successfully");
+          })
+          .catch((err) => {
+            console.log("err", err);
+            toast.error("Error submitting data");
+          });
+      }
     }
   };
-
-  const handleCheckBoxData = (position: number) => {
-    checkBoxOptions?.forEach((item: checkBoxOption, index: number) => {
-      if (index === position) {
-        setCheckedState((prev) => [...prev, item.label]);
-      }
-    });
-  };
-
-  // console.log(checkedState);
 
   // This function will fetch the DOI data from the DOI API
   function submitHandler(event: any) {
@@ -224,7 +247,6 @@ const SelectPaper = () => {
       fetchDoi(doiString)
         .then(function (response: any) {
           setError(false);
-          setDoi((prev) => !prev);
           const newResponse = camelizeKeys(response);
           setDoiResponse((prev: any) => {
             return {
@@ -240,6 +262,25 @@ const SelectPaper = () => {
               doi: newResponse.message?.doi,
             };
           });
+
+          setFormData((prev) => {
+            return {
+              ...prev,
+              paper: {
+                ...prev.paper,
+                publication_year: newResponse.message?.created?.dateTime,
+                publication_name: newResponse.message?.publisher,
+                title: newResponse.message?.title[0],
+                journal_name: newResponse.message?.shortContainerTitle[0],
+                author: `${newResponse.message?.author
+                  .map((author: any) => `${author?.given} ${author?.family}`)
+                  .join(", ")}`,
+
+                doi: newResponse.message?.doi,
+              },
+            };
+          });
+          setDoi(true);
         })
 
         .catch(function (error: any) {
@@ -257,10 +298,9 @@ const SelectPaper = () => {
     // title [0]
     // autour[0] -> given , family
   }
-  // console.log(doiResponse);
 
   function changeWorkFlowStage(userPaperID: string) {
-    if (typeof userPaperID !== "undefined") {
+    if (userPaperID && typeof userPaperID !== "undefined") {
       setFormData((prev: any) => {
         return {
           ...prev,
@@ -268,13 +308,26 @@ const SelectPaper = () => {
           paper_type: "declared",
         };
       });
-      appendUserPaperData(userPaperID, formData)
-        .then(() => {
-          navigate(`/reproductions/edit/${userPaperID}`);
-        })
-        .catch((err) => {
-          console.log("Error submitting data", err);
-        });
+
+      const response: boolean = window.confirm(
+        "Are you sure you want to declare? Changes can't be allowed after this step"
+      );
+
+      if (
+        formData?.paper_type === "declared" &&
+        formData?.workflow_stage === "scoping" &&
+        response
+      ) {
+        appendUserPaperData(userPaperID, formData)
+          .then(() => {
+            toast.success("Paper declared successfully");
+
+            navigate(`/reproductions/edit/${userPaperID}`);
+          })
+          .catch((err) => {
+            console.log("Error submitting data", err);
+          });
+      }
     } else {
       console.log("userPaperID not defined");
     }
@@ -302,6 +355,17 @@ const SelectPaper = () => {
           asked to read the paper and define the scope of the reproduction
           exercise.
         </Typography>
+        <Box
+          sx={{
+            paddingTop: 3,
+            paddingLeft: 2,
+            paddingRight: 2,
+          }}
+        >
+          <Button variant="contained" onClick={() => navigate(-1)}>
+            Return to stages overview
+          </Button>
+        </Box>
         <form
           method="post"
           onSubmit={submitSelectPaperData}
@@ -347,26 +411,26 @@ const SelectPaper = () => {
                   ),
                 }}
               />
-            </ListItem>{" "}
+            </ListItem>
             <p style={{ color: "red", textAlign: "center" }}>
               {isError ? "Please enter DOI " : null}
             </p>
-            {getDoi && Object.keys(doiResponse).length > 0 ? (
+            {getDoi && doiResponse && Object.keys(doiResponse).length > 0 ? (
               <>
                 <ListItem>
                   <TextField
                     label="Title of the paper"
                     type={"text"}
-                    defaultValue={doiResponse?.title ? doiResponse?.title : ""}
+                    value={doiResponse?.title ? doiResponse?.title : ""}
                     variant="standard"
                     fullWidth
                   />
-                </ListItem>{" "}
+                </ListItem>
                 <ListItem>
                   <TextField
                     label="Name of the journal or publication"
                     type={"text"}
-                    defaultValue={
+                    value={
                       doiResponse?.publication_name
                         ? doiResponse?.publication_name
                         : ""
@@ -379,7 +443,7 @@ const SelectPaper = () => {
                   <TextField
                     label="Digital Object Identifier (or URL if no DOI available)"
                     type={"text"}
-                    defaultValue={doiResponse?.doi ? doiResponse?.doi : ""}
+                    value={doiResponse?.doi ? doiResponse?.doi : ""}
                     variant="standard"
                     fullWidth
                   />
@@ -388,7 +452,7 @@ const SelectPaper = () => {
                   <TextField
                     label="Year of Publication"
                     type={"text"}
-                    defaultValue={
+                    value={
                       doiResponse?.publication_year
                         ? new Date(doiResponse?.publication_year)
                             .getFullYear()
@@ -403,9 +467,7 @@ const SelectPaper = () => {
                   <TextField
                     label="Authors"
                     type={"text"}
-                    defaultValue={
-                      doiResponse?.author ? doiResponse?.author : ""
-                    }
+                    value={doiResponse?.author ? doiResponse?.author : ""}
                     variant="standard"
                     fullWidth
                   />
@@ -422,38 +484,38 @@ const SelectPaper = () => {
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
-                  defaultValue={
+                  value={
                     formData?.reproduction_package_available
                       ? formData?.reproduction_package_available
-                      : "no"
+                      : null
                   }
                   onChange={formDataHandler}
                   name="reproduction_package_available"
                 >
                   <FormControlLabel
-                    value="yes"
-                    onClick={(event) => {
-                      setReproductionPackageAvailable(() => true);
-                      disableClick(true, "1.2");
-                    }}
+                    value="true"
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
                   />
                   <FormControlLabel
-                    value="no"
-                    onClick={() => {
-                      setReproductionPackageAvailable(() => false);
-                      disableClick(false, "1.2");
-                    }}
+                    value="false"
                     control={<Radio />}
-                    label="No"
+                    label="false"
                   />
                 </RadioGroup>
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl required disabled={isDisabled12}>
-                <FormLabel id="permission">
+              <FormControl
+                required
+                disabled={
+                  formData?.reproduction_package_available === "" ||
+                  formData?.reproduction_package_available === "true"
+                    ? true
+                    : false
+                }
+              >
+                <FormLabel id="authors_contacted">
                   1.3 Have you contacted the authors for a reproduction package?
                   Consult the{" "}
                   <span>
@@ -462,30 +524,36 @@ const SelectPaper = () => {
                   for recommendations on contacting authors.
                 </FormLabel>
                 <RadioGroup
-                  aria-labelledby="is a reproduction package available for this paper?"
-                  defaultValue={
+                  aria-labelledby="authors_contacted"
+                  value={
                     formData?.authors_contacted
                       ? formData?.authors_contacted
-                      : "yes"
+                      : null
                   }
                   name="authors_contacted"
                   onChange={formDataHandler}
                 >
                   <FormControlLabel
-                    value="yes"
-                    onClick={() => {
-                      disableClick(false, "1.3");
-                    }}
+                    value="true"
+                    disabled={
+                      formData?.reproduction_package_available === "" ||
+                      formData?.reproduction_package_available === "true"
+                        ? true
+                        : false
+                    }
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
                   />
                   <FormControlLabel
-                    value="no"
-                    onClick={() => {
-                      disableClick(true, "1.3");
-                    }}
+                    value="false"
+                    disabled={
+                      formData?.reproduction_package_available === "" ||
+                      formData?.reproduction_package_available === "true"
+                        ? true
+                        : false
+                    }
                     control={<Radio />}
-                    label="No"
+                    label="false"
                   />
                 </RadioGroup>
               </FormControl>
@@ -495,61 +563,126 @@ const SelectPaper = () => {
               </FormHelperText>
             </ListItem>
             <ListItem>
-              <FormControl required disabled={isDisabled12 || isDisabled13}>
+              <FormControl
+                required
+                disabled={
+                  formData?.authors_contacted === "" ||
+                  formData?.authors_contacted === "true"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel>
                   1.4 How did the authors respond? Select all that apply.
                 </FormLabel>
-                {checkBoxOptions.map((item: checkBoxOption, index: number) => {
-                  return (
-                    <>
-                      <FormControlLabel
-                        key={index}
-                        control={
-                          <Checkbox
-                            name={item.label}
-                            onChange={() => handleCheckBoxData(index)}
+                {checkBoxOptions.length > 0 &&
+                  checkBoxOptions?.map(
+                    (item: checkBoxOption, index: number) => {
+                      return (
+                        <>
+                          <FormControlLabel
+                            disabled={
+                              formData?.authors_contacted === "" ||
+                              formData?.authors_contacted === "true"
+                                ? true
+                                : false
+                            }
+                            key={index}
+                            control={
+                              <Checkbox
+                                name={item.label}
+                                checked={
+                                  checkedState?.length > 0 &&
+                                  typeof item?.label === "string"
+                                    ? !!checkedState.includes(item?.label)
+                                    : false
+                                }
+                                onChange={(
+                                  event: React.ChangeEvent<HTMLInputElement>
+                                ) => {
+                                  if (event.target.checked) {
+                                    setCheckedState((prevState: string[]) => [
+                                      ...prevState,
+                                      event.target.name,
+                                    ]);
+                                  } else {
+                                    setCheckedState((prevState: string[]) =>
+                                      prevState.filter(
+                                        (item: string) =>
+                                          item !== event.target.name
+                                      )
+                                    );
+                                  }
+                                }}
+                              />
+                            }
+                            label={item.label}
                           />
-                        }
-                        onClick={() => setDisabled16(true)}
-                        label={item.label}
-                      />
-                    </>
-                  );
-                })}
+                        </>
+                      );
+                    }
+                  )}
               </FormControl>
             </ListItem>
 
             <ListItem>
-              <FormControl required disabled={isDisabled12}>
+              <FormControl
+                required
+                disabled={
+                  formData?.reproduction_package_available === "" ||
+                  formData?.reproduction_package_available === "true"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel id="permission">
                   1.5 If there are no reproduction packages, are you willing to
                   build a reproduction package from scratch?
                 </FormLabel>
                 <RadioGroup
-                  defaultValue={
+                  value={
                     formData?.reproduction_package_from_scratch
                       ? formData?.reproduction_package_from_scratch
-                      : "yes"
+                      : null
                   }
                   onChange={formDataHandler}
                   name="reproduction_package_from_scratch"
                 >
                   <FormControlLabel
-                    value="yes"
-                    onClick={() => setDisabled16(true)}
+                    value="true"
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
+                    disabled={
+                      formData?.reproduction_package_available === "" ||
+                      formData?.reproduction_package_available === "true"
+                        ? true
+                        : false
+                    }
                   />
                   <FormControlLabel
-                    value="no"
-                    onClick={() => setDisabled16(false)}
+                    value="false"
                     control={<Radio />}
-                    label="No"
+                    label="false"
+                    disabled={
+                      formData?.reproduction_package_available === "" ||
+                      formData?.reproduction_package_available === "true"
+                        ? true
+                        : false
+                    }
                   />
                 </RadioGroup>
               </FormControl>
             </ListItem>
-            {isDisabled16 ? (
+
+            {formData?.reproduction_package_available === "true" &&
+            formData?.original_reproduction_packages !== undefined ? (
+              <AdditionalInfo
+                originalPackages={originalPackages}
+                setOriginalPackages={setOriginalPackages}
+              />
+            ) : null}
+
+            {formData?.reproduction_package_from_scratch === "true" ? (
               <ListItem>
                 <Button
                   variant="contained"
@@ -561,9 +694,6 @@ const SelectPaper = () => {
                   the exercise.
                 </Button>
               </ListItem>
-            ) : null}
-            {isReproductionPackageAvailable ? (
-              <AdditionalInfo formData={formData} setFormData={setFormData} />
             ) : null}
           </List>
           <Box sx={{ float: "right" }}>
@@ -586,3 +716,5 @@ const SelectPaper = () => {
 };
 
 export default SelectPaper;
+
+// TODO: 1.3 and 1.4 mai by default false check lgana hai

@@ -1,4 +1,4 @@
-import { Box, Container, FormHelperText, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React from "react";
 
 import { paperData } from "../../../types/index.d";
@@ -31,7 +31,9 @@ const ViewStepTwo = ({
         </Typography>
         {/* <FormHelperText>Contents of reproduction package</FormHelperText> */}
         <Box p={1} boxShadow={1} py={3} my={3} border={1}>
-          {userPaperData?.revised_reproduction_packages.length > 0 ? (
+          {typeof userPaperData !== "undefined" &&
+          userPaperData?.revised_reproduction_packages &&
+          userPaperData?.revised_reproduction_packages.length > 0 ? (
             userPaperData?.revised_reproduction_packages.map(
               (item: any, index: number) => {
                 return (

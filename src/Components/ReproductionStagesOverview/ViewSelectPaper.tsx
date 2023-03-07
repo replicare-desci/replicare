@@ -11,33 +11,7 @@ dayjs.extend(localizedFormat);
 
 const ViewSelectPaper = () => {
   const navigate = useNavigate();
-  const checkBoxOptions = [
-    {
-      label: "Provided reproduction package.",
-    },
-    {
-      label:
-        "Declined to share reproduction package, citing legal or ethical reasons.",
-    },
-    {
-      label:
-        "Declined to share reproduction package but did not provide a reason.",
-    },
-    {
-      label:
-        "Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:",
-    },
-    {
-      label: "Author(s) state that they no longer have access to the data.",
-    },
-    {
-      label:
-        "Shared detailed instructions on how to access the data (for restricted access only).",
-    },
-    {
-      label: "Did not respond. As of:",
-    },
-  ];
+
   const [userPaperData, setUserPaperData] = useState<paperData>();
   const { userPaperID } = useParams();
   useEffect(() => {
@@ -108,18 +82,21 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              <Box display={"flex"}>
-                {" "}
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                  Digital Object Identifier (or URL):
-                </Typography>
-                <Typography variant="subtitle2">
+              {userPaperData && userPaperData?.paper !== null && (
+                <Box display={"flex"}>
                   {" "}
-                  {userPaperData?.paper?.doi
-                    ? userPaperData?.paper?.doi
-                    : `N/A`}
-                </Typography>
-              </Box>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Digital Object Identifier (or URL):
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    {" "}
+                    {userPaperData?.paper?.doi
+                      ? userPaperData?.paper?.doi
+                      : `N/A`}
+                  </Typography>
+                </Box>
+              )}
+
               <Box display={"flex"}>
                 {" "}
                 <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -234,25 +211,16 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              {/* <ul>
-                {" "}
-                {userPaperData?.checkBoxData &&
-                userPaperData?.checkBoxData.length > 0
-                  ? userPaperData?.checkBoxData.map(
-                      (item: boolean, index: number) => {
-                        if (item) {
-                          return (
-                            <li>
-                              <Typography variant="subtitle2" component={"p"}>
-                                {checkBoxOptions[index].label}
-                              </Typography>
-                            </li>
-                          );
-                        }
+              <ul>
+                {userPaperData?.authors_response &&
+                userPaperData?.authors_response.length > 0
+                  ? userPaperData?.authors_response.map(
+                      (item: string, index: number) => {
+                        return <li key={index}>{item}</li>;
                       }
                     )
                   : "N/A"}
-              </ul> */}
+              </ul>
             </Box>
           </Grid>{" "}
           {/* <Grid item xl={12} xs={12} my={2}>

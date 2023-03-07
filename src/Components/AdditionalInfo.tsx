@@ -2,55 +2,40 @@ import {
   TextField,
   Button,
   FormControl,
-  Box,
-  ListItem,
   FormLabel,
   FormHelperText,
-  Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 
 import { original_reproduction_packages } from "../types/index.d";
 
 interface Props {
-  formData: any;
-  setFormData: any;
+  originalPackages: original_reproduction_packages[];
+  setOriginalPackages: React.Dispatch<
+    React.SetStateAction<original_reproduction_packages[]>
+  >;
 }
 
-function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
-  const [isDelete, setDelete] = useState(true);
+function AdditionalInfo({
+  originalPackages,
+  setOriginalPackages,
+}: Props): JSX.Element {
+  const addIntoSystem = () => {};
 
-  const [originalPackage, setOriginalPackage] =
-    useState<original_reproduction_packages>({
-      name: "",
-      url: "",
-      stage: "original",
-      content_type: "code",
+  function fillIntoDefaultFields(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+
+    setOriginalPackages((prevState: original_reproduction_packages[]) => {
+      return [
+        {
+          ...prevState[0],
+          [name]: value,
+        },
+      ];
     });
 
-  const deleted = () => {
-    setDelete(false);
-  };
+    console.log(originalPackages);
+  }
 
-  const addIntoSystem = () => {
-    if (originalPackage.name.length > 0 && originalPackage.url.length > 0) {
-      setFormData({
-        ...formData,
-        original_reproduction_packages: [
-          ...formData.original_reproduction_packages,
-          originalPackage,
-        ],
-      });
-      setOriginalPackage({
-        name: "",
-        url: "",
-        stage: "original",
-        content_type: "code",
-      });
-    } else {
-      alert("Please fill the required fields");
-    }
-  };
   return (
     <>
       {/* {isDelete ? (
@@ -80,7 +65,7 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
         </div>
       ) : null} */}
 
-      {formData.original_reproduction_packages.length > 0 &&
+      {/* {formData.original_reproduction_packages.length > 1 &&
         formData.original_reproduction_packages.map(
           (item: any, index: number) => {
             return (
@@ -134,53 +119,58 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
               </div>
             );
           }
-        )}
+        )} */}
 
-      <ListItem>
-        <FormControl required fullWidth sx={{ py: 1 }}>
-          <FormLabel>
-            Record the main repository that stores the code for the reproduction
-            package provided by the authors.
-          </FormLabel>
-          <FormHelperText>Contents of reproduction package</FormHelperText>
-          <TextField
-            variant="standard"
-            name="name"
-            type={"text"}
-            value={originalPackage.name}
-            defaultValue={originalPackage.name}
-            placeholder="e.g. Main code repository with data"
-            onChange={(event: any) => {
-              setOriginalPackage({
-                ...originalPackage,
-                name: event.target.value,
-              });
-            }}
-          ></TextField>
-          <TextField
-            required
-            type={"text"}
-            variant="standard"
-            value={originalPackage.url}
-            name="url"
-            defaultValue={originalPackage.url}
-            placeholder="e.g. https://github.com/paper/paper"
-            onChange={(event: any) => {
-              setOriginalPackage({
-                ...originalPackage,
-                url: event.target.value,
-              });
-            }}
-          ></TextField>
-          <FormLabel>
-            Are there additional data in different repositories? Use the button
-            below to add links to these as well.
-          </FormLabel>{" "}
-          <Button variant="contained" onClick={addIntoSystem}>
-            + Add additional reproduction packages for data
-          </Button>
-        </FormControl>
-      </ListItem>
+      <FormControl
+        sx={{
+          p: 2,
+          boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+          borderRadius: 2,
+        }}
+      >
+        <FormLabel>
+          Record the main repository that stores the code for the reproduction
+          package provided by the authors.
+        </FormLabel>
+        <FormHelperText>Contents of reproduction package</FormHelperText>
+        <TextField
+          variant="standard"
+          name="name"
+          type={"text"}
+          sx={{
+            marginBottom: 2,
+          }}
+          value={
+            originalPackages && originalPackages[0]?.name
+              ? originalPackages[0]?.name
+              : ""
+          }
+          placeholder="e.g. Main code repository with data"
+          onChange={fillIntoDefaultFields}
+        />
+        <TextField
+          type={"text"}
+          sx={{
+            marginBottom: 2,
+          }}
+          variant="standard"
+          value={
+            originalPackages && originalPackages[0]?.url
+              ? originalPackages[0]?.url
+              : ""
+          }
+          name="url"
+          placeholder="e.g. https://github.com/paper/paper"
+          onChange={fillIntoDefaultFields}
+        />
+        <FormLabel>
+          Are there additional data in different repositories? Use the button
+          below to add links to these as well.
+        </FormLabel>{" "}
+        <Button variant="contained" onClick={addIntoSystem}>
+          + Add additional reproduction packages for data
+        </Button>
+      </FormControl>
     </>
   );
 }
