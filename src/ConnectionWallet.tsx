@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Provider, ethers } from "ethers";
 import { Button } from "@mui/material";
 // import "./styles/App.css";
 
@@ -30,36 +29,9 @@ function ConnectionWallet(): JSX.Element {
       });
   }
 
-  if (ethereumAccount === null) {
-    return (
-      <div className="App App-header">
-        {isMetamaskInstalled ? (
-          <div>
-            <Button
-              variant="outlined"
-              aria-disabled={true}
-              sx={{
-                backgroundColor: "#222629",
-                ":hover": {
-                  bgcolor: "#222629",
-                  color: "white",
-                },
-              }}
-              onClick={connectMetamaskWallet}
-            >
-              Connect
-            </Button>
-          </div>
-        ) : (
-          <p>Please install wallet</p>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      {ethereumAccount !== null && !!isMetamaskInstalled ? (
         <Button
           variant="outlined"
           aria-disabled={true}
@@ -73,12 +45,26 @@ function ConnectionWallet(): JSX.Element {
           }}
           onClick={connectMetamaskWallet}
         >
-          {/* ETH wallet connected as:  */}
-          {/* {ethereumAccount} */}
-
           {ethereumAccount.slice(0, 6) + ".." + ethereumAccount.slice(38, 42)}
         </Button>
-      </header>
+      ) : isMetamaskInstalled && ethereumAccount === null ? (
+        <Button
+          variant="outlined"
+          aria-disabled={true}
+          sx={{
+            backgroundColor: "#222629",
+            ":hover": {
+              bgcolor: "#222629",
+              color: "white",
+            },
+          }}
+          onClick={connectMetamaskWallet}
+        >
+          Connect
+        </Button>
+      ) : (
+        <p>Please install wallet</p>
+      )}
     </div>
   );
 }
