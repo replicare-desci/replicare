@@ -11,6 +11,7 @@ import { Typography } from "@mui/material";
 import { fontSize } from "@mui/system";
 import ClearIcon from "@mui/icons-material/Clear";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 
 type Anchor = "right";
 
@@ -92,29 +93,44 @@ export default function Sidebar() {
 
         <Divider />
         <ListItem sx={{ padding: 0, marginY: 1 }}>
-          <Button
-            sx={{
-              backgroundColor: "#000000",
-              color: "#ffffff",
-              borderRadius: 0,
-              fontSize: 18,
-            }}
-          >
-            Sign Up
-          </Button>
+          <Link to="/sign-up" style={{ textDecoration: "none" }}>
+            <Button
+              sx={{
+                backgroundColor: "#000000",
+                color: "#ffffff",
+                borderRadius: 0,
+                fontSize: 18,
+
+                ":hover": {
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: 18.1,
+                },
+              }}
+            >
+              Sign Up
+            </Button>
+          </Link>
         </ListItem>
 
         <ListItem sx={{ padding: 0, margin: 0 }}>
-          <Button
-            sx={{
-              backgroundColor: "#000000",
-              color: "#ffffff",
-              borderRadius: 0,
-              fontSize: 18,
-            }}
-          >
-            Sign&nbsp; In
-          </Button>
+          <Link to={"/sign-in"} style={{ textDecoration: "none" }}>
+            <Button
+              sx={{
+                backgroundColor: "#000000",
+                color: "#ffffff",
+                borderRadius: 0,
+                fontSize: 18,
+                ":hover": {
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: 18.1,
+                },
+              }}
+            >
+              Sign&nbsp; In
+            </Button>
+          </Link>
         </ListItem>
       </List>
     </Box>
