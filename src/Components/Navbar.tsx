@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Sidebar from "./Sidebar";
 import Box from "@mui/material";
 import ConnectionWallet from "../ConnectionWallet";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -16,14 +17,17 @@ const Navbar = () => {
           {/* <CameraIcon sx={{ mr: 2 }} /> */}
           <Sidebar />
           {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}
-          <Typography
-            variant="h4"
-            color="inherit"
-            noWrap
-            justifyContent={"center"}
-          >
-            RRDAO
-          </Typography>
+          <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+            {" "}
+            <Typography
+              variant="h4"
+              color="inherit"
+              noWrap
+              justifyContent={"center"}
+            >
+              RRDAO
+            </Typography>
+          </Link>
           <ConnectionWallet />
         </Toolbar>
       </AppBar>
