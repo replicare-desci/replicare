@@ -10,6 +10,13 @@ import {
   List,
   ListItem,
   ListItemText,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  FormHelperText,
+  Checkbox,
 } from "@mui/material";
 
 const SelectPaper = () => {
@@ -20,6 +27,9 @@ const SelectPaper = () => {
   //   doiStringFetchError: () => Promise<string>,
   //   doiStringFetchErrorMessage: string,
   // }
+
+  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
+    useState<boolean>(false);
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
   const [doiResponse, setDoiResponse] = useState({
@@ -48,7 +58,7 @@ const SelectPaper = () => {
           setDoiResponse((prev: any) => {
             return {
               ...prev,
-              // dateTime: newResponse.message.license[0].start.dateTime,
+              dateTime: newResponse.message.created.dateTime,
               publisher: newResponse.message.publisher,
               nameOfJournal: newResponse.message.shortContainerTitle[0],
               title: newResponse.message.title[0],
@@ -101,7 +111,7 @@ const SelectPaper = () => {
           <List>
             <ListItem>
               <ListItemText>
-                Enter the{" "}
+                1.1 Enter the{" "}
                 <span>
                   <a
                     href="https://en.wikipedia.org/wiki/Digital_object_identifier"
@@ -179,7 +189,7 @@ const SelectPaper = () => {
                   <TextField
                     label="Year of Publication
 "
-                    // defaultValue={new Date(doiResponse?.dateTime).getFullYear()}
+                    defaultValue={new Date(doiResponse?.dateTime).getFullYear()}
                     variant="standard"
                     fullWidth
                   />
@@ -195,6 +205,136 @@ const SelectPaper = () => {
                 </ListItem>
               </>
             ) : null}
+            {/* doi fetch ends here  */}
+          </List>
+          <List>
+            <ListItem>
+              <FormControl>
+                <FormLabel id="reproduction-package-available?">
+                  1.2 is a reproduction package available for this paper?
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="is a reproduction package available for this paper?"
+                  defaultValue=""
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            </ListItem>
+            <ListItem>
+              <FormControl>
+                <FormLabel id="permission">
+                  1.3 Have you contacted the authors for a reproduction package?
+                  Consult the ACRe Guide for recommendations on contacting
+                  authors.
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="is a reproduction package available for this paper?"
+                  defaultValue=""
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+              <FormHelperText>
+                *Wait a few weeks for the authors to reply, then summarize your
+                interaction below.
+              </FormHelperText>
+            </ListItem>
+            <ListItem>
+              <FormControl>
+                <FormLabel>
+                  1.4 How did the authors respond? Select all that apply.
+                </FormLabel>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Provided reproduction package."
+                />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Declined to share reproduction package, citing legal or ethical reasons."
+                />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Declined to share reproduction package but did not provide a reason.
+"
+                />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:
+
+"
+                />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Author(s) state that they no longer have access to the data.
+"
+                />{" "}
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Shared detailed instructions on how to access the data (for restricted access only).
+
+"
+                />{" "}
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Did not respond. As of:"
+                />
+                <FormControlLabel control={<Checkbox />} label="Other " />
+                <TextField placeholder="(Explain Briefly)" />
+              </FormControl>
+            </ListItem>
+            <ListItem>
+              <FormControl>
+                <FormLabel id="permission">
+                  1.5 Are the authors available for further questions for ACRe
+                  reproductions?
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="is a reproduction package available for this paper?"
+                  defaultValue=""
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            </ListItem>
+            <ListItem>
+              <FormControl>
+                <FormLabel id="permission">
+                  1.6 If there are no reproduction packages, are you willing to
+                  build a reproduction package from scratch?
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="is a reproduction package available for this paper?"
+                  defaultValue=""
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            </ListItem>
           </List>
         </Grid>
       </Container>
