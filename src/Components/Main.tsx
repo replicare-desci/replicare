@@ -1,14 +1,14 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -43,6 +43,19 @@ const Main = () => {
           </Grid>
           <Grid item xs={8} my={10}>
             <Search />
+          </Grid>
+          <Grid item xs={8}>
+            {" "}
+            <Link
+              to="/reproductions/index"
+              style={{
+                textDecoration: "none",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Button variant="contained">+ Start a reproduction</Button>
+            </Link>
           </Grid>
         </Grid>
         <Box
