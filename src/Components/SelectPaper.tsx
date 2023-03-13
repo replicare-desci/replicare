@@ -32,6 +32,23 @@ const SelectPaper = () => {
     useState<boolean>(false);
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
+  const [isDisabled12, setDisabled12] = useState<boolean>(false);
+  const [isDisabled13, setDisabled13] = useState<boolean>(false);
+  const [isDisabled16, setDisabled16] = useState<boolean>(false);
+  const [isChecked141, setChecked141] = useState<boolean>(false);
+  const disableClick = (toggle: boolean, count: string) => {
+    if (count === "1.2") {
+      setDisabled12(toggle);
+    } else if (count === "1.3") {
+      setDisabled13(toggle);
+    } else if (count === "1.6") {
+      setDisabled16(toggle);
+    } else if (count === "1.41") {
+      setChecked141(toggle);
+    }
+    // event.preventDefault();
+  };
+
   const [doiResponse, setDoiResponse] = useState({
     dateTime: "",
     publisher: "",
@@ -62,7 +79,10 @@ const SelectPaper = () => {
               publisher: newResponse.message.publisher,
               nameOfJournal: newResponse.message.shortContainerTitle[0],
               title: newResponse.message.title[0],
-              author: `${newResponse.message.author[0].given} ${newResponse.message.author[0].family}`,
+              author: `${newResponse.message.author
+                .map((author: any) => `${author.given} ${author.family}`)
+                .join(", ")}`,
+
               doi: newResponse.message.doi,
             };
           });
@@ -220,15 +240,27 @@ const SelectPaper = () => {
                 >
                   <FormControlLabel
                     value="yes"
+                    onClick={() => {
+                      setReproductionPackageAvailable(() => true);
+                      disableClick(true, "1.2");
+                    }}
                     control={<Radio />}
                     label="Yes"
                   />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  <FormControlLabel
+                    value="no"
+                    onClick={() => {
+                      setReproductionPackageAvailable(() => false);
+                      disableClick(false, "1.2");
+                    }}
+                    control={<Radio />}
+                    label="No"
+                  />
                 </RadioGroup>
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl>
+              <FormControl disabled={isDisabled12}>
                 <FormLabel id="permission">
                   1.3 Have you contacted the authors for a reproduction package?
                   Consult the ACRe Guide for recommendations on contacting
@@ -241,10 +273,20 @@ const SelectPaper = () => {
                 >
                   <FormControlLabel
                     value="yes"
+                    onClick={() => {
+                      disableClick(false, "1.3");
+                    }}
                     control={<Radio />}
                     label="Yes"
                   />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  <FormControlLabel
+                    value="no"
+                    onClick={() => {
+                      disableClick(true, "1.3");
+                    }}
+                    control={<Radio />}
+                    label="No"
+                  />
                 </RadioGroup>
               </FormControl>
               <FormHelperText>
@@ -253,12 +295,13 @@ const SelectPaper = () => {
               </FormHelperText>
             </ListItem>
             <ListItem>
-              <FormControl>
+              <FormControl disabled={isDisabled12 || isDisabled13}>
                 <FormLabel>
                   1.4 How did the authors respond? Select all that apply.
                 </FormLabel>
                 <FormControlLabel
                   control={<Checkbox />}
+                  onClick={() => setDisabled16(true)}
                   label="Provided reproduction package."
                 />
                 <FormControlLabel
@@ -296,7 +339,7 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl>
+              <FormControl disabled={isDisabled12 || isDisabled13}>
                 <FormLabel id="permission">
                   1.5 Are the authors available for further questions for ACRe
                   reproductions?
@@ -316,7 +359,7 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl>
+              <FormControl disabled={isDisabled12}>
                 <FormLabel id="permission">
                   1.6 If there are no reproduction packages, are you willing to
                   build a reproduction package from scratch?
@@ -328,13 +371,56 @@ const SelectPaper = () => {
                 >
                   <FormControlLabel
                     value="yes"
+                    onClick={() => setDisabled16(true)}
                     control={<Radio />}
                     label="Yes"
                   />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  <FormControlLabel
+                    value="no"
+                    onClick={() => setDisabled16(false)}
+                    control={<Radio />}
+                    label="No"
+                  />
                 </RadioGroup>
               </FormControl>
             </ListItem>
+            {isDisabled16 ? (
+              <ListItem>
+                <Button variant="contained">
+                  You can declare this paper and continue the scoping portion of
+                  the exercise.
+                </Button>
+              </ListItem>
+            ) : null}
+            {isReproductionPackageAvailable ? (
+              <ListItem sx={{ boxShadow: 1 }}>
+                <FormControl fullWidth sx={{ py: 1 }}>
+                  <FormLabel>
+                    {" "}
+                    Record the main repository that stores the code for the
+                    reproduction package provided by the authors.
+                  </FormLabel>
+                  <FormHelperText>
+                    Contents of reproduction package
+                  </FormHelperText>
+                  <TextField
+                    variant="standard"
+                    placeholder="e.g. Main code repository with data"
+                  ></TextField>
+                  <TextField
+                    variant="standard"
+                    placeholder="e.g. https://github.com/paper/paper"
+                  ></TextField>
+                  <FormLabel>
+                    Are there additional data in different repositories? Use the
+                    button below to add links to these as well.
+                  </FormLabel>{" "}
+                  <Button variant="contained">
+                    + Add additional reproduction packages for data
+                  </Button>
+                </FormControl>
+              </ListItem>
+            ) : null}
           </List>
         </Grid>
       </Container>
