@@ -6,20 +6,21 @@ import Box from "@mui/material/Box";
 
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Fab from "@mui/material/Fab";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { Link } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="text.white" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="/">
+      <Link style={{ textDecoration: "none", color: "#ffffff" }} to={"/"}>
         RRDAO
-      </Link>
+      </Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -41,9 +42,19 @@ const Footer = () => {
           </Grid>
           <Grid item xs={6} xl={3} md={3}>
             <Box>
-              <Typography variant="overline" sx={{ color: "#ffffff" }}>
-                Home
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  Home
+                </Typography>
+              </Link>
             </Box>
             <Box>
               <Typography variant="overline" sx={{}}>
