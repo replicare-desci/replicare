@@ -36,9 +36,25 @@ const Footer = () => {
       >
         <Grid container>
           <Grid item xl={3}>
-            <Typography variant="h2" component={"h1"}>
-              RRDAO
-            </Typography>
+            <Link
+              to={"/"}
+              style={{
+                textDecoration: "none",
+                color: "#ffffff",
+              }}
+            >
+              <Typography
+                variant="h2"
+                component={"h1"}
+                sx={{
+                  ":hover": {
+                    color: "primary.main",
+                  },
+                }}
+              >
+                RRDAO
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={6} xl={3} md={3}>
             <Box>
@@ -57,52 +73,155 @@ const Footer = () => {
               </Link>
             </Box>
             <Box>
-              <Typography variant="overline" sx={{}}>
-                Privacy Policy
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+              </Link>
             </Box>
             <Box>
-              <Typography variant="overline" sx={{ color: "#ffffff" }}>
-                Contact us
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  Contact Us
+                </Typography>
+              </Link>
             </Box>
           </Grid>
           <Grid item xs={6} xl={3} md={3}>
             <Box>
-              <Typography variant="overline" sx={{}}>
-                Terms of use
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  Terms of use
+                </Typography>
+              </Link>
             </Box>
             <Box>
-              <Typography variant="overline" sx={{ color: "#ffffff" }}>
-                About
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  About
+                </Typography>
+              </Link>
             </Box>
             <Box>
-              <Typography variant="overline" sx={{}}>
-                info@rrdao.com
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  info@rrdao.com
+                </Typography>
+              </Link>
             </Box>
           </Grid>
 
           <Grid item xs={6} xl={3} md={3}>
             <Box>
-              <Typography variant="overline" sx={{}}>
-                Team
-              </Typography>
+              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "#ffffff",
+                    ":hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  Team
+                </Typography>
+              </Link>
             </Box>
             <Box>
               <Box>
-                <Typography variant="overline" sx={{}}>
-                  Follow us
-                </Typography>
+                <Link
+                  to="/"
+                  style={{ textDecoration: "none", color: "#222629" }}
+                >
+                  <Typography
+                    variant="overline"
+                    sx={{
+                      color: "#ffffff",
+                      ":hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                  >
+                    Follow us
+                  </Typography>
+                </Link>
               </Box>
               <Box display={"flex"}>
                 <Box>
-                  <GitHubIcon />
+                  <Link
+                    to="/"
+                    style={{ textDecoration: "none", color: "#222629" }}
+                  >
+                    <Typography
+                      variant="overline"
+                      sx={{
+                        color: "#ffffff",
+                        ":hover": {
+                          color: "primary.main",
+                        },
+                      }}
+                    >
+                      <GitHubIcon />
+                    </Typography>
+                  </Link>
                 </Box>
                 <Box mx={1}>
-                  <TwitterIcon />
+                  <Link
+                    to="/"
+                    style={{ textDecoration: "none", color: "#222629" }}
+                  >
+                    <Typography
+                      variant="overline"
+                      sx={{
+                        color: "#ffffff",
+                        ":hover": {
+                          color: "primary.main",
+                        },
+                      }}
+                    >
+                      <TwitterIcon />
+                    </Typography>
+                  </Link>
                 </Box>
               </Box>
             </Box>
