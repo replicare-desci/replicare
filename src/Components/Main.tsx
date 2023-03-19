@@ -76,12 +76,13 @@ const Main = () => {
               Introduction
             </Typography>
             <Typography variant="h5" color="text.secondary" paragraph>
-              RRDAO is a platform to improve the computational reproducibility
-              of published empirical research by crowdsourcing and sharing
-              reproductions that are conducted but may otherwise go unpublished.
-              Computational reproducibility is the ability to reproduce the
-              results, tables, and other figures found in research articles
-              using the data, code, and materials made available by the authors.
+              Replicare is a platform to improve the computational
+              reproducibility of published empirical research by crowdsourcing
+              and sharing reproductions that are conducted but may otherwise go
+              unpublished. Computational reproducibility is the ability to
+              reproduce the results, tables, and other figures found in research
+              articles using the data, code, and materials made available by the
+              authors.
             </Typography>
             <section>
               {" "}
@@ -113,7 +114,7 @@ const Main = () => {
                 Our Solution
               </Typography>
               <Typography variant="h5" color="text.secondary" paragraph>
-                RRDAO allows its users to increase the reproducibility of
+                Replicare allows its users to increase the reproducibility of
                 published work by guiding reproducers through a five-stage
                 process.
                 <List>
@@ -156,7 +157,7 @@ const Main = () => {
                 </List>
                 <Typography variant="h6" component={"p"}>
                   Rather than designating entire research articles as
-                  reproducible or irreproducible, RRDAO allows for a more
+                  reproducible or irreproducible, Replicare allows for a more
                   nuanced approach to reproducibility, where reproducers analyse
                   individual claims and their associated display items, and take
                   concrete steps to improve their reproducibility. Reproduction

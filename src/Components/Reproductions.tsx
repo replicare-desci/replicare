@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import MyWork from "./MyWork";
 
 const Reproductions = () => {
   return (
@@ -17,6 +18,7 @@ const Reproductions = () => {
             </Link>
           </Grid>
         </Grid>
+        <MyWork />
       </Container>
     </div>
   );

@@ -9,65 +9,113 @@ import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";
 import "./styles/App.css";
 
-import { Route, Routes, Outlet } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  Outlet,
+  BrowserRouter,
+  Navigate,
+} from "react-router-dom";
 import Main from "./Components/Main";
 import SignUp from "./Components/SignUp";
 import SignIn from "./Components/SignIn";
 import Reproductions from "./Components/Reproductions";
 import SelectAPaper from "./Components/SelectAPaper";
 import SelectPaper from "./Components/SelectPaper";
-
+import { UserContext } from "./context/ContextProvider";
+import NotFound from "./Components/NotFound";
 export default function App() {
+  const { store } = UserContext();
+  console.log(store);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Navbar />
-              <Main />
-              <Footer />
-            </>
-          }
-        />
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Navbar />
+                <Main />
+                <Footer />
+              </>
+            }
+          />
 
-        <Route
-          path="/reproductions"
-          element={
+          {store?.user?.isVerified && store?.user?.walletAddress && (
             <>
-              <Navbar />
-              <Reproductions />
-              <Footer />
-            </>
-          }
-        />
+              <Route
+                path="/reproductions"
+                element={
+                  <>
+                    <Navbar />
+                    <Reproductions />
+                    <Footer />
+                  </>
+                }
+              />
 
-        <Route
-          path="/reproductions/index"
-          element={
-            <>
-              <Navbar />
-              <SelectAPaper />
-              <Footer />
+              <Route
+                path="/reproductions/index"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectAPaper />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/reproductions/index/select-paper"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectPaper />
+                    <Footer />
+                  </>
+                }
+              />
             </>
-          }
-        />
-        <Route
-          path="/reproductions/index/select-paper"
-          element={
-            <>
-              <Navbar />
-              <SelectPaper />
-              <Footer />
-            </>
-          }
-        />
+          )}
+          <Route
+            path="/sign-up"
+            element={
+              <>
+                <Navbar />
+                <SignUp />
 
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} />
-      </Routes>
-    </ThemeProvider>
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <>
+                <Navbar />
+                <SignIn />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="not-found"
+            element={
+              <>
+                <Navbar />
+                <NotFound />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/not-found" replace={false} />}
+          />
+        </Routes>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }

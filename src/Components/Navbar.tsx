@@ -25,7 +25,7 @@ const Navbar = () => {
               noWrap
               justifyContent={"center"}
             >
-              RRDAO
+              Replicare
             </Typography>
           </Link>
           <ConnectionWallet />
