@@ -19,7 +19,7 @@ function Copyright() {
     <Typography variant="body2" color="text.white" align="center">
       {"Copyright © "}
       <Link style={{ textDecoration: "none", color: "#ffffff" }} to={"/"}>
-        RRDAO
+        Replicare
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -35,7 +35,7 @@ const Footer = () => {
         component="footer"
       >
         <Grid container>
-          <Grid item xl={3}>
+          <Grid item md={3} xs={12}>
             <Link
               to={"/"}
               style={{
@@ -47,16 +47,17 @@ const Footer = () => {
                 variant="h2"
                 component={"h1"}
                 sx={{
+                  // letterSpacing: 10,
                   ":hover": {
                     color: "primary.main",
                   },
                 }}
               >
-                RRDAO
+                Replicare
               </Typography>
             </Link>
           </Grid>
-          <Grid item xs={6} xl={3} md={3}>
+          <Grid item xs={6} xl={3} sm={3} md={3}>
             <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
@@ -103,7 +104,7 @@ const Footer = () => {
               </Link>
             </Box>
           </Grid>
-          <Grid item xs={6} xl={3} md={3}>
+          <Grid item xs={6} xl={3} sm={3} md={3}>
             <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
@@ -145,13 +146,13 @@ const Footer = () => {
                     },
                   }}
                 >
-                  info@rrdao.com
+                  info@Replicare.com
                 </Typography>
               </Link>
             </Box>
           </Grid>
 
-          <Grid item xs={6} xl={3} md={3}>
+          <Grid item xs={6} xl={3} sm={3} md={3}>
             <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
@@ -226,7 +227,7 @@ const Footer = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={6} xl={3} md={3}></Grid>
+          <Grid item xs={6} xl={3} sm={3} md={3}></Grid>
         </Grid>
         <Grid container justifyContent={"center"}>
           <Box mt={6}>

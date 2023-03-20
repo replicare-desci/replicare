@@ -1,8 +1,33 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-// import "./styles/App.css";
+import { getUserData } from "./firebase/firebaseFunctions";
+import { UserContext } from "./context/ContextProvider";
 
+// import "./styles/App.css";
+// import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
+
+// import Web3 from "web3";
+// import Matic from "maticjs";
 function ConnectionWallet(): JSX.Element {
+  const { store, setStore } = UserContext();
+
+  // const maticProvider = new WalletConnectProvider({
+  //   host: `https://rpc-mumbai.matic.today`,
+  //   callbacks: {
+  //     onConnect: console.log("connected"),
+  //     onDisconnect: console.log("disconnected!"),
+  //   },
+  // });
+
+  // const ropstenProvider = new WalletConnectProvider({
+  //   host: `https://ropsten.infura.io/v3/70645f042c3a409599c60f96f6dd9fbc`,
+  //   callbacks: {
+  //     onConnect: console.log("connected"),
+  //     onDisconnect: console.log("disconnected"),
+  //   },
+  // });
+  // const maticWeb3 = new Web3(maticProvider);
+  // const ropstenWeb3 = new Web3(ropstenProvider);
   const [isMetamaskInstalled, setIsMetamaskInstalled] =
     useState<boolean>(false);
   const [ethereumAccount, setEthereumAccount] = useState<string | null>(null);
@@ -23,7 +48,58 @@ function ConnectionWallet(): JSX.Element {
       })
       .then((accounts: string[]) => {
         setEthereumAccount(accounts[0]);
+        // const getUserDataVar = getUserData(accounts[0]);
+        // getUserDataVar.then((value) => {
+        //   if (value === null) {
+        //     console.log("User does not exist");
+        //   } else {
+        //     console.log("User exists", value);
+        //   }
+        // });
+
+        // getuser data
+        function handleUserData(userData: any) {
+          console.log("userData", userData);
+          setStore((prev) => {
+            return {
+              ...prev,
+              user: {
+                ...prev.user,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                walletAddress: userData.walletAddress,
+                emailID: userData.emailID,
+                id: userData.id,
+                isVerified: userData.isVerified,
+              },
+            };
+          });
+          localStorage.setItem(
+            "firstName",
+            userData.firstName ? userData.firstName : ""
+          );
+          localStorage.setItem(
+            "lastName",
+            userData.lastName ? userData.lastName : ""
+          );
+          localStorage.setItem(
+            "walletAddress",
+            userData.walletAddress ? userData.walletAddress : ""
+          );
+          localStorage.setItem(
+            "emailID",
+            userData.emailID ? userData.emailID : ""
+          );
+          localStorage.setItem("id", userData.id ? userData.id : "");
+
+          localStorage.setItem(
+            "isVerified",
+            userData.isVerified ? "true" : "false"
+          );
+        }
+        getUserData(accounts[0], handleUserData);
       })
+
       .catch((error: any) => {
         alert(`Something went wrong: ${error}`);
       });
@@ -31,7 +107,9 @@ function ConnectionWallet(): JSX.Element {
 
   return (
     <div>
-      {ethereumAccount !== null && !!isMetamaskInstalled ? (
+      {ethereumAccount !== null &&
+      !!isMetamaskInstalled &&
+      ethereumAccount.length > 0 ? (
         <Button
           variant="outlined"
           aria-disabled={true}
@@ -65,6 +143,40 @@ function ConnectionWallet(): JSX.Element {
       ) : (
         <p>Please install wallet</p>
       )}
+      {store.user.walletAddress.length > 0 ? (
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "primary.main",
+            textTransform: "unset",
+
+            ":hover": {
+              bgcolor: "#222629",
+              color: "white",
+            },
+          }}
+          onClick={() => {
+            localStorage.clear();
+            setEthereumAccount(null);
+            setStore((prev) => {
+              return {
+                ...prev,
+                user: {
+                  ...prev.user,
+                  firstName: "",
+                  lastName: "",
+                  walletAddress: "",
+                  emailID: "",
+                  id: "",
+                  isVerified: false,
+                },
+              };
+            });
+          }}
+        >
+          Disconnect
+        </Button>
+      ) : null}
     </div>
   );
 }
