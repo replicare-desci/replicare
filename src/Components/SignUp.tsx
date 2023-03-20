@@ -20,6 +20,10 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
 // import { Link } from "react-router-dom";
 
 export default function SignUp() {
@@ -53,13 +57,18 @@ export default function SignUp() {
           walletAddress: walletAddress,
           // password: password,
         });
+        // use toast to say account already exists
+        toast.success("Account Created");
 
         console.log("Document written with ID: ", docRef.id);
       } else {
         console.log("Account already exists ");
+        toast.error("Account Already exists");
       }
     } else {
       console.log("Invalid Email");
+
+      toast.error("Invalid Email");
     }
   };
 
@@ -71,6 +80,9 @@ export default function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <ToastContainer />
+      {/* Same as */}
+      <ToastContainer />
       <CssBaseline />
       <Box
         sx={{
