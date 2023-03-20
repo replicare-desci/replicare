@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { UserContext } from "./context/ContextProvider";
+
 // import "./styles/App.css";
 // import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 
 // import Web3 from "web3";
 // import Matic from "maticjs";
 function ConnectionWallet(): JSX.Element {
-  const { setStore } = UserContext();
+  const { store, setStore } = UserContext();
 
   // const maticProvider = new WalletConnectProvider({
   //   host: `https://rpc-mumbai.matic.today`,
@@ -106,7 +107,9 @@ function ConnectionWallet(): JSX.Element {
 
   return (
     <div>
-      {ethereumAccount !== null && !!isMetamaskInstalled ? (
+      {ethereumAccount !== null &&
+      !!isMetamaskInstalled &&
+      ethereumAccount.length > 0 ? (
         <Button
           variant="outlined"
           aria-disabled={true}
@@ -140,6 +143,40 @@ function ConnectionWallet(): JSX.Element {
       ) : (
         <p>Please install wallet</p>
       )}
+      {store.user.walletAddress.length > 0 ? (
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "primary.main",
+            textTransform: "unset",
+
+            ":hover": {
+              bgcolor: "#222629",
+              color: "white",
+            },
+          }}
+          onClick={() => {
+            localStorage.clear();
+            setEthereumAccount(null);
+            setStore((prev) => {
+              return {
+                ...prev,
+                user: {
+                  ...prev.user,
+                  firstName: "",
+                  lastName: "",
+                  walletAddress: "",
+                  emailID: "",
+                  id: "",
+                  isVerified: false,
+                },
+              };
+            });
+          }}
+        >
+          Disconnect
+        </Button>
+      ) : null}
     </div>
   );
 }

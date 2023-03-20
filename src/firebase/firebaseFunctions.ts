@@ -1,14 +1,12 @@
 import { app, db } from "./firebase";
 import {
-  getDocs,
   collection,
-  addDoc,
-  getDoc,
-  doc,
+  onSnapshot,
   query,
   where,
-  onSnapshot,
+  getDocs,
 } from "firebase/firestore";
+
 import { UserContext } from "../context/ContextProvider";
 
 type userType = {
@@ -19,22 +17,6 @@ type userType = {
   id: string;
   isVerified: boolean;
 };
-// Get a list of cities from your database
-// async function addDummyPaper(db: any) {
-//   try {
-//     const docRef = await addDoc(collection(db, "user"), {
-//       first: "Alan",
-//       middle: "Mathison",
-//       last: "Turing",
-//       born: 1912,
-//     });
-
-//     console.log("Document written with ID: ", docRef.id);
-//   } catch (e) {
-//     console.error("Error adding document: ", e);
-//   }
-//   return;
-// }
 
 function getUserData(
   walletAddress: string,
@@ -56,13 +38,12 @@ function getUserData(
       snapshots.docs.forEach((doc: any) => {
         // console.log(doc.data());
         if (
-          doc.data().walletAddress.toLowerCase() ===
-          walletAddress.toLocaleLowerCase()
+          doc.data().walletAddress.toLowerCase() === walletAddress.toLowerCase()
         ) {
           getDataReturnObj = {
             firstName: doc.data().firstName,
             lastName: doc.data().lastName,
-            emailID: doc.data().email,
+            emailID: doc.data().emailID,
             walletAddress: doc.data().walletAddress,
             id: doc.id,
             isVerified: doc.data().isVerified,
@@ -79,7 +60,24 @@ function getUserData(
 
   // return getDataReturnObj;
 }
+async function existsEmail(db: any, emailID: string) {
+  const usersRef = collection(db, "user");
+  const q = query(usersRef, where("emailID", "==", emailID));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty;
+}
+// existsWalletAddress function
+async function existsWalletAddress(db: any, walletAddress: string) {
+  const usersRef = collection(db, "user");
+  const q = query(usersRef, where("walletAddress", "==", walletAddress));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty;
+}
+
+export { existsEmail };
+export { existsWalletAddress };
 export { getUserData };
+
 /*
   
   table name : user

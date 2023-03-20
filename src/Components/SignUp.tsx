@@ -1,26 +1,73 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import React, { useState, useEffect } from "react";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/system";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import {
+  existsEmail,
+  existsWalletAddress,
+} from "../firebase/firebaseFunctions";
+import {
+  CssBaseline,
+  Box,
+  Avatar,
+  Grid,
+  TextField,
+  Link,
+  FormControlLabel,
+  Checkbox,
+  Button,
+} from "@mui/material";
+// import { Link } from "react-router-dom";
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [emailID, setEmail] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+
+  function isValidEmail(emailID: string): boolean {
+    // return /\S+@\S+\.\S+/.test(emailID);
+    return /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(emailID);
+  }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const existsEmailVar = await existsEmail(db, emailID);
+    const existsWalletAddressVar = await existsWalletAddress(db, walletAddress);
+    console.log(existsEmailVar);
+    // const form = event.target as HTMLFormElement;
+    // const data = Object.fromEntries(new FormData(form));
+    // const data = new FormData(event.currentTarget);
+    // console.log(data);
+
+    if (isValidEmail(emailID)) {
+      if (!existsEmailVar && !existsWalletAddressVar) {
+        const userCollectionRef = collection(db, "user");
+        const docRef = await addDoc(userCollectionRef, {
+          firstName: firstName,
+          lastName: lastName,
+          emailID: emailID,
+          isVerified: true,
+          walletAddress: walletAddress,
+          // password: password,
+        });
+
+        console.log("Document written with ID: ", docRef.id);
+      } else {
+        console.log("Account already exists ");
+      }
+    } else {
+      console.log("Invalid Email");
+    }
   };
+
+  // const [password, setPassword] = useState("");
+
+  // const addUser = async () => {
+  //   console.log("Document written with ID: ", docRef.id);
+  // };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -43,13 +90,17 @@ export default function SignUp() {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="given-name"
+                // autoComplete="given-name"
                 name="firstName"
                 required
                 fullWidth
                 id="firstName"
                 label="First Name"
+                type={"text"}
                 autoFocus
+                onChange={(event) => {
+                  setFirstName(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -58,21 +109,41 @@ export default function SignUp() {
                 fullWidth
                 id="lastName"
                 label="Last Name"
+                type={"text"}
                 name="lastName"
-                autoComplete="family-name"
+                // autoComplete="family-name"
+                onChange={(event) => {
+                  setLastName(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="email"
+                id="emailID"
                 label="Email Address"
-                name="email"
-                autoComplete="email"
+                type={"emailID"}
+                name="emailID"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="walletAddress"
+                label="Wallet Address"
+                type={"text"}
+                name="walletAddress"
+                onChange={(event) => {
+                  setWalletAddress(event.target.value);
+                }}
+              />
+            </Grid>
+            {/* <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -81,18 +152,23 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+                
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                label="I want to receive inspiration, marketing promotions and updates via emailID."
               />
             </Grid>
           </Grid>
           <Button
             type="submit"
             fullWidth
+            // onClick={addUser}
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
