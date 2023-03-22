@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { getUserData } from "./firebase/firebaseFunctions";
+import ConnectWalletPopUp from "./Components/ConnectWalletPopUp";
 import { UserContext } from "./context/ContextProvider";
 
 // import "./styles/App.css";
@@ -139,6 +140,7 @@ function ConnectionWallet(): JSX.Element {
           onClick={connectMetamaskWallet}
         >
           Connect
+          {/* {<ConnectWalletPopUp />} */}
         </Button>
       ) : (
         <p>Please install wallet</p>
