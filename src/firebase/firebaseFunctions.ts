@@ -5,9 +5,12 @@ import {
   query,
   where,
   getDocs,
+  addDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 import { UserContext } from "../context/ContextProvider";
+import { toast } from "react-toastify";
 
 type userType = {
   firstName: string;
@@ -74,9 +77,49 @@ async function existsWalletAddress(db: any, walletAddress: string) {
   return !querySnapshot.empty;
 }
 
+async function selectUserPaperData(
+  formData: any,
+  userID: string,
+  doiResponse: any
+) {
+  const userPaperCollectionRef = collection(db, "userPaper");
+
+  const doiDataCollectionRef = collection(db, "doiPaper");
+  const docRef1 = await addDoc(doiDataCollectionRef, {
+    doi: doiResponse.doi,
+    title: doiResponse.title,
+    nameOfJournal: doiResponse.nameOfJournal,
+    yearOfPublication: doiResponse.yearOfPublication,
+    author: doiResponse.author,
+    createdAt: Timestamp.now(),
+  });
+  let docRef2;
+  if (docRef1.id !== null) {
+    docRef2 = await addDoc(userPaperCollectionRef, {
+      reproductionPackageAvailable: formData.reproductionPackageAvailable,
+      authorContacted: formData.authorContacted,
+      // authorInteraction: false,
+      userID: userID,
+      paperID: docRef1.id,
+      authorAvailableForFurtherQuestion:
+        formData.authorAvailableForFurtherQuestion,
+      buildFromScratch: formData.buildFromScratch,
+      reproductionData1: formData.reproductionData1,
+      reproductionData2: formData.reproductionData2,
+      createdAt: Timestamp.now(),
+    });
+  }
+  if (docRef1?.id !== null && docRef2?.id !== null) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export { existsEmail };
 export { existsWalletAddress };
 export { getUserData };
+export { selectUserPaperData };
 
 /*
   

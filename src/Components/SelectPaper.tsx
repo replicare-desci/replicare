@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { fetchDoi } from "../api/fetchDOI";
 import { camelizeKeys } from "../utils/changeCase";
+import AdditionalInfo from "./AdditionalInfo";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { selectUserPaperData } from "../firebase/firebaseFunctions";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 import {
   TextField,
   Button,
@@ -28,14 +35,68 @@ const SelectPaper = () => {
   //   doiStringFetchErrorMessage: string,
   // }
 
-  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
-    useState<boolean>(false);
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
   const [isDisabled12, setDisabled12] = useState<boolean>(false);
   const [isDisabled13, setDisabled13] = useState<boolean>(false);
   const [isDisabled16, setDisabled16] = useState<boolean>(false);
   const [isChecked141, setChecked141] = useState<boolean>(false);
+
+  const [formData, setFormData] = useState({
+    reproductionPackageAvailable: false,
+    authorContacted: false,
+    // authorInteraction: false,
+    authorAvailableForFurtherQuestion: false,
+    buildFromScratch: false,
+    // additionalInfo: "",
+    // formCheckKey1: false,
+    // formCheckKey2: false,
+    // formCheckKey3: false,
+    // formCheckKey4: false,
+    // formCheckKey5: false,
+    // formCheckKey6: false,
+    reproductionData1: "",
+    reproductionData2: "",
+
+    // radioGroupFour: false,
+  });
+  const formDataHandler = (event: any) => {
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [event.target.name]: event.target.value,
+      };
+    });
+
+    console.log("formData", formData);
+  };
+  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
+    useState<boolean>(false);
+
+  const [count, setCount] = useState(0);
+  const [isSelectPaperData, setSelectPaperData] = useState<string>("");
+
+  const userID: string = localStorage.getItem("id") as string;
+  const submitSelectPaperData = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    // send form data to fireStore database on button click
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const data = Object.fromEntries(new FormData(form));
+    console.log("data", data);
+    selectUserPaperData(formData, userID, doiResponse).then((res) => {
+      console.log("res", res);
+      toast.success("Data submitted");
+    });
+    // setSelectPaperData("submitted");
+  };
+  const renderAdditional = () => {
+    setCount(count + 1);
+  };
+  const renderedComponents = Array.from({ length: count }, (_, index) => (
+    <AdditionalInfo key={index} />
+  ));
   const disableClick = (toggle: boolean, count: string) => {
     if (count === "1.2") {
       setDisabled12(toggle);
@@ -46,11 +107,10 @@ const SelectPaper = () => {
     } else if (count === "1.41") {
       setChecked141(toggle);
     }
-    // event.preventDefault();
   };
 
   const [doiResponse, setDoiResponse] = useState({
-    dateTime: "",
+    yearOfPublication: "",
     publisher: "",
     title: "",
     author: "",
@@ -75,7 +135,7 @@ const SelectPaper = () => {
           setDoiResponse((prev: any) => {
             return {
               ...prev,
-              dateTime: newResponse.message.created.dateTime,
+              yearOfPublication: newResponse.message.created.dateTime,
               publisher: newResponse.message.publisher,
               nameOfJournal: newResponse.message.shortContainerTitle[0],
               title: newResponse.message.title[0],
@@ -107,6 +167,9 @@ const SelectPaper = () => {
   return (
     <div>
       <Container>
+        <ToastContainer />
+        {/* Same as */}
+        <ToastContainer />
         <Typography variant="h3" component={"h1"} textAlign={"center"} py={2}>
           Select a paper
         </Typography>
@@ -127,7 +190,14 @@ const SelectPaper = () => {
           asked to read the paper and define the scope of the reproduction
           exercise.
         </Typography>
-        <Grid container my={12}>
+        <Grid
+          container
+          my={12}
+          // TODO: this will create error after uncommenting
+          component="form"
+          noValidate
+          onSubmit={submitSelectPaperData}
+        >
           <List>
             <ListItem>
               <ListItemText>
@@ -147,31 +217,27 @@ const SelectPaper = () => {
               </ListItemText>
             </ListItem>
             <ListItem>
-              <form
-                method="post"
-                onSubmit={submitHandler}
-                style={{ width: "100%" }}
-              >
-                <TextField
-                  label="Digital Object Identifier (or URL if no DOI available)"
-                  variant="standard"
-                  fullWidth
-                  id="doi"
-                  name="doi"
-                  onChange={(e: any) => setDoiString(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{ width: "20%" }}
-                      >
-                        Search DOI
-                      </Button>
-                    ),
-                  }}
-                />
-              </form>
+              <TextField
+                label="Digital Object Identifier (or URL if no DOI available)"
+                variant="standard"
+                type={"text"}
+                fullWidth
+                id="doi"
+                name="doi"
+                onChange={(e: any) => setDoiString(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <Button
+                      type="button"
+                      onClick={submitHandler}
+                      variant="contained"
+                      sx={{ width: "20%" }}
+                    >
+                      Search DOI
+                    </Button>
+                  ),
+                }}
+              />
             </ListItem>{" "}
             <p style={{ color: "red", textAlign: "center" }}>
               {isError ? "Please enter DOI " : null}
@@ -180,8 +246,8 @@ const SelectPaper = () => {
               <>
                 <ListItem>
                   <TextField
-                    label="Title of the paper
-"
+                    label="Title of the paper"
+                    type={"text"}
                     defaultValue={doiResponse?.title}
                     variant="standard"
                     fullWidth
@@ -189,8 +255,8 @@ const SelectPaper = () => {
                 </ListItem>{" "}
                 <ListItem>
                   <TextField
-                    label="Name of the journal or publication
-"
+                    label="Name of the journal or publication"
+                    type={"text"}
                     defaultValue={doiResponse?.nameOfJournal}
                     variant="standard"
                     fullWidth
@@ -198,8 +264,8 @@ const SelectPaper = () => {
                 </ListItem>{" "}
                 <ListItem>
                   <TextField
-                    label="Digital Object Identifier (or URL if no DOI available)
-"
+                    label="Digital Object Identifier (or URL if no DOI available)"
+                    type={"text"}
                     defaultValue={doiResponse?.doi}
                     variant="standard"
                     fullWidth
@@ -207,17 +273,19 @@ const SelectPaper = () => {
                 </ListItem>
                 <ListItem>
                   <TextField
-                    label="Year of Publication
-"
-                    defaultValue={new Date(doiResponse?.dateTime).getFullYear()}
+                    label="Year of Publication"
+                    type={"text"}
+                    defaultValue={new Date(
+                      doiResponse?.yearOfPublication
+                    ).getFullYear()}
                     variant="standard"
                     fullWidth
                   />
                 </ListItem>
                 <ListItem>
                   <TextField
-                    label="Authors
-"
+                    label="Authors"
+                    type={"text"}
                     defaultValue={doiResponse?.author}
                     variant="standard"
                     fullWidth
@@ -229,18 +297,19 @@ const SelectPaper = () => {
           </List>
           <List>
             <ListItem>
-              <FormControl>
+              <FormControl required>
                 <FormLabel id="reproduction-package-available?">
                   1.2 is a reproduction package available for this paper?
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
                   defaultValue=""
-                  name="radio-buttons-group"
+                  onChange={formDataHandler}
+                  name="reproductionPackageAvailable"
                 >
                   <FormControlLabel
                     value="yes"
-                    onClick={() => {
+                    onClick={(event) => {
                       setReproductionPackageAvailable(() => true);
                       disableClick(true, "1.2");
                     }}
@@ -260,7 +329,7 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl disabled={isDisabled12}>
+              <FormControl required disabled={isDisabled12}>
                 <FormLabel id="permission">
                   1.3 Have you contacted the authors for a reproduction package?
                   Consult the ACRe Guide for recommendations on contacting
@@ -269,7 +338,8 @@ const SelectPaper = () => {
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
                   defaultValue=""
-                  name="radio-buttons-group"
+                  name="authorContacted"
+                  onChange={formDataHandler}
                 >
                   <FormControlLabel
                     value="yes"
@@ -295,7 +365,7 @@ const SelectPaper = () => {
               </FormHelperText>
             </ListItem>
             <ListItem>
-              <FormControl disabled={isDisabled12 || isDisabled13}>
+              <FormControl required disabled={isDisabled12 || isDisabled13}>
                 <FormLabel>
                   1.4 How did the authors respond? Select all that apply.
                 </FormLabel>
@@ -305,33 +375,39 @@ const SelectPaper = () => {
                   label="Provided reproduction package."
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey1" />
+                  }
                   label="Declined to share reproduction package, citing legal or ethical reasons."
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Declined to share reproduction package but did not provide a reason.
-"
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey2" />
+                  }
+                  label="Declined to share reproduction package but did not provide a reason."
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:
-
-"
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey3" />
+                  }
+                  label="Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:"
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Author(s) state that they no longer have access to the data.
-"
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey4" />
+                  }
+                  label="Author(s) state that they no longer have access to the data."
                 />{" "}
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label="Shared detailed instructions on how to access the data (for restricted access only).
-
-"
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey5" />
+                  }
+                  label="Shared detailed instructions on how to access the data (for restricted access only)."
                 />{" "}
                 <FormControlLabel
-                  control={<Checkbox />}
+                  control={
+                    <Checkbox onChange={formDataHandler} name="formCheckKey6" />
+                  }
                   label="Did not respond. As of:"
                 />
                 <FormControlLabel control={<Checkbox />} label="Other " />
@@ -339,15 +415,14 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl disabled={isDisabled12 || isDisabled13}>
+              <FormControl required disabled={isDisabled12 || isDisabled13}>
                 <FormLabel id="permission">
                   1.5 Are the authors available for further questions for ACRe
                   reproductions?
                 </FormLabel>
                 <RadioGroup
-                  aria-labelledby="is a reproduction package available for this paper?"
-                  defaultValue=""
-                  name="radio-buttons-group"
+                  onChange={formDataHandler}
+                  name="authorAvailableForFurtherQuestion"
                 >
                   <FormControlLabel
                     value="yes"
@@ -359,15 +434,15 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
             <ListItem>
-              <FormControl disabled={isDisabled12}>
+              <FormControl required disabled={isDisabled12}>
                 <FormLabel id="permission">
                   1.6 If there are no reproduction packages, are you willing to
                   build a reproduction package from scratch?
                 </FormLabel>
                 <RadioGroup
-                  aria-labelledby="is a reproduction package available for this paper?"
                   defaultValue=""
-                  name="radio-buttons-group"
+                  onChange={formDataHandler}
+                  name="buildFromScratch"
                 >
                   <FormControlLabel
                     value="yes"
@@ -393,8 +468,8 @@ const SelectPaper = () => {
               </ListItem>
             ) : null}
             {isReproductionPackageAvailable ? (
-              <ListItem sx={{ boxShadow: 1 }}>
-                <FormControl fullWidth sx={{ py: 1 }}>
+              <ListItem>
+                <FormControl required fullWidth sx={{ py: 1 }}>
                   <FormLabel>
                     {" "}
                     Record the main repository that stores the code for the
@@ -405,23 +480,33 @@ const SelectPaper = () => {
                   </FormHelperText>
                   <TextField
                     variant="standard"
+                    onChange={formDataHandler}
+                    name="reproductionData1"
+                    type={"text"}
                     placeholder="e.g. Main code repository with data"
                   ></TextField>
                   <TextField
+                    type={"text"}
                     variant="standard"
+                    onChange={formDataHandler}
+                    name="reproductionData2"
                     placeholder="e.g. https://github.com/paper/paper"
                   ></TextField>
                   <FormLabel>
                     Are there additional data in different repositories? Use the
                     button below to add links to these as well.
                   </FormLabel>{" "}
-                  <Button variant="contained">
+                  {renderedComponents}
+                  <Button variant="contained" onClick={renderAdditional}>
                     + Add additional reproduction packages for data
                   </Button>
                 </FormControl>
               </ListItem>
             ) : null}
           </List>
+          <Button type="submit" variant="contained">
+            Submit
+          </Button>
         </Grid>
       </Container>
     </div>
