@@ -27,14 +27,33 @@ import {
 } from "@mui/material";
 
 const SelectPaper = () => {
-  // type doiStringProps = {
-  //   doi: string,
-  //   doiString: string,
-  //   doiStringFetch: () => Promise<string>,
-  //   doiStringFetchError: () => Promise<string>,
-  //   doiStringFetchErrorMessage: string,
-  // }
-
+  const checkBoxOptions = [
+    {
+      label: "Provided reproduction package.",
+    },
+    {
+      label:
+        "Declined to share reproduction package, citing legal or ethical reasons.",
+    },
+    {
+      label:
+        "Declined to share reproduction package but did not provide a reason.",
+    },
+    {
+      label:
+        "Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:",
+    },
+    {
+      label: "Author(s) state that they no longer have access to the data.",
+    },
+    {
+      label:
+        "Shared detailed instructions on how to access the data (for restricted access only).",
+    },
+    {
+      label: "Did not respond. As of:",
+    },
+  ];
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
   const [isDisabled12, setDisabled12] = useState<boolean>(false);
@@ -42,23 +61,29 @@ const SelectPaper = () => {
   const [isDisabled16, setDisabled16] = useState<boolean>(false);
   const [isChecked141, setChecked141] = useState<boolean>(false);
 
+  const [count, setCount] = useState(0);
+  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
+    useState<boolean>(false);
+  const [isError, setError] = useState<boolean>(false);
+  const [doiResponse, setDoiResponse] = useState({
+    yearOfPublication: "",
+    publisher: "",
+    title: "",
+    author: "",
+    doi: "",
+    nameOfJournal: "",
+  });
+  const [checkedState, setCheckedState] = useState<boolean[]>(
+    new Array(checkBoxOptions.length).fill(false)
+  );
+
   const [formData, setFormData] = useState({
     reproductionPackageAvailable: false,
     authorContacted: false,
-    // authorInteraction: false,
     authorAvailableForFurtherQuestion: false,
     buildFromScratch: false,
-    // additionalInfo: "",
-    // formCheckKey1: false,
-    // formCheckKey2: false,
-    // formCheckKey3: false,
-    // formCheckKey4: false,
-    // formCheckKey5: false,
-    // formCheckKey6: false,
     reproductionData1: "",
     reproductionData2: "",
-
-    // radioGroupFour: false,
   });
   const formDataHandler = (event: any) => {
     setFormData((prev) => {
@@ -70,11 +95,6 @@ const SelectPaper = () => {
 
     console.log("formData", formData);
   };
-  const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
-    useState<boolean>(false);
-
-  const [count, setCount] = useState(0);
-  const [isSelectPaperData, setSelectPaperData] = useState<string>("");
 
   const userID: string = localStorage.getItem("id") as string;
   const submitSelectPaperData = async (
@@ -85,6 +105,12 @@ const SelectPaper = () => {
     const form = event.target as HTMLFormElement;
     const data = Object.fromEntries(new FormData(form));
     console.log("data", data);
+    setFormData((prev) => {
+      return {
+        ...prev,
+        checkBoxData: checkedState,
+      };
+    });
     selectUserPaperData(formData, userID, doiResponse).then((res) => {
       console.log("res", res);
       toast.success("Data submitted");
@@ -109,15 +135,16 @@ const SelectPaper = () => {
     }
   };
 
-  const [doiResponse, setDoiResponse] = useState({
-    yearOfPublication: "",
-    publisher: "",
-    title: "",
-    author: "",
-    doi: "",
-    nameOfJournal: "",
-  });
-  const [isError, setError] = useState<boolean>(false);
+  const handleCheckBoxData = (position: number) => {
+    const updatedCheckedState = checkedState.map((item, index) => {
+      return index === position ? !item : item;
+    });
+
+    setCheckedState(updatedCheckedState);
+  };
+
+  console.log("checkedState", checkedState);
+
   function submitHandler(event: any) {
     event.preventDefault();
 
@@ -369,51 +396,29 @@ const SelectPaper = () => {
                 <FormLabel>
                   1.4 How did the authors respond? Select all that apply.
                 </FormLabel>
-                <FormControlLabel
-                  control={<Checkbox />}
-                  onClick={() => setDisabled16(true)}
-                  label="Provided reproduction package."
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey1" />
-                  }
-                  label="Declined to share reproduction package, citing legal or ethical reasons."
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey2" />
-                  }
-                  label="Declined to share reproduction package but did not provide a reason."
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey3" />
-                  }
-                  label="Declined to share the missing materials, citing not ready to share. Record date when you estimate that the authors may be ready to share the missing materials:"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey4" />
-                  }
-                  label="Author(s) state that they no longer have access to the data."
-                />{" "}
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey5" />
-                  }
-                  label="Shared detailed instructions on how to access the data (for restricted access only)."
-                />{" "}
-                <FormControlLabel
-                  control={
-                    <Checkbox onChange={formDataHandler} name="formCheckKey6" />
-                  }
-                  label="Did not respond. As of:"
-                />
-                <FormControlLabel control={<Checkbox />} label="Other " />
-                <TextField placeholder="(Explain Briefly)" />
+                {checkBoxOptions.map(({ label }, index) => {
+                  return (
+                    <>
+                      <FormControlLabel
+                        key={index}
+                        control={
+                          <Checkbox
+                            name={label}
+                            // value={name}
+                            checked={checkedState[index]}
+                            onChange={() => handleCheckBoxData(index)}
+                          />
+                        }
+                        onClick={() => setDisabled16(true)}
+                        label={label}
+                        // sx={{ display: "block" }}
+                      />
+                    </>
+                  );
+                })}
               </FormControl>
             </ListItem>
+
             <ListItem>
               <FormControl required disabled={isDisabled12 || isDisabled13}>
                 <FormLabel id="permission">
