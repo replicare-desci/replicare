@@ -98,6 +98,7 @@ async function selectUserPaperData(
     docRef2 = await addDoc(userPaperCollectionRef, {
       reproductionPackageAvailable: formData.reproductionPackageAvailable,
       authorContacted: formData.authorContacted,
+      checkBoxData: formData.checkBoxData,
       // authorInteraction: false,
       userID: userID,
       paperID: docRef1.id,
