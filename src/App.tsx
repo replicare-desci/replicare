@@ -23,11 +23,12 @@ import Reproductions from "./Components/Reproductions";
 import SelectAPaper from "./Components/SelectAPaper";
 import SelectPaper from "./Components/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
+import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
 export default function App() {
   const { store } = UserContext();
   console.log(store);
-
+  // useBeforeUnload((event: BeforeUnloadEvent) => sessionStorage.clear());
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>

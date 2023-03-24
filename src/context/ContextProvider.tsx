@@ -27,12 +27,12 @@ const defaultState: ContextInterface = {
 export const ContextDefault = createContext(defaultState);
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
-  var firstNameLocal = localStorage.getItem("firstName");
-  var lastNameLocal = localStorage.getItem("lastName");
-  var walletAddressLocal = localStorage.getItem("walletAddress");
-  var emailIDLocal = localStorage.getItem("emailID");
-  var idLocal = localStorage.getItem("id");
-  var isVerifiedLocal = localStorage.getItem("isVerified");
+  var firstNameLocal = sessionStorage.getItem("firstName");
+  var lastNameLocal = sessionStorage.getItem("lastName");
+  var walletAddressLocal = sessionStorage.getItem("walletAddress");
+  var emailIDLocal = sessionStorage.getItem("emailID");
+  var idLocal = sessionStorage.getItem("id");
+  var isVerifiedLocal = sessionStorage.getItem("isVerified");
 
   const [store, setStore] = useState<ContextType>({
     user: {
