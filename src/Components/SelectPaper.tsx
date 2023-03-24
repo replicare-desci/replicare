@@ -96,7 +96,7 @@ const SelectPaper = () => {
     console.log("formData", formData);
   };
 
-  const userID: string = localStorage.getItem("id") as string;
+  const userID: string = sessionStorage.getItem("id") as string;
   const submitSelectPaperData = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {

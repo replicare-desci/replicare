@@ -1,4 +1,5 @@
 import { app, db } from "./firebase";
+
 import {
   collection,
   onSnapshot,
@@ -63,6 +64,29 @@ function getUserData(
 
   // return getDataReturnObj;
 }
+// get userPaper data from firestore
+function getUserPaperData(
+  userID: string,
+  handleUserPaperData: (userPaperData: any) => void
+) {
+  let getDataReturnObj: any = [];
+  try {
+    const docRef = collection(db, "userPaper");
+
+    onSnapshot(docRef, (snapshots: any) => {
+      snapshots.docs.forEach((doc: any) => {
+        // console.log(doc.data());
+        if (doc.data().userID === userID) {
+          getDataReturnObj.push(doc.data());
+        }
+      });
+      handleUserPaperData(getDataReturnObj);
+    });
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
 async function existsEmail(db: any, emailID: string) {
   const usersRef = collection(db, "user");
   const q = query(usersRef, where("emailID", "==", emailID));

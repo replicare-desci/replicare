@@ -77,25 +77,25 @@ function ConnectionWallet(): JSX.Element {
               },
             };
           });
-          localStorage.setItem(
+          sessionStorage.setItem(
             "firstName",
             userData.firstName ? userData.firstName : ""
           );
-          localStorage.setItem(
+          sessionStorage.setItem(
             "lastName",
             userData.lastName ? userData.lastName : ""
           );
-          localStorage.setItem(
+          sessionStorage.setItem(
             "walletAddress",
             userData.walletAddress ? userData.walletAddress : ""
           );
-          localStorage.setItem(
+          sessionStorage.setItem(
             "emailID",
             userData.emailID ? userData.emailID : ""
           );
-          localStorage.setItem("id", userData.id ? userData.id : "");
+          sessionStorage.setItem("id", userData.id ? userData.id : "");
 
-          localStorage.setItem(
+          sessionStorage.setItem(
             "isVerified",
             userData.isVerified ? "true" : "false"
           );
@@ -179,7 +179,7 @@ function ConnectionWallet(): JSX.Element {
       ) : (
         <p>Please install wallet</p>
       )}
-      {store.user.walletAddress.length > 0 ? (
+      {/* {store.user.walletAddress.length > 0 ? (
         <Button
           variant="contained"
           sx={{
@@ -192,7 +192,7 @@ function ConnectionWallet(): JSX.Element {
             },
           }}
           onClick={() => {
-            localStorage.clear();
+            sessionStorage.clear();
             setEthereumAccount(null);
             setStore((prev) => {
               return {
@@ -212,7 +212,7 @@ function ConnectionWallet(): JSX.Element {
         >
           Disconnect
         </Button>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }
