@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { getUserData } from "./firebase/firebaseFunctions";
 import ConnectWalletPopUp from "./Components/ConnectWalletPopUp";
 import { UserContext } from "./context/ContextProvider";
-
+import MetamaskImage from "./assets/images/Metamask.png";
+import WalletConnect from "./assets/images/WalletConnect.png";
 // import "./styles/App.css";
 // import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 
@@ -61,6 +62,7 @@ function ConnectionWallet(): JSX.Element {
         // getuser data
         function handleUserData(userData: any) {
           console.log("userData", userData);
+
           setStore((prev) => {
             return {
               ...prev,
@@ -127,21 +129,53 @@ function ConnectionWallet(): JSX.Element {
           {ethereumAccount.slice(0, 6) + ".." + ethereumAccount.slice(38, 42)}
         </Button>
       ) : isMetamaskInstalled && ethereumAccount === null ? (
-        <Button
-          variant="outlined"
-          aria-disabled={true}
-          sx={{
-            backgroundColor: "#222629",
-            ":hover": {
-              bgcolor: "#222629",
-              color: "white",
-            },
-          }}
-          onClick={connectMetamaskWallet}
-        >
-          Connect
-          {/* {<ConnectWalletPopUp />} */}
-        </Button>
+        <Grid container flexDirection={"column"} justifyContent={"center"}>
+          <Grid item>
+            <Button
+              variant="contained"
+              aria-disabled={true}
+              sx={{
+                backgroundColor: "#ffffff",
+                mt: 1,
+
+                width: 200,
+                height: 50,
+                ":hover": {
+                  bgcolor: "#ffffff",
+                  // color: "white",
+                },
+              }}
+              onClick={connectMetamaskWallet}
+            >
+              <img src={MetamaskImage} alt="metamask connect" width={"100%"} />
+              {/* Connect */}
+              {/* {<ConnectWalletPopUp />} */}
+            </Button>
+          </Grid>
+          <Grid item>
+            {" "}
+            <Button
+              variant="contained"
+              aria-disabled={true}
+              sx={{
+                backgroundColor: "#ffffff",
+                mt: 1,
+
+                width: 200,
+                height: 50,
+                ":hover": {
+                  bgcolor: "#ffffff",
+                  // color: "white",
+                },
+              }}
+              onClick={connectMetamaskWallet}
+            >
+              <img src={WalletConnect} alt="Wallet connect" width={"100%"} />
+              {/* Connect */}
+              {/* {<ConnectWalletPopUp />} */}
+            </Button>
+          </Grid>
+        </Grid>
       ) : (
         <p>Please install wallet</p>
       )}

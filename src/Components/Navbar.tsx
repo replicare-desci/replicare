@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 import Box from "@mui/material";
 import ConnectionWallet from "../ConnectionWallet";
 import { Link } from "react-router-dom";
-
+import ConnectWalletPopUp from "./ConnectWalletPopUp";
 const Navbar = () => {
   return (
     <div>
@@ -28,7 +28,8 @@ const Navbar = () => {
               Replicare
             </Typography>
           </Link>
-          <ConnectionWallet />
+          {/* <ConnectionWallet /> */}
+          <ConnectWalletPopUp />
         </Toolbar>
       </AppBar>
     </div>
