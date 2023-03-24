@@ -12,6 +12,7 @@ import Person2Icon from "@mui/icons-material/Person2";
 import ConnectionWallet from "../ConnectionWallet";
 import { Box, Divider, Grid, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Link } from "react-router-dom";
 
 export default function ConnectWalletPopUp() {
   const [open, setOpen] = React.useState(false);
@@ -117,6 +118,15 @@ export default function ConnectWalletPopUp() {
                 </span>
               </Typography>
               <ConnectionWallet />
+            </Box>
+            <Box my={2}>
+              <Link
+                to="sign-up"
+                onClick={handleClose}
+                style={{ color: "#222629", textDecoration: "none" }}
+              >
+                Sign Up
+              </Link>
             </Box>
             {/* <DialogActions>
               <Button autoFocus onClick={handleClose}>
