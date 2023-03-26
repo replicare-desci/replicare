@@ -1,6 +1,4 @@
 import { Box, Container, Typography } from "@mui/material";
-import React from "react";
-
 const MyWork = () => {
   return (
     <Container>

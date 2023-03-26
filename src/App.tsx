@@ -2,20 +2,14 @@ import React from "react";
 
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 
 import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";
 import "./styles/App.css";
 
-import {
-  Route,
-  Routes,
-  Outlet,
-  BrowserRouter,
-  Navigate,
-} from "react-router-dom";
+import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import Main from "./Components/Main";
 import SignUp from "./Components/SignUp";
 import SignIn from "./Components/SignIn";
@@ -23,7 +17,7 @@ import Reproductions from "./Components/Reproductions";
 import SelectAPaper from "./Components/SelectAPaper";
 import SelectPaper from "./Components/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
-import { useBeforeUnload } from "react-router-dom";
+// import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
 export default function App() {
   const { store } = UserContext();
@@ -47,6 +41,17 @@ export default function App() {
 
           {store?.user?.isVerified && store?.user?.walletAddress && (
             <>
+              <Route
+                path="/update"
+                element={
+                  <>
+                    <Navbar />
+                    <SignUp />
+
+                    <Footer />
+                  </>
+                }
+              />
               <Route
                 path="/reproductions"
                 element={
@@ -80,17 +85,7 @@ export default function App() {
               />
             </>
           )}
-          <Route
-            path="/sign-up"
-            element={
-              <>
-                <Navbar />
-                <SignUp />
 
-                <Footer />
-              </>
-            }
-          />
           <Route
             path="/sign-in"
             element={

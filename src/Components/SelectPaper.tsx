@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { fetchDoi } from "../api/fetchDOI";
 import { camelizeKeys } from "../utils/changeCase";
 import AdditionalInfo from "./AdditionalInfo";
-import { collection, getDocs, addDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
 import { selectUserPaperData } from "../firebase/firebaseFunctions";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -476,7 +474,6 @@ const SelectPaper = () => {
               <ListItem>
                 <FormControl required fullWidth sx={{ py: 1 }}>
                   <FormLabel>
-                    {" "}
                     Record the main repository that stores the code for the
                     reproduction package provided by the authors.
                   </FormLabel>

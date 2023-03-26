@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { Container } from "@mui/system";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import {
@@ -10,7 +7,9 @@ import {
   existsWalletAddress,
 } from "../firebase/firebaseFunctions";
 import {
+  Container,
   CssBaseline,
+  Typography,
   Box,
   Avatar,
   Grid,

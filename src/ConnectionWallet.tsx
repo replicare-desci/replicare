@@ -153,7 +153,6 @@ function ConnectionWallet(): JSX.Element {
             </Button>
           </Grid>
           <Grid item>
-            {" "}
             <Button
               variant="contained"
               aria-disabled={true}

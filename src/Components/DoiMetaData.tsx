@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchDoi } from "../api/fetchDOI";
+// import { fetchDoi } from "../api/fetchDOI";
 function DoiMetadata({ doi }: { doi: string }) {
   const [metadata, setMetadata] = useState<any>(null);
 

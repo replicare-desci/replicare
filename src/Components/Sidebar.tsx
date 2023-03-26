@@ -1,14 +1,14 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 
-import { Typography } from "@mui/material";
-import { fontSize } from "@mui/system";
+import {
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  SwipeableDrawer,
+  Typography,
+} from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
@@ -93,7 +93,7 @@ export default function Sidebar() {
 
         <Divider />
         <ListItem sx={{ padding: 0, marginY: 1 }}>
-          <Link to="/sign-up" style={{ textDecoration: "none" }}>
+          <Link to="/update" style={{ textDecoration: "none" }}>
             <Button
               sx={{
                 backgroundColor: "#000000",
