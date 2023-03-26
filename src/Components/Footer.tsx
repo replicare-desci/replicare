@@ -1,24 +1,13 @@
 import * as React from "react";
-
-import Grid from "@mui/material/Grid";
-
-import Box from "@mui/material/Box";
-
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import Fab from "@mui/material/Fab";
+import { Grid, Box, Typography } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { Link } from "react-router-dom";
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.white" align="center">
+    <Typography variant="body2" color=" gray" align="center">
       {"Copyright © "}
-      <Link style={{ textDecoration: "none", color: "#ffffff" }} to={"/"}>
+      <Link style={{ textDecoration: "none", color: "gray" }} to={"/"}>
         Replicare
       </Link>{" "}
       {new Date().getFullYear()}
@@ -47,7 +36,6 @@ const Footer = () => {
                 variant="h2"
                 component={"h1"}
                 sx={{
-                  // letterSpacing: 10,
                   ":hover": {
                     color: "primary.main",
                   },
