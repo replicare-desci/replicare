@@ -46,36 +46,39 @@ export default function Sidebar() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List sx={{ padding: 10 }} className="sidebar-mobile">
-        <Typography variant="h4" component={"p"}>
+      <List sx={{ padding: 10, textAlign: "left" }} className="sidebar-mobile">
+        <Typography variant="h4" sx={{ lineHeight: 1.5 }} component={"p"}>
           <span className="hover-underline-animation ">Home</span>
         </Typography>
 
         <Typography
           className="hover-underline-animation"
           variant="h4"
+          lineHeight={1.5}
           component={"p"}
         >
-          About
+          Your Work
         </Typography>
 
         <Typography
           className="hover-underline-animation"
           variant="h4"
+          lineHeight={1.5}
           component={"p"}
         >
-          Events
+          Search Reproduction
         </Typography>
 
         <Typography
           className="hover-underline-animation"
           variant="h4"
+          sx={{ mb: 4, lineHeight: 1.5 }}
           component={"p"}
         >
-          Guide
+          Documentation
         </Typography>
 
-        <Typography
+        {/* <Typography
           className="hover-underline-animation"
           variant="h4"
           component={"p"}
@@ -89,7 +92,7 @@ export default function Sidebar() {
           component={"p"}
         >
           Metrics
-        </Typography>
+        </Typography> */}
 
         <Divider />
         <ListItem sx={{ padding: 0, marginY: 1 }}>
