@@ -37,8 +37,8 @@ export default function SignUp() {
   }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const existsEmailVar = await existsEmail(db, emailID);
-    const existsWalletAddressVar = await existsWalletAddress(db, walletAddress);
+    const existsEmailVar: boolean = await existsEmail(db, emailID);
+    const existsWalletAddressVar = await existsWalletAddress(walletAddress);
     console.log(existsEmailVar);
     // const form = event.target as HTMLFormElement;
     // const data = Object.fromEntries(new FormData(form));

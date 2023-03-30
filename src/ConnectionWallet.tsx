@@ -50,6 +50,7 @@ function ConnectionWallet(): JSX.Element {
       })
       .then((accounts: string[]) => {
         setEthereumAccount(accounts[0]);
+
         // const getUserDataVar = getUserData(accounts[0]);
         // getUserDataVar.then((value) => {
         //   if (value === null) {
