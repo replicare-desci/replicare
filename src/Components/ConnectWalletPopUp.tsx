@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
+// import { saveUserWalletAddress } from "../firebase/firebaseFunctions";
 
 export default function ConnectWalletPopUp() {
   const { store, setStore } = UserContext();
@@ -61,7 +62,7 @@ export default function ConnectWalletPopUp() {
             });
           }}
         >
-          {store.user.walletAddress.slice(0, 6) +
+          {store.user.walletAddress.slice(0, 5) +
             ".." +
             store.user.walletAddress.slice(38, 42)}
         </Button>

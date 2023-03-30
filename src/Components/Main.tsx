@@ -29,7 +29,7 @@ const Main = () => {
           </Typography>
           <Typography variant="h3" component={"p"}>
             Research Reproduction DAO
-          </Typography>{" "}
+          </Typography>
           <Typography variant="h5" sx={{ color: "#19857b" }} component={"p"}>
             We allows its users to increase the reproducibility of published
             work by guiding reproducers through a five-stage process.
@@ -40,7 +40,7 @@ const Main = () => {
         </Grid>
         <Grid item xs={8}>
           <Link
-            to="/reproductions/index"
+            to="/reproductions"
             style={{
               textDecoration: "none",
               justifyContent: "center",

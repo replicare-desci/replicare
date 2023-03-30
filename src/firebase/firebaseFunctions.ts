@@ -22,7 +22,12 @@ type userType = {
   isVerified: boolean;
 };
 
-function getUserData(
+/**
+ * @work getUserData function is getting the user data from the firebase
+ * @param {string} walletAddress
+ * @param {function} handleUserData
+ */
+async function getUserData(
   walletAddress: string,
   handleUserData: (userData: userType) => void
 ) {
@@ -38,33 +43,74 @@ function getUserData(
   try {
     const docRef = collection(db, "user");
 
-    onSnapshot(docRef, (snapshots: any) => {
-      snapshots.docs.forEach((doc: any) => {
-        // console.log(doc.data());
-        if (
-          doc.data().walletAddress.toLowerCase() === walletAddress.toLowerCase()
-        ) {
-          getDataReturnObj = {
-            firstName: doc.data().firstName,
-            lastName: doc.data().lastName,
-            emailID: doc.data().emailID,
-            walletAddress: doc.data().walletAddress,
-            id: doc.id,
-            isVerified: doc.data().isVerified,
-          };
-          handleUserData(getDataReturnObj);
-        }
+    // existsWalletAddress(walletAddress).then().catch();
+
+    if (await existsWalletAddress(walletAddress)) {
+      onSnapshot(docRef, (snapshots: any) => {
+        snapshots.docs.forEach((doc: any) => {
+          // console.log(doc.data());
+          if (
+            doc.data().walletAddress.toLowerCase() ===
+            walletAddress.toLowerCase()
+          ) {
+            getDataReturnObj = {
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              emailID: doc.data().emailID,
+              walletAddress: doc.data().walletAddress,
+              id: doc.id,
+              isVerified: doc.data().isVerified,
+            };
+            handleUserData(getDataReturnObj);
+          }
+        });
       });
-    });
+    } else {
+      const walletAddressRef = collection(db, "user");
+      addDoc(walletAddressRef, {
+        walletAddress: walletAddress,
+        isVerified: true,
+        createdAt: Timestamp.now(),
+      })
+        .then((docRef) => {
+          if (docRef.id !== null) {
+            onSnapshot(walletAddressRef, (snapshots: any) => {
+              snapshots.docs.forEach((doc: any) => {
+                // console.log(doc.data());
+                if (
+                  doc.data().walletAddress.toLowerCase() ===
+                  walletAddress.toLowerCase()
+                ) {
+                  getDataReturnObj = {
+                    firstName: doc.data().firstName,
+                    lastName: doc.data().lastName,
+                    emailID: doc.data().emailID,
+                    walletAddress: doc.data().walletAddress,
+                    id: doc.id,
+                    isVerified: doc.data().isVerified,
+                  };
+                  handleUserData(getDataReturnObj);
+                }
+              });
+            });
+          } else {
+            return false;
+          }
+        })
+        .catch((e) => {
+          console.error("Error adding document: ", e);
+        });
+    }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-
-  // console.log(getDataReturnObj);
-
-  // return getDataReturnObj;
 }
-// get userPaper data from firestore
+
+/**
+ * @work getUserPaperData is getting user paper data from the firestore
+ * @param {string}userID
+ * @param {function} handleUserPaperData
+ */
 function getUserPaperData(
   userID: string,
   handleUserPaperData: (userPaperData: any) => void
@@ -87,20 +133,39 @@ function getUserPaperData(
   }
 }
 
+/**
+ * @work existsEmail is a async function which checks that a email is already in the database or not.
+ * @param {any}db
+ * @param {string} emailID
+ * @returns {boolean}
+ */
 async function existsEmail(db: any, emailID: string) {
   const usersRef = collection(db, "user");
   const q = query(usersRef, where("emailID", "==", emailID));
   const querySnapshot = await getDocs(q);
   return !querySnapshot.empty;
 }
-// existsWalletAddress function
-async function existsWalletAddress(db: any, walletAddress: string) {
+
+/**
+ * @work existsWalletAddress is a async function which checks that a wallet address is already in the database or not.
+ * @param {any} db
+ * @param {string} walletAddress
+ * @returns {boolean}
+ */
+async function existsWalletAddress(walletAddress: string) {
   const usersRef = collection(db, "user");
   const q = query(usersRef, where("walletAddress", "==", walletAddress));
   const querySnapshot = await getDocs(q);
-  return !querySnapshot.empty;
+  return !querySnapshot.empty as boolean;
 }
 
+/**
+ * @work selectUserPaperData is a async function which is used to add the user paper data to the firestore
+ * @param {any} formData
+ * @param {string} userID
+ * @param {any} doiResponse
+ * @returns {boolean}
+ */
 async function selectUserPaperData(
   formData: any,
   userID: string,
@@ -141,10 +206,40 @@ async function selectUserPaperData(
   }
 }
 
-export { existsEmail };
-export { existsWalletAddress };
-export { getUserData };
-export { selectUserPaperData };
+/**
+ * @work create a default instance of userPaper table
+ * @param {string} userID
+ * @returns {boolean}
+ */
+async function createDefaultUserPaperData(userID: string) {
+  const userPaperCollectionRef = collection(db, "userPaper");
+  try {
+    const ref = await addDoc(userPaperCollectionRef, {
+      userID: userID,
+      createdAt: Timestamp.now(),
+    });
+
+    if (ref.id !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return false;
+}
+
+export {
+  existsEmail,
+  // saveUserWalletAddress,
+  getUserPaperData,
+  selectUserPaperData,
+  getUserData,
+  existsWalletAddress,
+  createDefaultUserPaperData,
+};
 
 /*
   
