@@ -28,11 +28,11 @@ const Main = () => {
             Welcome to
           </Typography>
           <Typography variant="h3" component={"p"}>
-            Research Reproduction DAO
+            Replicare
           </Typography>
-          <Typography variant="h5" sx={{ color: "#19857b" }} component={"p"}>
-            We allows its users to increase the reproducibility of published
-            work by guiding reproducers through a five-stage process.
+          <Typography variant="h5" sx={{ color: "#222629" }} component={"p"}>
+            A decentralized platform to assess and improve the computational
+            reproducibility of published empirical research
           </Typography>
         </Grid>
         <Grid item xs={8} my={10}>

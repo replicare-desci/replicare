@@ -6,9 +6,10 @@ const Search = () => {
         <TextField
           id="outlined-basic"
           sx={{ width: "100%" }}
+          placeholder="Search previous reproductions by DOI"
           variant="outlined"
           fullWidth
-          label="Search"
+          // label="Search"
         />
       </div>
     </div>

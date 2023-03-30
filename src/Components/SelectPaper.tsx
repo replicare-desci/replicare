@@ -22,6 +22,12 @@ import {
   RadioGroup,
   FormHelperText,
   Checkbox,
+  Box,
+  Paper,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
 } from "@mui/material";
 
 const SelectPaper = () => {
@@ -195,19 +201,18 @@ const SelectPaper = () => {
         <ToastContainer />
         {/* Same as */}
         <ToastContainer />
-        <Typography variant="h3" component={"h1"} textAlign={"center"} py={2}>
-          Select a paper
+        <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
+          Step 1: Declare a paper
         </Typography>
-        <Typography variant={"subtitle1"}>
-          Declare the paper that you will analyze in the remainder of the
-          exercise and record other "candidate" papers for which you were unable
-          to obtain access to a reproduction package. See detailed guidance
-          here.
+        <Typography variant={"subtitle1"} p={2}>
+          Specify the research paper that you will analyze and provide some
+          basic information about its reproduction package. Please refer to the
+          documentation provided for further assistance
         </Typography>{" "}
-        <Typography variant={"h6"} component="h6">
+        <Typography variant={"h5"} component="h6" p={2}>
           Basic information
         </Typography>
-        <Typography variant={"subtitle1"}>
+        <Typography variant={"subtitle1"} px={2}>
           At this point, you are not expected to review the reproduction
           materials in detail, as you will dedicate most of your time to this in
           later stages of the exercise. If materials are available, you will
