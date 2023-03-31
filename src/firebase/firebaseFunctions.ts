@@ -7,7 +7,9 @@ import {
   where,
   getDocs,
   addDoc,
+  deleteDoc,
   Timestamp,
+  doc,
 } from "firebase/firestore";
 
 import { UserContext } from "../context/ContextProvider";
@@ -111,7 +113,7 @@ async function getUserData(
  * @param {string}userID
  * @param {function} handleUserPaperData
  */
-function getUserPaperData(
+async function getUserPaperData(
   userID: string,
   handleUserPaperData: (userPaperData: any) => void
 ) {
@@ -119,15 +121,26 @@ function getUserPaperData(
   try {
     const docRef = collection(db, "userPaper");
 
-    onSnapshot(docRef, (snapshots: any) => {
-      snapshots.docs.forEach((doc: any) => {
-        // console.log(doc.data());
-        if (doc.data().userID === userID) {
-          getDataReturnObj.push(doc.data());
-        }
-      });
-      handleUserPaperData(getDataReturnObj);
+    // onSnapshot(docRef, (snapshots: any) => {
+    //   snapshots.docs.forEach((doc: any) => {
+
+    //     // console.log(doc.data());
+    //     // console.log(doc.id);
+
+    //     if (doc.data().userID === userID) {
+    //       getDataReturnObj.push({ ...doc.data(), id: doc.id });
+    //     }
+    //   });
+
+    //   handleUserPaperData(getDataReturnObj);
+    // });
+    const snapshot = await getDocs(docRef);
+    snapshot.forEach((doc) => {
+      if (doc.data().userID === userID) {
+        getDataReturnObj.push({ ...doc.data(), id: doc.id });
+      }
     });
+    handleUserPaperData(getDataReturnObj);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -231,9 +244,29 @@ async function createDefaultUserPaperData(userID: string) {
   return false;
 }
 
+/**
+ * @work delete userPaper table from database
+ *
+ */
+async function deleteUserPaperData(userID: string) {
+  // const userPaperCollectionRef = collection(db, "userPaper");
+
+  try {
+    // const querySnapshot = await getDocs(userPaperCollectionRef);
+
+    // querySnapshot.forEach((doc) => {
+    //   deleteDoc(doc.ref);
+    // });
+    await deleteDoc(doc(db, "userPaper", userID));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export {
   existsEmail,
   // saveUserWalletAddress,
+  deleteUserPaperData,
   getUserPaperData,
   selectUserPaperData,
   getUserData,
