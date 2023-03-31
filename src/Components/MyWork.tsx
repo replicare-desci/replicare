@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import {
   getUserPaperData,
-  createDefaultUserPaperData,
+  deleteUserPaperData,
 } from "../firebase/firebaseFunctions";
 
 import { useState, useEffect } from "react";
@@ -22,18 +22,22 @@ dayjs.extend(localizedFormat);
 
 const MyWork = () => {
   const userID = sessionStorage.getItem("id") as string;
+  const [userPaperID, setUserPaperID] = useState<string>("");
 
-  const [deleteData, setDeleteData] = useState<boolean>(true);
   const [data, setData] = useState([]);
   console.log(data);
 
-  const deleted = () => {
-    setDeleteData(false);
+  const deleted = (userID: string) => {
+    deleteUserPaperData(userID);
+    setData((prev) => {
+      return prev.filter((item: any) => item.id !== userID);
+    });
   };
 
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (userPaperIDEvent: string) => {
+    setUserPaperID(userPaperIDEvent);
     setOpen(true);
   };
 
@@ -51,48 +55,62 @@ const MyWork = () => {
 
   return (
     <>
-      {deleteData ? (
-        <Container>
-          {data.length !== 0 ? (
-            data?.map((item: any, index: number) => {
-              return (
-                <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Please enter a title in the Select a paper step.
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Created on:{" "}
-                    {dayjs(item?.createdAt?.seconds * 1000).format("L LT")}
-                  </Typography>
+      <Container>
+        {data.length !== 0 ? (
+          data?.map((item: any, index: number) => {
+            return (
+              <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Please enter a title in the Select a paper step.
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Created on:{" "}
+                  {dayjs(item?.createdAt?.seconds * 1000).format("L LT")}
+                </Typography>
 
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Paper status: candidate Number of claims assessed: 0
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Current stage: Selecting a Paper
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Number of display items assessed: 0
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    Number of claims assessed: 0
-                  </Typography>
-                  <Box my={2}>
-                    <Button variant="contained" sx={{ marginRight: 1 }}>
-                      Edit
-                    </Button>
-                    <Button variant="outlined" onClick={handleClickOpen}>
-                      Delete
-                    </Button>
-                  </Box>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Paper status: candidate Number of claims assessed: 0
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Current stage: Selecting a Paper
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Number of display items assessed: 0
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Number of claims assessed: 0
+                </Typography>
+                <Box my={2}>
+                  <Button variant="contained" sx={{ marginRight: 1 }}>
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      handleClickOpen(item?.id);
+                    }}
+                  >
+                    Delete
+                  </Button>
                 </Box>
-              );
-            })
-          ) : (
-            <p> there is nothing </p>
-          )}
-        </Container>
-      ) : null}
+              </Box>
+            );
+          })
+        ) : (
+          <Typography
+            variant="h6"
+            component={"p"}
+            sx={{
+              textAlign: "center",
+              my: 15,
+            }}
+          >
+            {" "}
+            There is not previous data available. Please create new by clicking
+            the +Start reproduction button.{" "}
+          </Typography>
+        )}
+      </Container>
 
       <div>
         <Dialog
@@ -115,8 +133,8 @@ const MyWork = () => {
             </Button>
             <Button
               onClick={() => {
-                deleted();
                 handleClose();
+                deleted(userPaperID);
               }}
               autoFocus
               variant="contained"
