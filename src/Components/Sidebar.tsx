@@ -46,37 +46,60 @@ export default function Sidebar() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List sx={{ padding: 10, textAlign: "left" }} className="sidebar-mobile">
-        <Typography variant="h4" sx={{ lineHeight: 1.5 }} component={"p"}>
-          <span className="hover-underline-animation ">Home</span>
-        </Typography>
+      <List sx={{ padding: 9, textAlign: "left" }} className="sidebar-mobile">
+        <Link to="/" style={{ textDecoration: "none" }} target={"_blank"}>
+          <Typography
+            variant="h4"
+            sx={{ mb: 2, lineHeight: 1.5 }}
+            component={"p"}
+          >
+            <span className="hover-underline-animation ">Home</span>
+          </Typography>
+        </Link>
 
-        <Typography
-          className="hover-underline-animation"
-          variant="h4"
-          lineHeight={1.5}
-          component={"p"}
+        <Link
+          to="/reproductions"
+          style={{ textDecoration: "none" }}
+          // target={"_blank"}
         >
-          Your Work
-        </Typography>
+          <Typography
+            className="hover-underline-animation"
+            variant="h4"
+            sx={{ mb: 2, lineHeight: 1.5 }}
+            component={"p"}
+          >
+            Your Work
+          </Typography>
+        </Link>
+        <Link
+          to="/"
+          style={{ textDecoration: "none" }}
+          // target={"_blank"}
+        >
+          <Typography
+            className="hover-underline-animation"
+            variant="h4"
+            sx={{ mb: 2, lineHeight: 1.5 }}
+            component={"p"}
+          >
+            Search Reproductions
+          </Typography>
+        </Link>
 
-        <Typography
-          className="hover-underline-animation"
-          variant="h4"
-          lineHeight={1.5}
-          component={"p"}
+        <Link
+          to="https://docs.replicare.dev/"
+          style={{ textDecoration: "none" }}
+          target={"_blank"}
         >
-          Search Reproduction
-        </Typography>
-
-        <Typography
-          className="hover-underline-animation"
-          variant="h4"
-          sx={{ mb: 4, lineHeight: 1.5 }}
-          component={"p"}
-        >
-          Documentation
-        </Typography>
+          <Typography
+            className="hover-underline-animation"
+            variant="h4"
+            sx={{ mb: 4, lineHeight: 1.5 }}
+            component={"p"}
+          >
+            Documentation
+          </Typography>
+        </Link>
 
         {/* <Typography
           className="hover-underline-animation"

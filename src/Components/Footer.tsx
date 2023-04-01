@@ -77,7 +77,10 @@ const Footer = () => {
               </Link>
             </Box>
             <Box>
-              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+              <Link
+                to="https://docs.replicare.dev/"
+                style={{ textDecoration: "none", color: "#222629" }}
+              >
                 <Typography
                   variant="overline"
                   sx={{
@@ -87,7 +90,7 @@ const Footer = () => {
                     },
                   }}
                 >
-                  Contact Us
+                  Documentation
                 </Typography>
               </Link>
             </Box>
@@ -124,17 +127,21 @@ const Footer = () => {
               </Link>
             </Box>
             <Box>
-              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
+              <Link
+                to="mailto:info@replicare.dev"
+                style={{ textDecoration: "none", color: "#222629" }}
+              >
                 <Typography
                   variant="overline"
                   sx={{
                     color: "#ffffff",
+                    // textTransform: "unset",
                     ":hover": {
                       color: "primary.main",
                     },
                   }}
                 >
-                  info@Replicare.com
+                  Contact us
                 </Typography>
               </Link>
             </Box>
@@ -178,7 +185,8 @@ const Footer = () => {
               <Box display={"flex"}>
                 <Box>
                   <Link
-                    to="/"
+                    to="https://github.com/replicare-desci/replicare"
+                    target={"_blank"}
                     style={{ textDecoration: "none", color: "#222629" }}
                   >
                     <Typography
