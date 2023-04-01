@@ -59,8 +59,8 @@ const Main = () => {
           pb: 6,
         }}
       >
-        <Container maxWidth="xl">
-          <Typography component="h1" variant="h2" color="primary" gutterBottom>
+        {/* <Container maxWidth="xl">
+          // <Typography component="h1" variant="h2" color="" gutterBottom>
             Introduction
           </Typography>
           <Typography variant="h5" color="text.secondary" paragraph>
@@ -149,6 +149,111 @@ const Main = () => {
               </Typography>
             </Typography>
           </section>
+          <Stack
+            sx={{ pt: 4 }}
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+          ></Stack>
+        </Container> */}
+        <Container maxWidth="xl">
+          <Typography component="h1" variant="h2" color="primary" gutterBottom>
+            Features
+          </Typography>
+
+          <section style={{ padding: 10 }}>
+            {" "}
+            <Typography
+              component="h4"
+              variant="h5"
+              color="#222629"
+              gutterBottom
+            >
+              Crowdsourcing
+            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph>
+              Anyone with a Web3 wallet can submit reproduction attempts for a
+              research claim.
+            </Typography>
+            <Typography
+              component="h4"
+              variant="h5"
+              color="#222629"
+              gutterBottom
+            >
+              Cataloguing
+            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph>
+              Researchers can now systematically explore all prior attempts at
+              reproducing a research claim using our database.
+            </Typography>{" "}
+            <Typography
+              component="h4"
+              variant="h5"
+              color="#222629"
+              gutterBottom
+            >
+              Assessing
+            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph>
+              Describe and assign a reproducibility score to a research claim.
+            </Typography>{" "}
+            <Typography
+              component="h4"
+              variant="h5"
+              color="#222629"
+              gutterBottom
+            >
+              Improving
+            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph>
+              Analyze, troubleshoot and develop existing reproduction packages
+              for a research claim.
+            </Typography>{" "}
+            {/* <List>
+              <ListItem>
+                <ListItemText>
+                  1. [Select Paper] Select a candidate paper
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>
+                  2. [Scoping] Define the scope of the exercise by recording the
+                  claims, display items, and specifications you will focus on in
+                  the remainder of the reproduction{" "}
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>
+                  3. [Assessment] Review and describe in detail the available
+                  reproduction package and assess the current level of
+                  computational reproducibility of the selected display items
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>
+                  4. [Improvements] Making modifications (e.g., debugging code,
+                  acquiring required data files) to increase reproducibility
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>
+                  5. [Robustness] Verify the validity of the results with
+                  alternative analysis parameters.
+                </ListItemText>
+              </ListItem>
+            </List> */}
+            {/* <Typography variant="h6" component={"p"}>
+              Rather than designating entire research articles as reproducible
+              or irreproducible, Replicare allows for a more nuanced approach to
+              reproducibility, where reproducers analyse individual claims and
+              their associated display items, and take concrete steps to improve
+              their reproducibility. Reproduction reports are transparent and
+              publicly document their analyses to support collaboration,
+              discussion, and reuse. These reports can be anonymously shared.
+            </Typography> */}
+          </section>
+
           <Stack
             sx={{ pt: 4 }}
             direction="row"
