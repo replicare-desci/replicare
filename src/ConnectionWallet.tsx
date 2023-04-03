@@ -1,15 +1,31 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { getUserData } from "./firebase/firebaseFunctions";
-import ConnectWalletPopUp from "./Components/ConnectWalletPopUp";
 import { UserContext } from "./context/ContextProvider";
 import MetamaskImage from "./assets/images/Metamask.png";
 import WalletConnect from "./assets/images/WalletConnect.png";
+import Web3 from "web3";
+// import { use } from "@maticnetwork/maticjs";
+// import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
+// import {
+//   auth,
+//   resolver,
+//   protocol,
+//   loaders,
+//   circuits,
+// } from "@iden3/js-iden3-auth";
+// install web3 plugin
+// use(Web3ClientPlugin);
+
 // import "./styles/App.css";
 // import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 
 // import Web3 from "web3";
 // import Matic from "maticjs";
+
+// this variable provides type safety for window object
+const newWindow: any = window as any;
+
 function ConnectionWallet(): JSX.Element {
   const { store, setStore } = UserContext();
 
@@ -35,79 +51,114 @@ function ConnectionWallet(): JSX.Element {
   const [ethereumAccount, setEthereumAccount] = useState<string | null>(null);
 
   useEffect(() => {
-    if ((window as any).ethereum) {
+    if (newWindow.ethereum) {
       //check if Metamask wallet is installed
       setIsMetamaskInstalled(true);
     }
   }, []);
 
-  //Does the User have an Ethereum wallet/account?
-  async function connectMetamaskWallet(): Promise<void> {
-    //to get around type checking
-    (window as any).ethereum
-      .request({
-        method: "eth_requestAccounts",
-      })
-      .then((accounts: string[]) => {
-        setEthereumAccount(accounts[0]);
+  const detectCurrentProvider = () => {
+    let provider;
 
-        // const getUserDataVar = getUserData(accounts[0]);
-        // getUserDataVar.then((value) => {
-        //   if (value === null) {
-        //     console.log("User does not exist");
-        //   } else {
-        //     console.log("User exists", value);
-        //   }
-        // });
+    if (newWindow.ethereum) {
+      provider = newWindow.ethereum;
+    } else if (newWindow.web3) {
+      provider = newWindow.web3.currentProvider;
+    } else {
+      console.log("Non-ethereum browser detected. You should install Metamask");
+    }
+    return provider;
+  };
 
-        // getuser data
-        function handleUserData(userData: any) {
-          console.log("userData", userData);
+  function handleUserData(userData: any) {
+    console.log("userData", userData);
 
-          setStore((prev) => {
-            return {
-              ...prev,
-              user: {
-                ...prev.user,
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-                walletAddress: userData.walletAddress,
-                emailID: userData.emailID,
-                id: userData.id,
-                isVerified: userData.isVerified,
-              },
-            };
-          });
-          sessionStorage.setItem(
-            "firstName",
-            userData.firstName ? userData.firstName : ""
-          );
-          sessionStorage.setItem(
-            "lastName",
-            userData.lastName ? userData.lastName : ""
-          );
-          sessionStorage.setItem(
-            "walletAddress",
-            userData.walletAddress ? userData.walletAddress : ""
-          );
-          sessionStorage.setItem(
-            "emailID",
-            userData.emailID ? userData.emailID : ""
-          );
-          sessionStorage.setItem("id", userData.id ? userData.id : "");
+    setStore((prev) => {
+      return {
+        ...prev,
+        user: {
+          ...prev.user,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          walletAddress: userData.walletAddress,
+          emailID: userData.emailID,
+          id: userData.id,
+          isVerified: userData.isVerified,
+        },
+      };
+    });
+    sessionStorage.setItem(
+      "firstName",
+      userData.firstName ? userData.firstName : ""
+    );
+    sessionStorage.setItem(
+      "lastName",
+      userData.lastName ? userData.lastName : ""
+    );
+    sessionStorage.setItem(
+      "walletAddress",
+      userData.walletAddress ? userData.walletAddress : ""
+    );
+    sessionStorage.setItem("emailID", userData.emailID ? userData.emailID : "");
+    sessionStorage.setItem("id", userData.id ? userData.id : "");
 
-          sessionStorage.setItem(
-            "isVerified",
-            userData.isVerified ? "true" : "false"
-          );
-        }
-        getUserData(accounts[0], handleUserData);
-      })
-
-      .catch((error: any) => {
-        alert(`Something went wrong: ${error}`);
-      });
+    sessionStorage.setItem(
+      "isVerified",
+      userData.isVerified ? "true" : "false"
+    );
   }
+
+  async function connectMetamaskWallet(): Promise<void> {
+    try {
+      const currentProvider = detectCurrentProvider();
+      if (currentProvider) {
+        await currentProvider.request({ method: "eth_requestAccounts" });
+        const web3 = new Web3(currentProvider);
+        const userAccount = await web3.eth.getAccounts();
+
+        const account = userAccount[0];
+        const signatureHash = await web3.eth.personal
+          .sign("Authentication", account, "test password")
+          .then((resp) => console.log(resp))
+          .catch((error) => console.log(error));
+
+        await getUserData(account, handleUserData);
+
+        let ethBalance = await web3.eth.getBalance(account);
+        setEthereumAccount(account);
+      }
+    } catch (err) {
+      console.log(err);
+      alert(`Something went wrong: ${err}`);
+    }
+  }
+
+  //Does the User have an Ethereum wallet/account?
+  // async function connectMetamaskWallet(): Promise<void> {
+  //   //to get around type checking
+  //   (window as any).ethereum
+  //     .request({
+  //       method: "eth_requestAccounts",
+  //     })
+  //     .then((accounts: string[]) => {
+  //       setEthereumAccount(accounts[0]);
+
+  //       // const getUserDataVar = getUserData(accounts[0]);
+  //       // getUserDataVar.then((value) => {
+  //       //   if (value === null) {
+  //       //     console.log("User does not exist");
+  //       //   } else {
+  //       //     console.log("User exists", value);
+  //       //   }
+  //       // });
+
+  //       // getuser data
+  //     })
+
+  //     .catch((error: any) => {
+  //       alert(`Something went wrong: ${error}`);
+  //     });
+  // }
 
   return (
     <div>
