@@ -8,6 +8,7 @@ import {
   getDocs,
   addDoc,
   deleteDoc,
+  getDoc,
   Timestamp,
   doc,
 } from "firebase/firestore";
@@ -188,34 +189,40 @@ async function selectUserPaperData(
 
   const doiDataCollectionRef = collection(db, "doiPaper");
   const docRef1 = await addDoc(doiDataCollectionRef, {
-    doi: doiResponse.doi,
-    title: doiResponse.title,
-    nameOfJournal: doiResponse.nameOfJournal,
-    yearOfPublication: doiResponse.yearOfPublication,
-    author: doiResponse.author,
+    doi: doiResponse?.doi,
+    title: doiResponse?.title,
+    nameOfJournal: doiResponse?.nameOfJournal,
+    yearOfPublication: doiResponse?.yearOfPublication,
+    author: doiResponse?.author,
     createdAt: Timestamp.now(),
   });
   let docRef2;
   if (docRef1.id !== null) {
     docRef2 = await addDoc(userPaperCollectionRef, {
-      reproductionPackageAvailable: formData.reproductionPackageAvailable,
-      authorContacted: formData.authorContacted,
-      checkBoxData: formData.checkBoxData,
+      reproductionPackageAvailable: formData?.reproductionPackageAvailable,
+      authorContacted: formData?.authorContacted,
+      checkBoxData: formData?.checkBoxData,
       // authorInteraction: false,
       userID: userID,
-      paperID: docRef1.id,
+      paperID: docRef1?.id,
       authorAvailableForFurtherQuestion:
-        formData.authorAvailableForFurtherQuestion,
-      buildFromScratch: formData.buildFromScratch,
-      reproductionData1: formData.reproductionData1,
-      reproductionData2: formData.reproductionData2,
+        formData?.authorAvailableForFurtherQuestion,
+      buildFromScratch: formData?.buildFromScratch,
+      reproductionData1: formData?.reproductionData1,
+      reproductionData2: formData?.reproductionData2,
       createdAt: Timestamp.now(),
     });
   }
   if (docRef1?.id !== null && docRef2?.id !== null) {
-    return true;
+    return {
+      status: true,
+      userPaperID: docRef2?.id,
+    };
   } else {
-    return false;
+    return {
+      status: false,
+      userPaperID: "",
+    };
   }
 }
 
@@ -263,9 +270,37 @@ async function deleteUserPaperData(userID: string) {
   }
 }
 
+/**
+ * @work  getting the select user paper data from firestore database
+ * @param userPaperID
+ * @returns
+ */
+async function getSelectUserPaperData(userPaperID: string) {
+  const userPaperCollectionRef = collection(db, "userPaper");
+  let data: any = {};
+  try {
+    let querySnapshot: any = await getDoc(doc(db, "userPaper", userPaperID));
+
+    // querySnapshot.forEach((doc: any) => {
+    //   if (doc.id == userPaperID) {
+    //     data.push(doc.data());
+    //   }
+    // });
+    // console.log(querySnapshot.data());
+    const doiPaperID = querySnapshot.data().paperID;
+    const doiPaperData = await getDoc(doc(db, "doiPaper", doiPaperID));
+    data = { ...querySnapshot.data(), doiPaperData: doiPaperData.data() };
+  } catch (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
 export {
   existsEmail,
   // saveUserWalletAddress,
+  getSelectUserPaperData,
   deleteUserPaperData,
   getUserPaperData,
   selectUserPaperData,
