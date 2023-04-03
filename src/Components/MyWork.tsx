@@ -13,6 +13,7 @@ import {
   getUserPaperData,
   deleteUserPaperData,
 } from "../firebase/firebaseFunctions";
+import { Link } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 import React from "react";
@@ -81,9 +82,11 @@ const MyWork = () => {
                   Number of claims assessed: 0
                 </Typography>
                 <Box my={2}>
-                  <Button variant="contained" sx={{ marginRight: 1 }}>
-                    Edit
-                  </Button>
+                  <Link to={`/reproductions/index/edit/${item?.id}`}>
+                    <Button variant="contained" sx={{ marginRight: 1 }}>
+                      Edit
+                    </Button>
+                  </Link>
                   <Button
                     variant="outlined"
                     onClick={() => {

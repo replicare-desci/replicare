@@ -4,6 +4,7 @@ import { camelizeKeys } from "../utils/changeCase";
 import AdditionalInfo from "./AdditionalInfo";
 import { selectUserPaperData } from "../firebase/firebaseFunctions";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -31,6 +32,7 @@ import {
 } from "@mui/material";
 
 const SelectPaper = () => {
+  const navigate = useNavigate();
   const checkBoxOptions = [
     {
       label: "Provided reproduction package.",
@@ -115,10 +117,21 @@ const SelectPaper = () => {
         checkBoxData: checkedState,
       };
     });
-    selectUserPaperData(formData, userID, doiResponse).then((res) => {
-      console.log("res", res);
-      toast.success("Data submitted");
-    });
+    selectUserPaperData(formData, userID, doiResponse)
+      .then((res) => {
+        console.log("res", res);
+        if (res.status) {
+          toast.success("Data submitted");
+          navigate(`/reproductions/index/edit/${res?.userPaperID}`);
+        } else {
+          toast.error("Error submitting data");
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+        // toast.error("Error submitting data");
+      });
+
     // setSelectPaperData("submitted");
   };
   const renderAdditional = () => {

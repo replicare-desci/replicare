@@ -1,14 +1,9 @@
-import React from "react";
-
 import CssBaseline from "@mui/material/CssBaseline";
-
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
-
 import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";
 import "./styles/App.css";
-
 import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import Main from "./Components/Main";
 import SignUp from "./Components/SignUp";
@@ -19,6 +14,7 @@ import SelectPaper from "./Components/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
 // import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
+import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
 export default function App() {
   const { store } = UserContext();
   console.log(store);
@@ -62,9 +58,18 @@ export default function App() {
                   </>
                 }
               />
-
               <Route
-                path="/reproductions/index"
+                path="/reproductions/index/:pageType/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectAPaper />
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/reproductions/index/:pageType"
                 element={
                   <>
                     <Navbar />
@@ -74,7 +79,17 @@ export default function App() {
                 }
               />
               <Route
-                path="/reproductions/index/select-paper"
+                path="/reproductions/index/view/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <ViewSelectPaper />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/reproductions/index/:pageType/select-paper"
                 element={
                   <>
                     <Navbar />

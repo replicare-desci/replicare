@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 // const steps = [
 //   {
 //     label: "Select campaign settings",
@@ -33,6 +33,8 @@ import { Link } from "react-router-dom";
 //   },
 // ];
 const SelectAPaper = () => {
+  const { pageType, userPaperID } = useParams();
+
   // const [activeStep, setActiveStep] = React.useState(0);
 
   // const handleNext = () => {
@@ -111,12 +113,31 @@ const SelectAPaper = () => {
               basic information about its reproduction package. Please refer to
               the documentation provided for further assistance.
             </Typography>
-            <Link
-              to="/reproductions/index/select-paper"
-              style={{ textDecoration: "none" }}
-            >
-              <Button variant="contained">Edit this section</Button>
-            </Link>
+
+            {pageType === "new" ? (
+              <Link
+                to="/reproductions/index/new/select-paper"
+                style={{ textDecoration: "none" }}
+              >
+                <Button variant="contained">Create this section</Button>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/reproductions/index/edit/select-paper"
+                  style={{ textDecoration: "none", marginRight: 10 }}
+                >
+                  <Button variant="contained">Edit this section</Button>
+                </Link>
+
+                <Link
+                  to={`/reproductions/index/view/${userPaperID}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button variant="contained">View this section</Button>
+                </Link>
+              </>
+            )}
           </Grid>
         </Grid>
       </Container>
