@@ -1,7 +1,7 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "../Sidebar";
 // import ConnectionWallet from "../ConnectionWallet";
 import { Link } from "react-router-dom";
-import ConnectWalletPopUp from "./ConnectWalletPopUp";
+import ConnectWalletPopUp from "../ConnectWalletPopUp";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 const Navbar = () => {
   return (

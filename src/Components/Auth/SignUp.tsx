@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { collection, getDocs, addDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import {
   existsEmail,
   existsWalletAddress,
-} from "../firebase/firebaseFunctions";
+} from "../../firebase/firebaseFunctions";
 import {
   Container,
   CssBaseline,

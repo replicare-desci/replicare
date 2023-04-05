@@ -32,7 +32,7 @@ import { Link, useParams } from "react-router-dom";
 //               they're running and how to resolve approval issues.`,
 //   },
 // ];
-const SelectAPaper = () => {
+const SelectPaperOverview = () => {
   const { pageType, userPaperID } = useParams();
 
   // const [activeStep, setActiveStep] = React.useState(0);
@@ -50,7 +50,7 @@ const SelectAPaper = () => {
   // };
   return (
     <div>
-      {/* <div>SelectAPaper</div> */}
+      {/* <div>SelectPaperOverview</div> */}
       <Container>
         {/* <Box sx={{ maxWidth: 400 }}>
           <Stepper activeStep={activeStep} orientation="vertical">
@@ -145,4 +145,4 @@ const SelectAPaper = () => {
   );
 };
 
-export default SelectAPaper;
+export default SelectPaperOverview;

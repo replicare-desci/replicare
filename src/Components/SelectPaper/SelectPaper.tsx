@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { fetchDoi } from "../api/fetchDOI";
-import { camelizeKeys } from "../utils/changeCase";
-import AdditionalInfo from "./AdditionalInfo";
-import { selectUserPaperData } from "../firebase/firebaseFunctions";
+import { fetchDoi } from "../../api/fetchDOI";
+import { camelizeKeys } from "../../utils/changeCase";
+import AdditionalInfo from "../AdditionalInfo";
+import { selectUserPaperData } from "../../firebase/firebaseFunctions";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

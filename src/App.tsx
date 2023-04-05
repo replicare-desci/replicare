@@ -1,16 +1,16 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
-import Footer from "./Components/Footer";
-import Navbar from "./Components/Navbar";
+import Footer from "./Components/Binder/Footer";
+import Navbar from "./Components/Binder/Navbar";
 import "./styles/App.css";
 import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import Main from "./Components/Main";
-import SignUp from "./Components/SignUp";
-import SignIn from "./Components/SignIn";
+import SignUp from "./Components/Auth/SignUp";
+import SignIn from "./Components/Auth/SignIn";
 import Reproductions from "./Components/Reproductions";
-import SelectAPaper from "./Components/SelectAPaper";
-import SelectPaper from "./Components/SelectPaper";
+import SelectPaperOverview from "./Components/SelectPaper/SelectPaperOverview";
+import SelectPaper from "./Components/SelectPaper/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
 // import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
@@ -63,7 +63,7 @@ export default function App() {
                 element={
                   <>
                     <Navbar />
-                    <SelectAPaper />
+                    <SelectPaperOverview />
                     <Footer />
                   </>
                 }
@@ -73,7 +73,7 @@ export default function App() {
                 element={
                   <>
                     <Navbar />
-                    <SelectAPaper />
+                    <SelectPaperOverview />
                     <Footer />
                   </>
                 }
