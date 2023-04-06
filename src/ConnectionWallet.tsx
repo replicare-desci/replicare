@@ -170,6 +170,7 @@ function ConnectionWallet(): JSX.Element {
           aria-disabled={true}
           sx={{
             backgroundColor: "#222629",
+            mt: 3,
             textTransform: "unset",
             ":hover": {
               bgcolor: "#222629",

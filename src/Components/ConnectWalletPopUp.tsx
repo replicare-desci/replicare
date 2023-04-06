@@ -37,6 +37,7 @@ export default function ConnectWalletPopUp() {
           sx={{
             backgroundColor: "#222629",
             color: "primary.main",
+
             textTransform: "unset",
 
             ":hover": {
@@ -140,20 +141,20 @@ export default function ConnectWalletPopUp() {
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Box>
+            <Box px={7}>
               <Typography variant="caption">
-                By connecting to Common, you agree to our
+                By connecting to Common, you agree to our &nbsp;
                 <span>
                   <a href="/">Terms of Service</a>
                 </span>
-                and
+                &nbsp; and &nbsp;
                 <span>
                   <a href="/">Privacy Policy</a>
                 </span>
               </Typography>
               <ConnectionWallet />
             </Box>
-            <Box my={2}>
+            {/* <Box my={2}>
               <Link
                 to="sign-up"
                 onClick={handleClose}
@@ -161,7 +162,7 @@ export default function ConnectWalletPopUp() {
               >
                 Sign Up
               </Link>
-            </Box>
+            </Box> */}
           </Grid>
         </Grid>
       </Dialog>
