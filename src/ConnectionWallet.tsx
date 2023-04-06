@@ -164,32 +164,33 @@ function ConnectionWallet(): JSX.Element {
     <div>
       {ethereumAccount !== null &&
       !!isMetamaskInstalled &&
-      ethereumAccount.length > 0 ? (
-        <Button
-          variant="outlined"
-          aria-disabled={true}
-          sx={{
-            backgroundColor: "#222629",
-            mt: 3,
-            textTransform: "unset",
-            ":hover": {
-              bgcolor: "#222629",
-              color: "white",
-            },
-          }}
-          onClick={connectMetamaskWallet}
+      ethereumAccount.length > 0 ? //   sx={{ //   aria-disabled={true} //   variant="outlined" // <Button
+      //     backgroundColor: "#222629",
+      //     mt: 3,
+      //     textTransform: "unset",
+      //     ":hover": {
+      //       bgcolor: "#222629",
+      //       color: "white",
+      //     },
+      //   }}
+      //   onClick={connectMetamaskWallet}
+      // >
+      //   {ethereumAccount.slice(0, 6) + ".." + ethereumAccount.slice(38, 42)}
+      // </Button>
+      null : isMetamaskInstalled && ethereumAccount === null ? (
+        <Grid
+          container
+          marginBottom={5}
+          flexDirection={"column"}
+          justifyContent={"center"}
         >
-          {ethereumAccount.slice(0, 6) + ".." + ethereumAccount.slice(38, 42)}
-        </Button>
-      ) : isMetamaskInstalled && ethereumAccount === null ? (
-        <Grid container flexDirection={"column"} justifyContent={"center"}>
           <Grid item>
             <Button
               variant="contained"
               aria-disabled={true}
               sx={{
                 backgroundColor: "#ffffff",
-                mt: 1,
+                // mt: 1,
 
                 width: 200,
                 height: 50,

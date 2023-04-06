@@ -435,7 +435,7 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
 
-            <ListItem>
+            {/* <ListItem>
               <FormControl required disabled={isDisabled12 || isDisabled13}>
                 <FormLabel id="permission">
                   1.5 Are the authors available for further questions for ACRe
@@ -453,11 +453,11 @@ const SelectPaper = () => {
                   <FormControlLabel value="no" control={<Radio />} label="No" />
                 </RadioGroup>
               </FormControl>
-            </ListItem>
+            </ListItem> */}
             <ListItem>
               <FormControl required disabled={isDisabled12}>
                 <FormLabel id="permission">
-                  1.6 If there are no reproduction packages, are you willing to
+                  1.5 If there are no reproduction packages, are you willing to
                   build a reproduction package from scratch?
                 </FormLabel>
                 <RadioGroup

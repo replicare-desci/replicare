@@ -284,7 +284,7 @@ const ViewSelectPaper = () => {
               </ul>
             </Box>
           </Grid>{" "}
-          <Grid item xl={12} xs={12} my={2}>
+          {/* <Grid item xl={12} xs={12} my={2}>
             <Typography
               variant="subtitle1"
               sx={{ fontWeight: 600 }}
@@ -304,14 +304,14 @@ const ViewSelectPaper = () => {
                 ? userPaperData?.authorAvailableForFurtherQuestion
                 : "N/A"}
             </Box>
-          </Grid>{" "}
+          </Grid>{" "} */}
           <Grid item xl={12} xs={12} my={2}>
             <Typography
               variant="subtitle1"
               sx={{ fontWeight: 600 }}
               component={"h6"}
             >
-              1.6 If there are no reproduction packages, are you willing to
+              1.5 If there are no reproduction packages, are you willing to
               build a reproduction package from scratch?
             </Typography>
             <Box

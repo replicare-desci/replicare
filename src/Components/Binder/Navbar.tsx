@@ -3,7 +3,7 @@ import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
 import ConnectWalletPopUp from "../ConnectWalletPopUp";
 import { AppBar, Toolbar, Typography } from "@mui/material";
-// import logo from "../../../public/logo.png";
+import logo from "../../assets/images/logo.png";
 const Navbar = () => {
   return (
     <div>
@@ -20,7 +20,7 @@ const Navbar = () => {
             >
               Replicare
             </Typography>
-            {/* <img style={{ width: "10%" }} src={logo} alt="logo" /> */}
+            <img style={{ width: "10%" }} src={logo} alt="logo" />
           </Link>
           {/* <ConnectionWallet /> */}
           <ConnectWalletPopUp />
