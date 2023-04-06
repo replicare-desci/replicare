@@ -100,7 +100,7 @@ export default function ConnectWalletPopUp() {
           >
             <DialogContent>
               <DialogContentText>
-                <Typography variant="subtitle1">
+                <Typography variant="body1" fontWeight={600}>
                   This Community requires an Ethereum Wallet
                 </Typography>
                 <Divider
@@ -111,7 +111,7 @@ export default function ConnectWalletPopUp() {
                     backgroundColor: "primary.main",
                   }}
                 />
-                <Typography variant="body2">
+                <Typography variant="body1">
                   Many communities require different wallets based on the chain
                   they are built on and the types of tokens members hold.
                 </Typography>
@@ -132,8 +132,9 @@ export default function ConnectWalletPopUp() {
               <IconButton
                 sx={{
                   width: "20",
+
                   marginRight: 1,
-                  marginTop: 1,
+                  // marginTop: 1,
                   marginLeft: "auto",
                 }}
                 onClick={handleClose}
@@ -141,9 +142,11 @@ export default function ConnectWalletPopUp() {
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Box px={7}>
-              <Typography variant="caption">
-                By connecting to Common, you agree to our &nbsp;
+            <Box px={3}>
+              {" "}
+              <ConnectionWallet />
+              <Typography variant="caption" mt={5}>
+                By connecting to Replicare, you agree to our &nbsp;
                 <span>
                   <a href="/">Terms of Service</a>
                 </span>
@@ -152,7 +155,6 @@ export default function ConnectWalletPopUp() {
                   <a href="/">Privacy Policy</a>
                 </span>
               </Typography>
-              <ConnectionWallet />
             </Box>
             {/* <Box my={2}>
               <Link

@@ -13,9 +13,10 @@ const theme = createTheme({
     error: {
       main: red.A400,
     },
-    // background: {
-    //     default: "#222629"
-    //   }
+    background: {
+      //      default: "#222629"
+      default: "#EEECEC",
+    },
   },
 });
 
