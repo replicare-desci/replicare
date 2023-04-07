@@ -46,7 +46,15 @@ export default function Sidebar() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List sx={{ padding: 9, textAlign: "left" }} className="sidebar-mobile">
+      {" "}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", px: 4.5, pt: 3 }}>
+        {" "}
+        <Button onClick={() => setMenuIconClicked}>
+          {" "}
+          <ClearIcon sx={{ color: "#0000000", fontSize: 30 }} />
+        </Button>
+      </Box>
+      <List sx={{ px: 9, textAlign: "left" }} className="sidebar-mobile">
         <Link to="/" style={{ textDecoration: "none" }} target={"_blank"}>
           <Typography
             variant="h4"
@@ -170,7 +178,11 @@ export default function Sidebar() {
             sx={{ color: "#ffffff", zIndex: 2 }}
             onClick={toggleDrawer(anchor, true)}
           >
-            {menuIconClicked ? <ClearIcon /> : <MenuIcon />}
+            {menuIconClicked ? (
+              <ClearIcon sx={{ color: "#0000000" }} />
+            ) : (
+              <MenuIcon />
+            )}
           </Button>
           <SwipeableDrawer
             sx={{ zIndex: 1 }}

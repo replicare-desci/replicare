@@ -53,7 +53,7 @@ const Main = () => {
       </Grid>
       <Box
         sx={{
-          bgcolor: "background.paper",
+          // bgcolor: "background.paper",
 
           pt: 8,
           pb: 6,
