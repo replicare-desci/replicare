@@ -16,6 +16,7 @@ export interface ContextInterface {
 }
 
 export type formDataType = {
+  checkBoxData: boolean[];
   reproductionPackageAvailable: boolean;
   authorContacted: boolean;
   // authorAvailableForFurtherQuestion: boolean,
