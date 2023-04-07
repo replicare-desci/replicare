@@ -79,6 +79,7 @@ const SelectPaper = () => {
   );
 
   const [formData, setFormData] = useState<formDataType>({
+    checkBoxData: new Array(checkBoxOptions.length).fill(false),
     reproductionPackageAvailable: false,
     authorContacted: false,
     // authorAvailableForFurtherQuestion: false,
@@ -113,14 +114,19 @@ const SelectPaper = () => {
         checkBoxData: checkedState,
       };
     });
+    // console.log(116, formData);
+
     selectUserPaperData(formData, userID, doiResponse)
       .then((res) => {
         console.log("res", res);
-        if (res.status) {
-          toast.success("Data submitted");
-          navigate(`/reproductions/index/edit/${res?.userPaperID}`);
-        } else {
-          toast.error("Error submitting data");
+
+        if (typeof res !== "undefined") {
+          if (res.success) {
+            toast.success("Data submitted");
+            navigate(`/reproductions/index/edit/${res?.userPaperID}`);
+          } else {
+            toast.error("Error submitting data");
+          }
         }
       })
       .catch((err) => {
@@ -177,8 +183,8 @@ const SelectPaper = () => {
               ...prev,
               yearOfPublication: newResponse.message.created.dateTime,
               publisher: newResponse.message.publisher,
+              title: newResponse.message?.title[0],
               nameOfJournal: newResponse.message.shortContainerTitle[0],
-              title: newResponse.message.title[0],
               author: `${newResponse.message.author
                 .map((author: any) => `${author.given} ${author.family}`)
                 .join(", ")}`,
@@ -187,6 +193,7 @@ const SelectPaper = () => {
             };
           });
         })
+
         .catch(function (error: any) {
           setError(true);
           console.log("fetchDoi error", error);

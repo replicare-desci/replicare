@@ -12,7 +12,7 @@ import {
   Timestamp,
   doc,
 } from "firebase/firestore";
-
+// import { formDataType } from "../types/context.d";
 import { UserContext } from "../context/ContextProvider";
 import { toast } from "react-toastify";
 
@@ -121,20 +121,6 @@ async function getUserPaperData(
   let getDataReturnObj: any = [];
   try {
     const docRef = collection(db, "userPaper");
-
-    // onSnapshot(docRef, (snapshots: any) => {
-    //   snapshots.docs.forEach((doc: any) => {
-
-    //     // console.log(doc.data());
-    //     // console.log(doc.id);
-
-    //     if (doc.data().userID === userID) {
-    //       getDataReturnObj.push({ ...doc.data(), id: doc.id });
-    //     }
-    //   });
-
-    //   handleUserPaperData(getDataReturnObj);
-    // });
     const snapshot = await getDocs(docRef);
     snapshot.forEach((doc) => {
       if (doc.data().userID === userID) {
@@ -145,6 +131,21 @@ async function getUserPaperData(
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+}
+function giveDoiDataBasedOnPaperID(paperID: string) {
+  const giveDoiData = getDoc(doc(db, "doiPaper", paperID))
+    .then((resp) => {
+      console.log(resp);
+      if (paperID === resp.id) {
+        return {
+          ...resp.data(),
+        };
+      }
+    })
+
+    .catch((err) => console.log(err));
+  console.log(giveDoiData);
+  return giveDoiData;
 }
 
 /**
@@ -175,7 +176,7 @@ async function existsWalletAddress(walletAddress: string) {
 
 /**
  * @work selectUserPaperData is a async function which is used to add the user paper data to the firestore
- * @param {any} formData
+ * @param {formDataType} formData
  * @param {string} userID
  * @param {any} doiResponse
  * @returns {boolean}
@@ -185,42 +186,43 @@ async function selectUserPaperData(
   userID: string,
   doiResponse: any
 ) {
-  const userPaperCollectionRef = collection(db, "userPaper");
+  try {
+    const userPaperCollection = collection(db, "userPaper");
+    const doiDataCollection = collection(db, "doiPaper");
 
-  const doiDataCollectionRef = collection(db, "doiPaper");
-  const docRef1 = await addDoc(doiDataCollectionRef, {
-    doi: doiResponse?.doi,
-    title: doiResponse?.title,
-    nameOfJournal: doiResponse?.nameOfJournal,
-    yearOfPublication: doiResponse?.yearOfPublication,
-    author: doiResponse?.author,
-    createdAt: Timestamp.now(),
-  });
-  let docRef2;
-  if (docRef1.id !== null) {
-    docRef2 = await addDoc(userPaperCollectionRef, {
+    // Add DOI paper data to database
+    const doiPaperDoc = await addDoc(doiDataCollection, {
+      doi: doiResponse?.doi,
+      title: doiResponse?.title,
+      journalName: doiResponse?.nameOfJournal,
+      yearOfPublication: doiResponse?.yearOfPublication,
+      author: doiResponse?.author,
+      createdAt: Timestamp.now(),
+    });
+
+    // Add user paper data to database, referencing DOI paper
+    const userPaperDoc = await addDoc(userPaperCollection, {
       reproductionPackageAvailable: formData?.reproductionPackageAvailable,
       authorContacted: formData?.authorContacted,
       checkBoxData: formData?.checkBoxData,
-      // authorInteraction: false,
+      authorInteraction: false,
       userID: userID,
-      paperID: docRef1?.id,
-      authorAvailableForFurtherQuestion:
-        formData?.authorAvailableForFurtherQuestion,
+      doiPaperID: doiPaperDoc?.id,
       buildFromScratch: formData?.buildFromScratch,
       reproductionData1: formData?.reproductionData1,
       reproductionData2: formData?.reproductionData2,
       createdAt: Timestamp.now(),
     });
-  }
-  if (docRef1?.id !== null && docRef2?.id !== null) {
+    if (doiPaperDoc.id !== null && userPaperDoc !== null) {
+      return {
+        success: true,
+        userPaperID: userPaperDoc.id,
+      };
+    }
+  } catch (error) {
+    console.error("Error in selectUserPaperData:", error);
     return {
-      status: true,
-      userPaperID: docRef2?.id,
-    };
-  } else {
-    return {
-      status: false,
+      success: false,
       userPaperID: "",
     };
   }
@@ -286,10 +288,15 @@ async function getSelectUserPaperData(userPaperID: string) {
     //     data.push(doc.data());
     //   }
     // });
-    // console.log(querySnapshot.data());
-    const doiPaperID = querySnapshot.data().paperID;
-    const doiPaperData = await getDoc(doc(db, "doiPaper", doiPaperID));
-    data = { ...querySnapshot.data(), doiPaperData: doiPaperData.data() };
+    console.log(querySnapshot.data());
+    const doiPaperID = querySnapshot.data().doiPaperID;
+    if (doiPaperID) {
+      const doiPaperData = await getDoc(doc(db, "doiPaper", doiPaperID));
+
+      console.log(doiPaperData.data());
+
+      data = { ...querySnapshot.data(), doiPaperData: doiPaperData.data() };
+    }
   } catch (error) {
     console.log(error);
   }
@@ -300,6 +307,7 @@ async function getSelectUserPaperData(userPaperID: string) {
 export {
   existsEmail,
   // saveUserWalletAddress,
+  giveDoiDataBasedOnPaperID,
   getSelectUserPaperData,
   deleteUserPaperData,
   getUserPaperData,
