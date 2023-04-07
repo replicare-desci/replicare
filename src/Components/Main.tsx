@@ -13,7 +13,10 @@ import {
   Button,
 } from "@mui/material";
 import Search from "./Search";
+import ConnectWalletPopUp from "./ConnectWalletPopUp";
+import ConnectionWallet from "../ConnectionWallet";
 const Main = () => {
+  const walletAddress = sessionStorage.getItem("walletAddress");
   return (
     <Container>
       <Grid
@@ -38,17 +41,27 @@ const Main = () => {
         <Grid item xs={8} my={10}>
           <Search />
         </Grid>
-        <Grid item xs={8}>
-          <Link
-            to="/reproductions"
-            style={{
-              textDecoration: "none",
-              justifyContent: "center",
-              display: "flex",
-            }}
-          >
-            <Button variant="contained">+ Start a reproduction</Button>
-          </Link>
+        <Grid item xs={8} justifyContent={"center"}>
+          {walletAddress ? (
+            <Link
+              to="/reproductions"
+              style={{
+                textDecoration: "none",
+                textAlign: "center",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Box display={"flex"} justifyContent={"center"}>
+                <Button variant="contained">+ Start a reproduction</Button>
+              </Box>
+            </Link>
+          ) : (
+            <Box justifyContent={"center"} display={"flex"}>
+              <ConnectWalletPopUp />
+              {/* <Box>To start</Box> */}
+            </Box>
+          )}
         </Grid>
       </Grid>
       <Box
