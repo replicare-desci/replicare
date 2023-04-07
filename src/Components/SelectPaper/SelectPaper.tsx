@@ -5,6 +5,7 @@ import AdditionalInfo from "../AdditionalInfo";
 import { selectUserPaperData } from "../../firebase/firebaseFunctions";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { formDataType } from "../../types/context.d";
 
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -23,12 +24,6 @@ import {
   RadioGroup,
   FormHelperText,
   Checkbox,
-  Box,
-  Paper,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
 } from "@mui/material";
 
 const SelectPaper = () => {
@@ -83,14 +78,15 @@ const SelectPaper = () => {
     new Array(checkBoxOptions.length).fill(false)
   );
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<formDataType>({
     reproductionPackageAvailable: false,
     authorContacted: false,
-    authorAvailableForFurtherQuestion: false,
+    // authorAvailableForFurtherQuestion: false,
     buildFromScratch: false,
     reproductionData1: "",
     reproductionData2: "",
   });
+
   const formDataHandler = (event: any) => {
     setFormData((prev) => {
       return {

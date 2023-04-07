@@ -14,3 +14,18 @@ export interface ContextInterface {
   setStore: Dispatch<SetStateAction<ContextType>>;
   // setStore: (store: ContextType) => void;
 }
+
+export type formDataType = {
+  reproductionPackageAvailable: boolean;
+  authorContacted: boolean;
+  // authorAvailableForFurtherQuestion: boolean,
+  buildFromScratch: boolean;
+  reproductionData1: string;
+  reproductionData2: string;
+  [key: string]: unknown;
+};
+
+export type doiDataType = {
+  doi: string;
+  [key: string]: unknown;
+};
