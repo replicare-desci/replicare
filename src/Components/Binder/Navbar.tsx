@@ -18,10 +18,16 @@ const Navbar = () => {
         <Toolbar>
           {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}
           <Link to="/">
-            <Box display={"flex"}>
-              {" "}
-              <img style={{ width: "15%" }} src={logo} alt="logo" />
-            </Box>
+            <Box
+              component="img"
+              sx={{
+                height: 64,
+
+                py: 1,
+              }}
+              alt="replicare logo."
+              src={logo}
+            />
           </Link>
           {/* <ConnectionWallet /> */}
           <Box
@@ -35,6 +41,7 @@ const Navbar = () => {
                 sx={{
                   color: "primary.main",
                   backgroundColor: "background.paper",
+                  textDecoration: "none",
                   mx: 2,
                 }}
                 variant="contained"
