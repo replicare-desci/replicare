@@ -234,7 +234,11 @@ const ViewSelectPaper = () => {
               component={"h6"}
             >
               1.3 Have you contacted the authors for a reproduction package?
-              Consult the ACRe Guide for recommendations on contacting authors.
+              Consult the{" "}
+              <span>
+                <a href="https://docs.replicare.dev">docs</a>
+              </span>{" "}
+              for recommendations on contacting authors.
             </Typography>
             <Box
               p={1}

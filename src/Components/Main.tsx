@@ -182,6 +182,9 @@ const Main = () => {
                 item
                 xs={12}
                 xl={5}
+                lg={5}
+                mt={2}
+                sm={12}
                 sx={{
                   backgroundColor: "#ffffff",
                   borderRadius: 5,
@@ -209,6 +212,9 @@ const Main = () => {
                 item
                 xs={12}
                 xl={5}
+                lg={5}
+                mt={2}
+                sm={12}
                 sx={{
                   backgroundColor: "#ffffff",
                   borderRadius: 5,
@@ -238,6 +244,9 @@ const Main = () => {
                 item
                 xs={12}
                 xl={5}
+                lg={5}
+                mt={2}
+                sm={12}
                 sx={{
                   backgroundColor: "#ffffff",
                   borderRadius: 5,
@@ -264,6 +273,9 @@ const Main = () => {
                 item
                 xs={12}
                 xl={5}
+                lg={5}
+                mt={2}
+                sm={12}
                 sx={{
                   backgroundColor: "#ffffff",
                   borderRadius: 5,

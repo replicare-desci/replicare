@@ -378,8 +378,11 @@ const SelectPaper = () => {
               <FormControl required disabled={isDisabled12}>
                 <FormLabel id="permission">
                   1.3 Have you contacted the authors for a reproduction package?
-                  Consult the ACRe Guide for recommendations on contacting
-                  authors.
+                  Consult the{" "}
+                  <span>
+                    <a href="https://docs.replicare.dev">docs</a>
+                  </span>{" "}
+                  for recommendations on contacting authors.
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
