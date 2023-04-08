@@ -40,9 +40,13 @@ const Navbar = () => {
               <Button
                 sx={{
                   color: "primary.main",
-                  backgroundColor: "background.paper",
+                  backgroundColor: "background.default",
                   textDecoration: "none",
                   mx: 2,
+                  ":hover": {
+                    backgroundColor: "background.default",
+                    color: "#222629",
+                  },
                 }}
                 variant="contained"
               >

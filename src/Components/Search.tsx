@@ -5,7 +5,12 @@ const Search = () => {
       <div className="search">
         <TextField
           id="outlined-basic"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            ":hover": {
+              backgroundColor: "#ffffff",
+            },
+          }}
           placeholder="Search previous reproductions by DOI"
           variant="outlined"
           fullWidth
