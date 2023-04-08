@@ -176,53 +176,118 @@ const Main = () => {
 
           <section style={{ padding: 10 }}>
             {" "}
-            <Typography
-              component="h4"
-              variant="h5"
-              color="#222629"
-              gutterBottom
-            >
-              Crowdsourcing
-            </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-              Anyone with a Web3 wallet can submit reproduction attempts for a
-              research claim.
-            </Typography>
-            <Typography
-              component="h4"
-              variant="h5"
-              color="#222629"
-              gutterBottom
-            >
-              Cataloguing
-            </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-              Researchers can now systematically explore all prior attempts at
-              reproducing a research claim using our database.
-            </Typography>{" "}
-            <Typography
-              component="h4"
-              variant="h5"
-              color="#222629"
-              gutterBottom
-            >
-              Assessing
-            </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-              Describe and assign a reproducibility score to a research claim.
-            </Typography>{" "}
-            <Typography
-              component="h4"
-              variant="h5"
-              color="#222629"
-              gutterBottom
-            >
-              Improving
-            </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-              Analyze, troubleshoot and develop existing reproduction packages
-              for a research claim.
-            </Typography>{" "}
+            <Grid container justifyContent={"space-around"}>
+              {" "}
+              <Grid
+                item
+                xs={12}
+                xl={5}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: 5,
+                  boxShadow: 2,
+                  p: 5,
+
+                  height: 200,
+                }}
+              >
+                {" "}
+                <Typography
+                  component="h4"
+                  variant="h5"
+                  color="#222629"
+                  gutterBottom
+                >
+                  Crowdsourcing
+                </Typography>{" "}
+                <Typography variant="body1" color="text.secondary" paragraph>
+                  Anyone with a Web3 wallet can submit reproduction attempts for
+                  a research claim.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                xl={5}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: 5,
+                  boxShadow: 2,
+                  p: 5,
+
+                  height: 200,
+                }}
+              >
+                <Typography
+                  component="h4"
+                  variant="h5"
+                  color="#222629"
+                  gutterBottom
+                >
+                  Cataloguing
+                </Typography>
+                <Typography variant="body1" color="text.secondary" paragraph>
+                  Researchers can now systematically explore all prior attempts
+                  at reproducing a research claim using our database.
+                </Typography>{" "}
+              </Grid>
+            </Grid>
+            <Grid container justifyContent={"space-around"} mt={2}>
+              {" "}
+              <Grid
+                item
+                xs={12}
+                xl={5}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: 5,
+                  boxShadow: 2,
+                  p: 5,
+
+                  height: 200,
+                }}
+              >
+                <Typography
+                  component="h4"
+                  variant="h5"
+                  color="#222629"
+                  gutterBottom
+                >
+                  Assessing
+                </Typography>
+                <Typography variant="body1" color="text.secondary" paragraph>
+                  Describe and assign a reproducibility score to a research
+                  claim.
+                </Typography>{" "}
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                xl={5}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: 5,
+                  boxShadow: 2,
+                  p: 5,
+
+                  height: 200,
+                }}
+              >
+                {" "}
+                <Typography
+                  component="h4"
+                  variant="h5"
+                  color="#222629"
+                  gutterBottom
+                >
+                  Improving
+                </Typography>
+                <Typography variant="body1" color="text.secondary" paragraph>
+                  Analyze, troubleshoot and develop existing reproduction
+                  packages for a research claim.
+                </Typography>{" "}
+              </Grid>
+            </Grid>
             {/* <List>
               <ListItem>
                 <ListItemText>

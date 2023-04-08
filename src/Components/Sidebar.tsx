@@ -58,7 +58,7 @@ export default function Sidebar() {
         <Link to="/" style={{ textDecoration: "none" }} target={"_blank"}>
           <Typography
             variant="h4"
-            sx={{ mb: 2, lineHeight: 1.5 }}
+            sx={{ mb: 2, lineHeight: 0.8 }}
             component={"p"}
           >
             <span className="hover-underline-animation ">Home</span>
@@ -73,7 +73,7 @@ export default function Sidebar() {
           <Typography
             className="hover-underline-animation"
             variant="h4"
-            sx={{ mb: 2, lineHeight: 1.5 }}
+            sx={{ mb: 2, lineHeight: 0.8 }}
             component={"p"}
           >
             Your Work
@@ -87,7 +87,7 @@ export default function Sidebar() {
           <Typography
             className="hover-underline-animation"
             variant="h4"
-            sx={{ mb: 2, lineHeight: 1.5 }}
+            sx={{ mb: 2, lineHeight: 0.8 }}
             component={"p"}
           >
             Search Reproductions
@@ -102,7 +102,7 @@ export default function Sidebar() {
           <Typography
             className="hover-underline-animation"
             variant="h4"
-            sx={{ mb: 4, lineHeight: 1.5 }}
+            sx={{ mb: 4, lineHeight: 0.8 }}
             component={"p"}
           >
             Documentation
