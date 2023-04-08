@@ -19,6 +19,9 @@ const theme = createTheme({
       // paper: "#222629",
     },
   },
+  typography: {
+    fontFamily: ["Merriweather", "serif"].join(","),
+  },
 });
 
 export default theme;

@@ -35,16 +35,20 @@ const Navbar = () => {
             justifyContent={"flex-end"}
             sx={{ width: "100%" }}
           >
-            <Link to="https://docs.replicare.dev">
+            <Link
+              to="https://docs.replicare.dev"
+              style={{ textDecoration: "none" }}
+            >
               {" "}
               <Button
                 sx={{
                   color: "primary.main",
                   backgroundColor: "background.default",
-                  textDecoration: "none",
+
                   mx: 2,
                   ":hover": {
                     backgroundColor: "background.default",
+
                     color: "#222629",
                   },
                 }}
