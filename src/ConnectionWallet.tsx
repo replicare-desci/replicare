@@ -164,12 +164,7 @@ function ConnectionWallet(): JSX.Element {
     <div>
       {ethereumAccount !== null &&
       !!isMetamaskInstalled &&
-      ethereumAccount.length > 0 ? //   sx={{ //   aria-disabled={true} //   variant="outlined" // <Button
-      //     backgroundColor: "#222629",
-      //     mt: 3,
-      //     textTransform: "unset",
-      //     ":hover": {
-      //       bgcolor: "#222629",
+      ethereumAccount.length > 0 ? //       bgcolor:"primary.dark" //     ":hover": { //     textTransform: "unset", //     mt: 3, //     backgroundcolor:"primary.dark" //   sx={{ //   aria-disabled={true} //   variant="outlined" // <Button
       //       color: "white",
       //     },
       //   }}
@@ -189,13 +184,13 @@ function ConnectionWallet(): JSX.Element {
               variant="contained"
               aria-disabled={true}
               sx={{
-                backgroundColor: "#ffffff",
+                backgroundColor: "background.paper",
                 // mt: 1,
 
                 width: 200,
                 height: 50,
                 ":hover": {
-                  bgcolor: "#ffffff",
+                  bgcolor: "primary.light",
                   // color: "white",
                 },
               }}
@@ -211,13 +206,13 @@ function ConnectionWallet(): JSX.Element {
               variant="contained"
               aria-disabled={true}
               sx={{
-                backgroundColor: "#ffffff",
+                backgroundColor: "background.paper",
                 mt: 1,
 
                 width: 200,
                 height: 50,
                 ":hover": {
-                  bgcolor: "#ffffff",
+                  bgcolor: "primary.light",
                   // color: "white",
                 },
               }}
@@ -240,7 +235,7 @@ function ConnectionWallet(): JSX.Element {
             textTransform: "unset",
 
             ":hover": {
-              bgcolor: "#222629",
+              bgcolor:"primary.dark"
               color: "white",
             },
           }}

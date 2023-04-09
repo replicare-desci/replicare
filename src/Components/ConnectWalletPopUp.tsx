@@ -35,13 +35,13 @@ export default function ConnectWalletPopUp() {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#222629",
-            color: "primary.main",
+            backgroundColor: "background.default",
+            color: "primary.dark",
 
             textTransform: "unset",
 
             ":hover": {
-              bgcolor: "#222629",
+              bgcolor: "background.paper",
               color: "white",
             },
           }}
@@ -71,12 +71,12 @@ export default function ConnectWalletPopUp() {
         <Button
           variant="outlined"
           sx={{
-            backgroundColor: "#222629",
+            backgroundColor: "primary.light",
             textTransform: "unset",
 
             ":hover": {
-              bgcolor: "#222629",
-              color: "white",
+              bgcolor: "background.paper",
+              color: "primary.main",
             },
           }}
           onClick={handleClickOpen}
@@ -100,7 +100,11 @@ export default function ConnectWalletPopUp() {
           >
             <DialogContent>
               <DialogContentText>
-                <Typography variant="body1" fontWeight={600}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "background.paper" }}
+                  fontWeight={500}
+                >
                   This Community requires an Ethereum Wallet
                 </Typography>
                 <Divider
@@ -111,7 +115,7 @@ export default function ConnectWalletPopUp() {
                     backgroundColor: "primary.main",
                   }}
                 />
-                <Typography variant="body1">
+                <Typography variant="body2" sx={{ color: "background.paper" }}>
                   Many communities require different wallets based on the chain
                   they are built on and the types of tokens members hold.
                 </Typography>
@@ -160,7 +164,7 @@ export default function ConnectWalletPopUp() {
               <Link
                 to="sign-up"
                 onClick={handleClose}
-                style={{ color: "#222629", textDecoration: "none" }}
+                style={{ color:"primary.dark" textDecoration: "none" }}
               >
                 Sign Up
               </Link>

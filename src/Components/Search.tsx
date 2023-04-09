@@ -8,7 +8,7 @@ const Search = () => {
           sx={{
             width: "100%",
             ":hover": {
-              backgroundColor: "#ffffff",
+              backgroundColor: "background.paper",
             },
           }}
           placeholder="Search previous reproductions by DOI"
