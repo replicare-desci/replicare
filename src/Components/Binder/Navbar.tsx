@@ -47,9 +47,9 @@ const Navbar = () => {
 
                   mx: 2,
                   ":hover": {
-                    backgroundColor: "background.default",
+                    backgroundColor: "background.paper",
 
-                    color: "primary.dark",
+                    color: "primary.light",
                   },
                 }}
                 variant="contained"
