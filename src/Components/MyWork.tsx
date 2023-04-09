@@ -18,6 +18,11 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import React from "react";
 import dayjs from "dayjs";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+
+import CancelIcon from "@mui/icons-material/Cancel";
 const localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
 
@@ -84,6 +89,7 @@ const MyWork = () => {
                 <Box my={2}>
                   <Link to={`/reproductions/index/edit/${item?.id}`}>
                     <Button variant="contained" sx={{ marginRight: 1 }}>
+                      <EditIcon sx={{ fontSize: 18, mr: 1 }} />
                       Edit
                     </Button>
                   </Link>
@@ -93,6 +99,7 @@ const MyWork = () => {
                       handleClickOpen(item?.id);
                     }}
                   >
+                    <DeleteIcon sx={{ fontSize: 18, mr: 1 }} />
                     Delete
                   </Button>
                 </Box>
@@ -132,6 +139,7 @@ const MyWork = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} variant="outlined">
+              <CancelIcon sx={{ fontSize: 18, mr: 1 }} />
               Cancel
             </Button>
             <Button
@@ -142,6 +150,7 @@ const MyWork = () => {
               autoFocus
               variant="contained"
             >
+              <DeleteForeverIcon sx={{ fontSize: 18, mr: 1 }} />
               Delete
             </Button>
           </DialogActions>
