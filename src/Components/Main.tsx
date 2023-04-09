@@ -15,6 +15,7 @@ import {
 import Search from "./Search";
 import ConnectWalletPopUp from "./ConnectWalletPopUp";
 import ConnectionWallet from "../ConnectionWallet";
+import AddIcon from "@mui/icons-material/Add";
 const Main = () => {
   const walletAddress = sessionStorage.getItem("walletAddress");
   return (
@@ -53,7 +54,10 @@ const Main = () => {
               }}
             >
               <Box display={"flex"} justifyContent={"center"}>
-                <Button variant="contained">+ Start a reproduction</Button>
+                <Button variant="contained">
+                  {" "}
+                  <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
+                </Button>
               </Box>
             </Link>
           ) : (

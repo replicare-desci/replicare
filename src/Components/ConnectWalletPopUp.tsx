@@ -102,8 +102,8 @@ export default function ConnectWalletPopUp() {
               <DialogContentText>
                 <Typography
                   variant="body1"
-                  sx={{ color: "background.paper" }}
-                  fontWeight={500}
+                  sx={{ color: "primary.light" }}
+                  // fontWeight={500}
                 >
                   This Community requires an Ethereum Wallet
                 </Typography>
@@ -115,7 +115,10 @@ export default function ConnectWalletPopUp() {
                     backgroundColor: "primary.main",
                   }}
                 />
-                <Typography variant="body2" sx={{ color: "background.paper" }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: "background.paper" }}
+                >
                   Many communities require different wallets based on the chain
                   they are built on and the types of tokens members hold.
                 </Typography>
@@ -149,15 +152,20 @@ export default function ConnectWalletPopUp() {
             <Box px={3}>
               {" "}
               <ConnectionWallet />
-              <Typography variant="caption" mt={5}>
+              <Typography variant="caption" mt={4}>
                 By connecting to Replicare, you agree to our &nbsp;
                 <span>
-                  <a href="/">Terms of Service</a>
+                  <a
+                    href="/"
+                    style={{ textDecoration: "none", color: "#32454D" }}
+                  >
+                    Terms of Service
+                  </a>
                 </span>
-                &nbsp; and &nbsp;
-                <span>
+                {/* &nbsp; and &nbsp; */}
+                {/* <span>
                   <a href="/">Privacy Policy</a>
-                </span>
+                </span> */}
               </Typography>
             </Box>
             {/* <Box my={2}>

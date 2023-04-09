@@ -32,6 +32,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: "#EFECEC",
+        },
+      },
+    },
   },
 });
 

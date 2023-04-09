@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import MyWork from "./MyWork";
 import { createDefaultUserPaperData } from "../firebase/firebaseFunctions";
 import { UserContext } from "../context/ContextProvider";
-
+import AddIcon from "@mui/icons-material/Add";
 const Reproductions = () => {
   const { store } = UserContext(); //from userContext we are fetching the user id
 
@@ -36,7 +36,7 @@ const Reproductions = () => {
               style={{ textDecoration: "none" }}
             >
               <Button variant="contained" onClick={newReproductionHandler}>
-                + Start a reproduction
+                <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
               </Button>
             </Link>
           </Grid>

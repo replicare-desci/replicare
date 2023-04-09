@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import ArticleIcon from "@mui/icons-material/Article";
 import logo from "../../assets/images/logo.png";
 const Navbar = () => {
   return (
@@ -54,6 +55,7 @@ const Navbar = () => {
                 }}
                 variant="contained"
               >
+                <ArticleIcon sx={{ fontSize: 20, mr: 1 }} />
                 Docs
               </Button>
             </Link>
