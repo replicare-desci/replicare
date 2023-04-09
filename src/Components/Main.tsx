@@ -66,7 +66,7 @@ const Main = () => {
       </Grid>
       <Box
         sx={{
-          // bgcolor: "background.paper",
+          // bgcolor: "#ffffff",
 
           pt: 8,
           pb: 6,
@@ -186,7 +186,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "background.paper",
+                  backgroundColor: "#ffffff",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -216,7 +216,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "background.paper",
+                  backgroundColor: "#ffffff",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -248,7 +248,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "background.paper",
+                  backgroundColor: "#ffffff",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -277,7 +277,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "background.paper",
+                  backgroundColor: "#ffffff",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
