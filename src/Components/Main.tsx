@@ -27,7 +27,7 @@ const Main = () => {
         my={10}
       >
         <Grid item xs={8}>
-          <Typography variant="h5" sx={{ color: "#80B731" }} component={"p"}>
+          <Typography variant="h5" sx={{ color: "#" }} component={"p"}>
             Welcome to
           </Typography>
           <Typography variant="h3" component={"p"}>
@@ -186,7 +186,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "background.paper",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -216,7 +216,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "background.paper",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -248,7 +248,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "background.paper",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,
@@ -277,7 +277,7 @@ const Main = () => {
                 mt={2}
                 sm={12}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "background.paper",
                   borderRadius: 5,
                   boxShadow: 2,
                   p: 5,

@@ -5,7 +5,9 @@ import { red } from "@mui/material/colors";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#80B731",
+      main: "#32454D",
+      light: "#EFECEC",
+      dark: "#141818",
     },
     secondary: {
       main: "#19857b",
@@ -14,13 +16,22 @@ const theme = createTheme({
       main: red.A400,
     },
     background: {
-      //      default: "#222629"
-      default: "#EEECEC",
-      // paper: "#222629",
+      default: "#EFECEC",
+      paper: "#8C8881",
     },
   },
   typography: {
-    fontFamily: ["Merriweather", "serif"].join(","),
+    fontFamily: "Roboto,sans-serif",
+  },
+  components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: "#EFECEC",
+          // color: "red",
+        },
+      },
+    },
   },
 });
 

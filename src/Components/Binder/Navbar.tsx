@@ -14,7 +14,7 @@ import logo from "../../assets/images/logo.png";
 const Navbar = () => {
   return (
     <div>
-      <AppBar position="relative">
+      <AppBar position="relative" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
           {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}
           <Link to="/">
@@ -22,7 +22,7 @@ const Navbar = () => {
               component="img"
               sx={{
                 height: 64,
-
+                // color: "primary.light",
                 py: 1,
               }}
               alt="replicare logo."
@@ -47,9 +47,9 @@ const Navbar = () => {
 
                   mx: 2,
                   ":hover": {
-                    backgroundColor: "background.default",
+                    backgroundColor: "background.paper",
 
-                    color: "#222629",
+                    color: "primary.light",
                   },
                 }}
                 variant="contained"

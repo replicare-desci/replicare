@@ -40,7 +40,7 @@ export default function Sidebar() {
 
   const list = (anchor: Anchor) => (
     <Box
-      sx={{ width: 500 }}
+      sx={{ width: 500, backgroundColor: "primary.light" }}
       className="sidebar-mobile-width"
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
@@ -126,38 +126,40 @@ export default function Sidebar() {
         </Typography> */}
 
         <Divider />
-        <ListItem sx={{ padding: 0, marginY: 1 }}>
+        {/* <ListItem sx={{ padding: 0, marginY: 1 }}>
           <Link to="/update" style={{ textDecoration: "none" }}>
             <Button
+              variant="contained"
               sx={{
-                backgroundColor: "#000000",
-                color: "#ffffff",
-                borderRadius: 0,
+                backgroundColor: "primary.main",
+                color: "primary.light",
+
+                // borderRadius: 0,
                 fontSize: 18,
 
                 ":hover": {
-                  backgroundColor: "#000000",
-                  color: "#ffffff",
-                  fontSize: 18.1,
+                  backgroundColor: "background.dark",
+                  color: "primary.light",
+                  // fontSize: 18.1,
                 },
               }}
             >
               Sign Up
             </Button>
           </Link>
-        </ListItem>
+        </ListItem> */}
 
-        <ListItem sx={{ padding: 0, margin: 0 }}>
+        {/* <ListItem sx={{ padding: 0, margin: 0 }}>
           <Link to={"/sign-in"} style={{ textDecoration: "none" }}>
             <Button
               sx={{
-                backgroundColor: "#000000",
-                color: "#ffffff",
+                backgroundColor: "background.dark",
+                color: "primary.light",
                 borderRadius: 0,
                 fontSize: 18,
                 ":hover": {
-                  backgroundColor: "#000000",
-                  color: "#ffffff",
+                  backgroundColor: "background.dark",
+                  color: "primary.light",
                   fontSize: 18.1,
                 },
               }}
@@ -165,7 +167,7 @@ export default function Sidebar() {
               Sign&nbsp; In
             </Button>
           </Link>
-        </ListItem>
+        </ListItem> */}
       </List>
     </Box>
   );
@@ -175,7 +177,7 @@ export default function Sidebar() {
       {(["right"] as const).map((anchor) => (
         <React.Fragment key={anchor}>
           <Button
-            sx={{ color: "#ffffff", zIndex: 2 }}
+            sx={{ color: "primary.light", zIndex: 2 }}
             onClick={toggleDrawer(anchor, true)}
           >
             {menuIconClicked ? (

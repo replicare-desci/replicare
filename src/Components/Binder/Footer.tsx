@@ -20,7 +20,7 @@ const Footer = () => {
     <div>
       {/* Footer */}
       <Box
-        sx={{ bgcolor: "#222629", p: 6, color: "#ffffff" }}
+        sx={{ bgcolor: "primary.main", p: 6, color: "#ffffff" }}
         component="footer"
       >
         <Grid container>
@@ -29,15 +29,17 @@ const Footer = () => {
               to={"/"}
               style={{
                 textDecoration: "none",
-                color: "#ffffff",
+                color: "primary.light",
               }}
             >
               <Typography
                 variant="h2"
                 component={"h1"}
                 sx={{
+                  textDecoration: "none",
+                  color: "primary.light",
                   ":hover": {
-                    color: "primary.main",
+                    color: "background.paper",
                   },
                 }}
               >
@@ -51,9 +53,9 @@ const Footer = () => {
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
@@ -61,21 +63,21 @@ const Footer = () => {
                 </Typography>
               </Link>
             </Box>
-            <Box>
+            {/* <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
                   Privacy Policy
                 </Typography>
               </Link>
-            </Box>
+            </Box> */}
             <Box>
               <Link
                 to="https://docs.replicare.dev/"
@@ -84,9 +86,9 @@ const Footer = () => {
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
@@ -96,29 +98,29 @@ const Footer = () => {
             </Box>
           </Grid>
           <Grid item xs={6} xl={3} sm={3} md={3}>
-            <Box>
+            {/* <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
                   Terms of use
                 </Typography>
               </Link>
-            </Box>
+            </Box> */}
             <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
@@ -134,10 +136,10 @@ const Footer = () => {
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     // textTransform: "unset",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
@@ -148,21 +150,21 @@ const Footer = () => {
           </Grid>
 
           <Grid item xs={6} xl={3} sm={3} md={3}>
-            <Box>
+            {/* <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
                   variant="overline"
                   sx={{
-                    color: "#ffffff",
+                    color: "primary.light",
                     ":hover": {
-                      color: "primary.main",
+                      color: "background.paper",
                     },
                   }}
                 >
                   Team
                 </Typography>
               </Link>
-            </Box>
+            </Box> */}
             <Box>
               <Box>
                 <Link
@@ -172,9 +174,9 @@ const Footer = () => {
                   <Typography
                     variant="overline"
                     sx={{
-                      color: "#ffffff",
+                      color: "primary.light",
                       ":hover": {
-                        color: "primary.main",
+                        color: "background.paper",
                       },
                     }}
                   >
@@ -192,9 +194,9 @@ const Footer = () => {
                     <Typography
                       variant="overline"
                       sx={{
-                        color: "#ffffff",
+                        color: "primary.light",
                         ":hover": {
-                          color: "primary.main",
+                          color: "background.paper",
                         },
                       }}
                     >
@@ -210,9 +212,9 @@ const Footer = () => {
                     <Typography
                       variant="overline"
                       sx={{
-                        color: "#ffffff",
+                        color: "primary.light",
                         ":hover": {
-                          color: "primary.main",
+                          color: "background.paper",
                         },
                       }}
                     >
