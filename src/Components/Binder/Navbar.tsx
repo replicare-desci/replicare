@@ -57,7 +57,7 @@ const Navbar = () => {
                 }}
                 variant="contained"
               >
-                <ArticleIcon sx={{ fontSize: 18, mr: 1 }} />
+                <ArticleIcon sx={{ fontSize: 18, mr: 0.5 }} />
                 Docs
               </Button>
             </Link>
