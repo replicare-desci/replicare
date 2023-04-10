@@ -28,13 +28,21 @@ const Main = () => {
         my={10}
       >
         <Grid item xs={8}>
-          <Typography variant="h5" sx={{ color: "#" }} component={"p"}>
+          <Typography
+            variant="overline"
+            sx={{ color: "primary.dark", px: 1, fontSize: 25, lineHeight: 0.5 }}
+            component={"p"}
+          >
             Welcome to
           </Typography>
-          <Typography variant="h3" component={"p"}>
+          <Typography variant="h1" component={"h1"}>
             Replicare
           </Typography>
-          <Typography variant="h5" sx={{ color: "#222629" }} component={"p"}>
+          <Typography
+            variant="body1"
+            sx={{ color: "background.paper", px: 1 }}
+            component={"p"}
+          >
             A decentralized platform to assess and improve the computational
             reproducibility of published empirical research
           </Typography>
