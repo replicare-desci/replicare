@@ -22,7 +22,9 @@ const Navbar = () => {
             <Box
               component="img"
               sx={{
-                height: 64,
+                // height: "10%",
+                width: "100%",
+
                 // color: "primary.light",
                 py: 1,
               }}
