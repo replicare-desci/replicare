@@ -27,7 +27,7 @@ const Main = () => {
         display={"flex"}
         my={10}
       >
-        <Grid item xs={8}>
+        <Grid item xs={12} xl={8} lg={8} sm={10}>
           <Typography
             variant="overline"
             sx={{ color: "primary.dark", px: 1, fontSize: 25, lineHeight: 0.5 }}

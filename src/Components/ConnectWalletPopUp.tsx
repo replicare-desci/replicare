@@ -81,7 +81,7 @@ export default function ConnectWalletPopUp() {
           }}
           onClick={handleClickOpen}
         >
-          <Person2Icon sx={{ marginRight: 1, fontSize: 20 }} />
+          <Person2Icon sx={{ marginRight: 0.5, fontSize: 18 }} />
           Sign in
         </Button>
       )}
