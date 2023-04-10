@@ -1,8 +1,8 @@
 {
   "name": "Replicare",
   "short_name": "Replicare",
-  "theme_color": "#80B731",
-  "background_color": "#222629",
+  "theme_color": "#32454D",
+  "background_color": "#EFECEC",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",

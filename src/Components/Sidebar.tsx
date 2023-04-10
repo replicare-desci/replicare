@@ -87,7 +87,7 @@ export default function Sidebar() {
           <Typography
             className="hover-underline-animation"
             variant="h4"
-            sx={{ mb: 2, lineHeight: 0.8 }}
+            sx={{ mb: 2, lineHeight: 1 }}
             component={"p"}
           >
             Search Reproductions
@@ -187,7 +187,7 @@ export default function Sidebar() {
             )}
           </Button>
           <SwipeableDrawer
-            sx={{ zIndex: 1 }}
+            // sx={{ zIndex: 1 }}
             anchor={anchor}
             open={menuIconClicked}
             onClose={toggleDrawer(anchor, false)}
