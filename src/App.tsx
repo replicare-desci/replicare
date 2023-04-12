@@ -15,6 +15,7 @@ import { UserContext } from "./context/ContextProvider";
 // import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
+import Scoping from "./Components/Scoping/Scoping";
 export default function App() {
   const { store } = UserContext();
   console.log(store);
@@ -34,7 +35,6 @@ export default function App() {
               </>
             }
           />
-
           {store?.user?.isVerified && store?.user?.walletAddress && (
             <>
               <Route
@@ -100,7 +100,6 @@ export default function App() {
               />
             </>
           )}
-
           <Route
             path="/sign-in"
             element={
@@ -124,6 +123,16 @@ export default function App() {
           <Route
             path="*"
             element={<Navigate to="/not-found" replace={false} />}
+          />{" "}
+          <Route
+            path="scoping"
+            element={
+              <>
+                <Navbar />
+                <Scoping />
+                <Footer />
+              </>
+            }
           />
         </Routes>
       </ThemeProvider>
