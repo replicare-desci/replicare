@@ -30,17 +30,17 @@ const Main = () => {
         <Grid item xs={12} xl={8} lg={8} sm={10}>
           <Typography
             variant="overline"
-            sx={{ color: "primary.dark", px: 1, fontSize: 25, lineHeight: 0.5 }}
+            sx={{ color: "primary.dark", fontSize: 25, lineHeight: 0.5 }}
             component={"p"}
           >
             Welcome to
           </Typography>
-          <Typography variant="h1" component={"h1"}>
+          <Typography variant="h2" my={1} component={"h1"}>
             Replicare
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: "background.paper", px: 1 }}
+            sx={{ color: "background.paper" }}
             component={"p"}
           >
             A decentralized platform to assess and improve the computational
