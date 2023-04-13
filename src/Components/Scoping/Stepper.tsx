@@ -5,6 +5,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Scoping from "./Scoping";
 
 const steps = [
   "Summarize paper",
@@ -36,30 +37,19 @@ export default function HorizontalLinearStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+  // const handleSkip = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  //   setSkipped((prevSkipped) => {
+  //     const newSkipped = new Set(prevSkipped.values());
+  //     newSkipped.add(activeStep);
+  //     return newSkipped;
+  //   });
+  // };
 
   const handleReset = () => {
     setActiveStep(0);
   };
-  function getStepContent(stepIndex: any) {
-    switch (stepIndex) {
-      case 0:
-        return <div>hey1</div>;
-      case 1:
-        return <div>hey2</div>;
-      case 2:
-        return <div>hey3</div>;
-      default:
-        return "Unknown stepIndex";
-    }
-  }
+
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
