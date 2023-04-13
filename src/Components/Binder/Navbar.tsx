@@ -26,7 +26,7 @@ const Navbar = () => {
                 width: "100%",
 
                 // color: "primary.light",
-                py: 1,
+                // py: 1,
               }}
               alt="replicare logo."
               src={logo}
@@ -40,6 +40,7 @@ const Navbar = () => {
           >
             <Link
               to="https://docs.replicare.dev"
+              target="_blank"
               style={{ textDecoration: "none" }}
             >
               {" "}

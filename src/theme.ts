@@ -21,7 +21,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Roboto,sans-serif",
+    fontFamily: "Raleway,sans-serif",
   },
   components: {
     MuiDrawer: {

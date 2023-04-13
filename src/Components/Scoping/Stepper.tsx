@@ -48,7 +48,18 @@ export default function HorizontalLinearStepper() {
   const handleReset = () => {
     setActiveStep(0);
   };
-
+  function getStepContent(stepIndex: any) {
+    switch (stepIndex) {
+      case 0:
+        return <div>hey1</div>;
+      case 1:
+        return <div>hey2</div>;
+      case 2:
+        return <div>hey3</div>;
+      default:
+        return "Unknown stepIndex";
+    }
+  }
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
