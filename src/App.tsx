@@ -16,6 +16,10 @@ import { UserContext } from "./context/ContextProvider";
 import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
 import Scoping from "./Components/Scoping/Scoping";
+import SummarizePaperStepOne from "./Components/Scoping/SummarizePaperStepOne";
+import DeclareRobustnessChecksStepFour from "./Components/Scoping/DeclareRobustnessChecksStepFour";
+import AddRevisedReproductionPackagesStepTwo from "./Components/Scoping/AddRevisedReproductionPackagesStepTwo";
+import OutlineClaimsStepThree from "./Components/Scoping/OutlineClaimsStepThree/OutlineClaimsStepThree";
 export default function App() {
   const { store } = UserContext();
   console.log(store);
@@ -125,7 +129,7 @@ export default function App() {
             element={<Navigate to="/not-found" replace={false} />}
           />{" "}
           <Route
-            path="scoping"
+            path="/scoping"
             element={
               <>
                 <Navbar />
@@ -133,7 +137,39 @@ export default function App() {
                 <Footer />
               </>
             }
-          />
+          ></Route>
+          <Route
+            path="/step1"
+            element={
+              <>
+                <SummarizePaperStepOne />
+              </>
+            }
+          ></Route>{" "}
+          <Route
+            path="/step2"
+            element={
+              <>
+                <AddRevisedReproductionPackagesStepTwo />
+              </>
+            }
+          ></Route>{" "}
+          <Route
+            path="/step3"
+            element={
+              <>
+                <OutlineClaimsStepThree />
+              </>
+            }
+          ></Route>{" "}
+          <Route
+            path="/step4"
+            element={
+              <>
+                <DeclareRobustnessChecksStepFour />
+              </>
+            }
+          ></Route>
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
