@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import TableData from "./TableData";
 
 const OutlineClaimsStepThree = () => {
-  const [isClaims, setClaims] = useState(1);
+  const [isClaims, setClaims] = useState(2);
 
   const setTotalClaims = () => {
     setClaims(2);
