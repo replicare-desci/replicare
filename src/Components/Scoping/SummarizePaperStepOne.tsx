@@ -74,8 +74,7 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.5</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.5</b> How would you rate your familiarity with this paper?
               </FormLabel>
               <RadioGroup
                 defaultValue=""
@@ -103,8 +102,8 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.6</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.6</b>How many display items (tables, figures and inline
+                results) are included in the paper's main body?
               </FormLabel>
               <TextField
                 fullWidth
@@ -134,8 +133,8 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.7</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.7</b> How many display items (tables and figures) are
+                included in the paper's appendix?
               </FormLabel>
               <TextField
                 fullWidth
@@ -156,8 +155,9 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.8</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.8</b>Describe the main population that is the focus of the
+                paper as a whole. The population is usually described in the
+                paper's introduction or motivation.
               </FormLabel>
               <TextField
                 fullWidth
@@ -215,8 +215,10 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.11</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.11</b> Would you classify the paper's scientific claims as
+                mainly focused on estimating a causal relationship,
+                estimating/predicting a descriptive statistic of a population,
+                or something else?
               </FormLabel>
               <RadioGroup
                 defaultValue=""
@@ -296,8 +298,7 @@ const SummarizePaperStepOne = () => {
           <ListItem component="li">
             <FormControl required>
               <FormLabel sx={{ my: 1 }}>
-                <b>1.12</b> If there are no reproduction packages, are you
-                willing to build a reproduction package from scratch?
+                <b>1.12</b> Do you plan to investigate the entire paper?
               </FormLabel>
               <RadioGroup
                 defaultValue=""

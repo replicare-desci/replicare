@@ -14,8 +14,13 @@ const steps = [
   "Declare robustness checks",
 ];
 
-export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
+export default function HorizontalLinearStepper({
+  activeStep,
+  setActiveStep,
+}: {
+  activeStep: number;
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepSkipped = (step: number) => {

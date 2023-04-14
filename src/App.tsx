@@ -102,6 +102,49 @@ export default function App() {
                   </>
                 }
               />
+              <Route
+                path="/reproductions/index/:pageType/scoping"
+                element={
+                  <>
+                    <Navbar />
+                    <Scoping />
+                    <Footer />
+                  </>
+                }
+              >
+                {/* <Route
+                  path="/scoping/step1"
+                  element={
+                    <>
+                      <SummarizePaperStepOne />
+                    </>
+                  }
+                ></Route>{" "}
+                <Route
+                  path="/scoping/step2"
+                  element={
+                    <>
+                      <AddRevisedReproductionPackagesStepTwo />
+                    </>
+                  }
+                ></Route>{" "}
+                <Route
+                  path="/scoping/step3"
+                  element={
+                    <>
+                      <OutlineClaimsStepThree />
+                    </>
+                  }
+                ></Route>{" "}
+                <Route
+                  path="/scoping/step4"
+                  element={
+                    <>
+                      <DeclareRobustnessChecksStepFour />
+                    </>
+                  }
+                ></Route> */}
+              </Route>
             </>
           )}
           <Route
@@ -128,48 +171,6 @@ export default function App() {
             path="*"
             element={<Navigate to="/not-found" replace={false} />}
           />{" "}
-          <Route
-            path="/scoping"
-            element={
-              <>
-                <Navbar />
-                <Scoping />
-                <Footer />
-              </>
-            }
-          ></Route>
-          <Route
-            path="/step1"
-            element={
-              <>
-                <SummarizePaperStepOne />
-              </>
-            }
-          ></Route>{" "}
-          <Route
-            path="/step2"
-            element={
-              <>
-                <AddRevisedReproductionPackagesStepTwo />
-              </>
-            }
-          ></Route>{" "}
-          <Route
-            path="/step3"
-            element={
-              <>
-                <OutlineClaimsStepThree />
-              </>
-            }
-          ></Route>{" "}
-          <Route
-            path="/step4"
-            element={
-              <>
-                <DeclareRobustnessChecksStepFour />
-              </>
-            }
-          ></Route>
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

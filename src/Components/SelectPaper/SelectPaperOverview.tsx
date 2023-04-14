@@ -139,6 +139,35 @@ const SelectPaperOverview = () => {
               </>
             )}
           </Grid>
+          <Grid item xs={12} xl={12} p={2}>
+            <Typography variant="body1" p={1}>
+              Step 2: Scoping
+            </Typography>
+            {pageType === "new" ? (
+              <Link
+                to="/reproductions/index/new/scoping"
+                style={{ textDecoration: "none" }}
+              >
+                <Button variant="contained">Create this section</Button>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/reproductions/index/edit/scoping"
+                  style={{ textDecoration: "none", marginRight: 10 }}
+                >
+                  <Button variant="contained">Edit this section</Button>
+                </Link>
+
+                {/* <Link
+                  to={`/reproductions/index/view/${userPaperID}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button variant="contained">View this section</Button>
+                </Link> */}
+              </>
+            )}
+          </Grid>
         </Grid>
       </Container>
     </div>
