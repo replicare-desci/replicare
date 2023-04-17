@@ -15,6 +15,7 @@ import {
 // import { formDataType } from "../types/context.d";
 import { UserContext } from "../context/ContextProvider";
 import { toast } from "react-toastify";
+import { paperData } from "../types/index.d";
 
 type userType = {
   firstName: string;
@@ -110,9 +111,11 @@ async function getUserData(
 }
 
 /**
+ * TODO: no need for now
  * @work getUserPaperData is getting user paper data from the firestore
  * @param {string}userID
  * @param {function} handleUserPaperData
+ *
  */
 async function getUserPaperData(
   userID: string,
@@ -132,29 +135,29 @@ async function getUserPaperData(
     console.error("Error adding document: ", e);
   }
 }
-function giveDoiDataBasedOnPaperID(paperID: string) {
-  const giveDoiData = getDoc(doc(db, "doiPaper", paperID))
-    .then((resp) => {
-      console.log(resp);
-      if (paperID === resp.id) {
-        return {
-          ...resp.data(),
-        };
-      }
-    })
 
-    .catch((err) => console.log(err));
-  console.log(giveDoiData);
-  return giveDoiData;
-}
+// function giveDoiDataBasedOnPaperID(paperID: string) {
+//   const giveDoiData = getDoc(doc(db, "doiPaper", paperID))
+//     .then((resp) => {
+//       console.log(resp);
+//       if (paperID === resp.id) {
+//         return {
+//           ...resp.data(),
+//         };
+//       }
+//     })
+
+//     .catch((err) => console.log(err));
+//   console.log(giveDoiData);
+//   return giveDoiData;
+// }
 
 /**
  * @work existsEmail is a async function which checks that a email is already in the database or not.
- * @param {any}db
  * @param {string} emailID
  * @returns {boolean}
  */
-async function existsEmail(db: any, emailID: string) {
+async function existsEmail(emailID: string) {
   const usersRef = collection(db, "user");
   const q = query(usersRef, where("emailID", "==", emailID));
   const querySnapshot = await getDocs(q);
@@ -176,49 +179,61 @@ async function existsWalletAddress(walletAddress: string) {
 
 /**
  * @work selectUserPaperData is a async function which is used to add the user paper data to the firestore
- * @param {formDataType} formData
+ * @param {paperData} formData
  * @param {string} userID
  * @param {any} doiResponse
  * @returns {boolean}
  */
-async function selectUserPaperData(
+async function addUserPaperData(
   formData: any,
   userID: string,
   doiResponse: any
 ) {
   try {
     const userPaperCollection = collection(db, "userPaper");
-    const doiDataCollection = collection(db, "doiPaper");
-
-    // Add DOI paper data to database
-    const doiPaperDoc = await addDoc(doiDataCollection, {
-      doi: doiResponse?.doi,
-      title: doiResponse?.title,
-      journalName: doiResponse?.nameOfJournal,
-      yearOfPublication: doiResponse?.yearOfPublication,
-      author: doiResponse?.author,
-      createdAt: Timestamp.now(),
-    });
-
-    // Add user paper data to database, referencing DOI paper
-    const userPaperDoc = await addDoc(userPaperCollection, {
-      reproductionPackageAvailable: formData?.reproductionPackageAvailable,
-      authorContacted: formData?.authorContacted,
-      checkBoxData: formData?.checkBoxData,
-      authorInteraction: false,
+    const finalUserPaperDataRef = await addDoc(userPaperCollection, {
       userID: userID,
-      doiPaperID: doiPaperDoc?.id,
-      buildFromScratch: formData?.buildFromScratch,
-      reproductionData1: formData?.reproductionData1,
-      reproductionData2: formData?.reproductionData2,
-      createdAt: Timestamp.now(),
+      paper: doiResponse,
+      ...formData,
     });
-    if (doiPaperDoc.id !== null && userPaperDoc !== null) {
+
+    if (finalUserPaperDataRef.id !== null) {
       return {
         success: true,
-        userPaperID: userPaperDoc.id,
+        userPaperID: finalUserPaperDataRef.id,
       };
     }
+    // const doiDataCollection = collection(db, "doiPaper");
+
+    // // Add DOI paper data to database
+    // const doiPaperDoc = await addDoc(doiDataCollection, {
+    //   doi: doiResponse?.doi,
+    //   title: doiResponse?.title,
+    //   journalName: doiResponse?.nameOfJournal,
+    //   yearOfPublication: doiResponse?.yearOfPublication,
+    //   author: doiResponse?.author,
+    //   createdAt: Timestamp.now(),
+    // });
+
+    // // Add user paper data to database, referencing DOI paper
+    // const userPaperDoc = await addDoc(userPaperCollection, {
+    //   reproductionPackageAvailable: formData?.reproductionPackageAvailable,
+    //   authorContacted: formData?.authorContacted,
+    //   checkBoxData: formData?.checkBoxData,
+    //   authorInteraction: false,
+    //   userID: userID,
+    //   doiPaperID: doiPaperDoc?.id,
+    //   buildFromScratch: formData?.buildFromScratch,
+    //   reproductionData1: formData?.reproductionData1,
+    //   reproductionData2: formData?.reproductionData2,
+    //   createdAt: Timestamp.now(),
+    // });
+    // if (doiPaperDoc.id !== null && userPaperDoc !== null) {
+    //   return {
+    //     success: true,
+    //     userPaperID: userPaperDoc.id,
+    //   };
+    // }
   } catch (error) {
     console.error("Error in selectUserPaperData:", error);
     return {
@@ -239,6 +254,24 @@ async function createDefaultUserPaperData(userID: string) {
     const ref = await addDoc(userPaperCollectionRef, {
       userID: userID,
       createdAt: Timestamp.now(),
+      authors_available: "",
+      authors_contacted: "",
+      authors_response: [],
+      created_at: "2023-04-15T13:07:59.254Z",
+      familiarity_level: "",
+      is_author: "true",
+      is_creator: "true",
+      outputs: {
+        attempt_all_figures_appendix: "",
+        attempt_all_inline_results_body: "",
+        attempt_all_tables_appendix: "",
+      },
+      paper_type: "candidate",
+      reproduction_package_available: "",
+      reproduction_package_from_scratch: "",
+      shareable_link: false,
+      will_assess_whole_paper: "",
+      workflow_stage: "select_paper",
     });
 
     if (ref.id !== null) {
@@ -255,18 +288,11 @@ async function createDefaultUserPaperData(userID: string) {
 
 /**
  * @work delete userPaper table from database
- *
+ * @param {string} userPaperID
  */
-async function deleteUserPaperData(userID: string) {
-  // const userPaperCollectionRef = collection(db, "userPaper");
-
+async function deleteUserPaperData(userPaperID: string) {
   try {
-    // const querySnapshot = await getDocs(userPaperCollectionRef);
-
-    // querySnapshot.forEach((doc) => {
-    //   deleteDoc(doc.ref);
-    // });
-    await deleteDoc(doc(db, "userPaper", userID));
+    await deleteDoc(doc(db, "userPaper", userPaperID));
   } catch (error) {
     console.log(error);
   }
@@ -307,11 +333,11 @@ async function getSelectUserPaperData(userPaperID: string) {
 export {
   existsEmail,
   // saveUserWalletAddress,
-  giveDoiDataBasedOnPaperID,
+  // giveDoiDataBasedOnPaperID,
   getSelectUserPaperData,
   deleteUserPaperData,
   getUserPaperData,
-  selectUserPaperData,
+  addUserPaperData,
   getUserData,
   existsWalletAddress,
   createDefaultUserPaperData,

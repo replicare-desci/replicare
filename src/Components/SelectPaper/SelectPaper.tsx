@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { fetchDoi } from "../../api/fetchDOI";
 import { camelizeKeys } from "../../utils/changeCase";
 import AdditionalInfo from "../AdditionalInfo";
-import { selectUserPaperData } from "../../firebase/firebaseFunctions";
+import { addUserPaperData } from "../../firebase/firebaseFunctions";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { formDataType } from "../../types/context.d";
@@ -116,7 +116,7 @@ const SelectPaper = () => {
     });
     // console.log(116, formData);
 
-    selectUserPaperData(formData, userID, doiResponse)
+    addUserPaperData(formData, userID, doiResponse)
       .then((res) => {
         console.log("res", res);
 

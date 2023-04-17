@@ -29,18 +29,17 @@ dayjs.extend(localizedFormat);
 const MyWork = () => {
   const userID = sessionStorage.getItem("id") as string;
   const [userPaperID, setUserPaperID] = useState<string>("");
-
+  const [open, setOpen] = React.useState(false);
   const [data, setData] = useState([]);
   console.log(data);
 
-  const deleted = (userID: string) => {
-    deleteUserPaperData(userID);
+  // deletes the data from userPaper Table
+  const deleted = (userPaperID: string) => {
+    deleteUserPaperData(userPaperID);
     setData((prev) => {
-      return prev.filter((item: any) => item.id !== userID);
+      return prev.filter((item: any) => item.id !== userPaperID);
     });
   };
-
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (userPaperIDEvent: string) => {
     setUserPaperID(userPaperIDEvent);
