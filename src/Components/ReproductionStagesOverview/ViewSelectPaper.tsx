@@ -1,47 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
-  Typography,
-  ListItemText,
-  ListItem,
-  List,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSelectUserPaperData } from "../../firebase/firebaseFunctions";
 import dayjs from "dayjs";
+import { paperData } from "../../types/index.d";
 
 const localizedFormat = require("dayjs/plugin/localizedFormat");
 
 dayjs.extend(localizedFormat);
 
-type userPaperDataType = {
-  authorAvailableForFurtherQuestion: string;
-  authorContacted: string;
-  buildFromScratch: string;
-  checkBoxData: boolean[];
-  createdAt: any;
-  doiPaperData: {
-    author: string;
-    createdAt: any;
-    doi: string;
-    nameOfJournal: string;
-    title: string;
-    yearOfPublication: any;
-  };
-  paperID: string;
-  reproductionData1: string;
-  reproductionData2: string;
-  reproductionPackageAvailable: string;
-  userID: string;
-};
 const ViewSelectPaper = () => {
   const navigate = useNavigate();
   const checkBoxOptions = [
@@ -71,7 +38,7 @@ const ViewSelectPaper = () => {
       label: "Did not respond. As of:",
     },
   ];
-  const [userPaperData, setUserPaperData] = useState<userPaperDataType>();
+  const [userPaperData, setUserPaperData] = useState<paperData>();
   const { userPaperID } = useParams();
   useEffect(() => {
     getSelectUserPaperData(userPaperID as string)
@@ -148,8 +115,8 @@ const ViewSelectPaper = () => {
                 </Typography>
                 <Typography variant="subtitle2">
                   {" "}
-                  {userPaperData?.doiPaperData?.doi
-                    ? userPaperData?.doiPaperData?.doi
+                  {userPaperData?.paper?.doi
+                    ? userPaperData?.paper?.doi
                     : `N/A`}
                 </Typography>
               </Box>
@@ -160,8 +127,8 @@ const ViewSelectPaper = () => {
                 </Typography>
                 <Typography variant="subtitle2">
                   {" "}
-                  {userPaperData?.doiPaperData?.title
-                    ? userPaperData?.doiPaperData?.title
+                  {userPaperData?.paper?.title
+                    ? userPaperData?.paper?.title
                     : `N/A`}
                 </Typography>
               </Box>
@@ -173,8 +140,8 @@ const ViewSelectPaper = () => {
                 </Typography>
                 <Typography variant="subtitle2">
                   {" "}
-                  {userPaperData?.doiPaperData?.nameOfJournal
-                    ? userPaperData?.doiPaperData?.nameOfJournal
+                  {userPaperData?.paper?.journal_name
+                    ? userPaperData?.paper?.journal_name
                     : `N/A`}{" "}
                 </Typography>
               </Box>
@@ -186,10 +153,10 @@ const ViewSelectPaper = () => {
                 </Typography>{" "}
                 <Typography variant="subtitle2">
                   {" "}
-                  {userPaperData?.doiPaperData?.yearOfPublication
-                    ? dayjs(
-                        userPaperData?.doiPaperData?.yearOfPublication
-                      ).format("L LT")
+                  {userPaperData?.paper?.publication_year
+                    ? dayjs(userPaperData?.paper?.publication_year).format(
+                        "L LT"
+                      )
                     : `N/A`}{" "}
                 </Typography>
               </Box>
@@ -200,8 +167,8 @@ const ViewSelectPaper = () => {
                 </Typography>
                 <Typography variant="subtitle2">
                   {" "}
-                  {userPaperData?.doiPaperData?.author
-                    ? userPaperData?.doiPaperData?.author
+                  {userPaperData?.paper?.author
+                    ? userPaperData?.paper?.author
                     : `N/A`}
                 </Typography>
               </Box>
@@ -222,8 +189,8 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              {userPaperData?.reproductionPackageAvailable
-                ? userPaperData?.reproductionPackageAvailable
+              {userPaperData?.reproduction_package_available
+                ? userPaperData?.reproduction_package_available
                 : "N/A"}
             </Box>
           </Grid>{" "}
@@ -247,8 +214,8 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              {userPaperData?.authorContacted
-                ? userPaperData?.authorContacted
+              {userPaperData?.authors_contacted
+                ? userPaperData?.authors_contacted
                 : "N/A"}
             </Box>
           </Grid>{" "}
@@ -267,7 +234,7 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              <ul>
+              {/* <ul>
                 {" "}
                 {userPaperData?.checkBoxData &&
                 userPaperData?.checkBoxData.length > 0
@@ -285,7 +252,7 @@ const ViewSelectPaper = () => {
                       }
                     )
                   : "N/A"}
-              </ul>
+              </ul> */}
             </Box>
           </Grid>{" "}
           {/* <Grid item xl={12} xs={12} my={2}>
@@ -325,8 +292,8 @@ const ViewSelectPaper = () => {
               border={1}
               //   sx={{ backgroundColor: "#222629" }}
             >
-              {userPaperData?.buildFromScratch
-                ? userPaperData?.buildFromScratch
+              {userPaperData?.reproduction_package_from_scratch
+                ? userPaperData?.reproduction_package_from_scratch
                 : "N/A"}
             </Box>
           </Grid>{" "}
@@ -340,14 +307,16 @@ const ViewSelectPaper = () => {
             >
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Package name:
-                {userPaperData?.reproductionData1
-                  ? userPaperData?.reproductionData1
+                {userPaperData?.original_reproduction_packages &&
+                userPaperData?.original_reproduction_packages?.length > 0
+                  ? userPaperData?.original_reproduction_packages[0]?.name
                   : "N/A"}
               </Typography>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Package URL:
-                {userPaperData?.reproductionData2
-                  ? userPaperData?.reproductionData2
+                {userPaperData?.original_reproduction_packages &&
+                userPaperData?.original_reproduction_packages?.length > 0
+                  ? userPaperData?.original_reproduction_packages[0]?.url
                   : "N/A"}
               </Typography>
             </Box>

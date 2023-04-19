@@ -312,7 +312,7 @@ workflow_stage:"select_paper"
 // :
 // {num_tables_body: 123,
  num_tables_appendix: 176,
- num_figures_body: 145,
+ num_figures_body: 145,paper
  num_figures_appendix: 1689,…}
 // attempt_all_figures_appendix
 // :

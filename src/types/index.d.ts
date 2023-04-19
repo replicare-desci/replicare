@@ -4,12 +4,13 @@ export type doiData = {
   doi: string;
   publication_name: string;
   publication_year: string;
+  journal_name: string;
 };
 
 export type original_reproduction_packages = {
-  id: number;
-  stage: string;
-  content_type: string;
+  id?: number;
+  stage?: string;
+  content_type?: string;
   name: string;
   url: string;
 };

@@ -11,6 +11,7 @@ import {
   getDoc,
   Timestamp,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 // import { formDataType } from "../types/context.d";
 import { UserContext } from "../context/ContextProvider";
@@ -253,14 +254,13 @@ async function createDefaultUserPaperData(userID: string) {
   try {
     const ref = await addDoc(userPaperCollectionRef, {
       userID: userID,
-      createdAt: Timestamp.now(),
       authors_available: "",
       authors_contacted: "",
       authors_response: [],
-      created_at: "2023-04-15T13:07:59.254Z",
+      created_at: Timestamp.now(),
       familiarity_level: "",
-      is_author: "true",
-      is_creator: "true",
+      is_author: true,
+      is_creator: true,
       outputs: {
         attempt_all_figures_appendix: "",
         attempt_all_inline_results_body: "",
@@ -304,7 +304,6 @@ async function deleteUserPaperData(userPaperID: string) {
  * @returns
  */
 async function getSelectUserPaperData(userPaperID: string) {
-  const userPaperCollectionRef = collection(db, "userPaper");
   let data: any = {};
   try {
     let querySnapshot: any = await getDoc(doc(db, "userPaper", userPaperID));
@@ -314,20 +313,30 @@ async function getSelectUserPaperData(userPaperID: string) {
     //     data.push(doc.data());
     //   }
     // });
+
     console.log(querySnapshot.data());
-    const doiPaperID = querySnapshot.data().doiPaperID;
-    if (doiPaperID) {
-      const doiPaperData = await getDoc(doc(db, "doiPaper", doiPaperID));
 
-      console.log(doiPaperData.data());
-
-      data = { ...querySnapshot.data(), doiPaperData: doiPaperData.data() };
-    }
+    data = { ...querySnapshot.data() };
   } catch (error) {
     console.log(error);
   }
 
   return data;
+}
+
+async function appendUserPaperData(userPaperID: string, data: any) {
+  try {
+    const updateSnapshot: any = await updateDoc(
+      doc(db, "userPaper", userPaperID),
+      data
+    );
+
+    if (updateSnapshot.id !== null) {
+      return updateSnapshot.id;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export {
@@ -341,9 +350,14 @@ export {
   getUserData,
   existsWalletAddress,
   createDefaultUserPaperData,
+  appendUserPaperData,
 };
 
 /*
+
+id => userPaperID
+userID => userID
+
   
   table name : user
     firstName : "String",

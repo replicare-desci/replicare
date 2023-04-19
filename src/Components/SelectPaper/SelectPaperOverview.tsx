@@ -83,7 +83,7 @@ const SelectPaperOverview = () => {
                     </Link>
 
                     <Link
-                      to={`/reproductions/index/view/${userPaperID}`}
+                      to={`/reproductions/select-paper/view/${userPaperID}`}
                       style={{ textDecoration: "none" }}
                     >
                       <Button variant="contained">View this section</Button>
@@ -93,7 +93,13 @@ const SelectPaperOverview = () => {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Step 2:Scoping</StepLabel>
+              <StepLabel>Step 2:Scoping</StepLabel>{" "}
+              <Link to={`/reproductions/scoping/view/${userPaperID}`}>
+                {" "}
+                <Button>
+                  <VisibilityIcon />
+                </Button>
+              </Link>
               <StepContent>
                 <Typography>
                   Focusing on the declared paper from the previous stage, define
@@ -101,6 +107,7 @@ const SelectPaperOverview = () => {
                   and claims on which you will focus in the later stages. See
                   detailed guidance here.
                 </Typography>
+
                 <>
                   <Link
                     to="/reproductions/index/edit/scoping"
@@ -110,10 +117,34 @@ const SelectPaperOverview = () => {
                   </Link>
                 </>
               </StepContent>
+              {pageType === "new" ? (
+                <Link
+                  to="/reproductions/index/edit/scoping/"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button variant="contained">Create this section</Button>
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/reproductions/index/edit/scoping"
+                    style={{ textDecoration: "none", marginRight: 10 }}
+                  >
+                    <Button variant="contained">Edit this section</Button>
+                  </Link>
+
+                  <Link
+                    to={`/reproductions/scoping/view/${userPaperID}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button variant="contained">View this section</Button>
+                  </Link>
+                </>
+              )}
             </Step>
             {/* step3 */}
             <Step>
-              <StepLabel>Step 3: Assessment</StepLabel>
+              <StepLabel>Step 3: Assessment</StepLabel> <VisibilityIcon />
               <StepContent>
                 <Typography>
                   Describe in detail the available reproduction materials and
@@ -133,7 +164,7 @@ const SelectPaperOverview = () => {
             </Step>
             {/* step4 */}
             <Step>
-              <StepLabel>Step 4:Improvement</StepLabel>
+              <StepLabel>Step 4:Improvement</StepLabel> <VisibilityIcon />
               <StepContent>
                 <Typography>
                   Record and/or propose ways to improve the reproducibility of

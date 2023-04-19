@@ -6,6 +6,9 @@ import {
   AddRevisedReproductionPackage,
   SummarizePaper,
 } from "../../types/context.d";
+
+import { paperData } from "../../types/index.d";
+
 import Stepper from "./Stepper";
 import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPackagesStepTwo";
 import OutlineClaimsStepThree from "./OutlineClaimsStepThree/OutlineClaimsStepThree";
@@ -22,13 +25,19 @@ const Scoping = () => {
   const [oneTen, setOneTen] = useState<number>(-1);
   const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
+
+  // global state for scoping
+  const [scopingData, setScopingData] = useState();
+
   function scopeStepRender(activeStep: number) {
     switch (activeStep) {
       case 0:
         return (
           <SummarizePaperStepOne
-          // scopingDataStep1={scopingDataStep1}
-          // setScopingDataStep1={setScopingDataStep1}
+            scopingData={scopingData}
+            setScopingData={setScopingData}
+            // scopingDataStep1={scopingDataStep1}
+            // setScopingDataStep1={setScopingDataStep1}
           />
         );
       case 1:

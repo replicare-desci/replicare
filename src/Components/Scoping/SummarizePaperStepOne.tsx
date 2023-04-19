@@ -16,7 +16,13 @@ import {
 } from "@mui/material";
 
 import SaveIcon from "@mui/icons-material/Save";
-const SummarizePaperStepOne = () => {
+
+interface props {
+  scopingData: any;
+  setScopingData: any;
+}
+
+const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   return (
     <>
       <Typography variant={"h5"} component="h6" p={2}>
