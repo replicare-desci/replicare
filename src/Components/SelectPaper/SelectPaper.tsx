@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { fetchDoi } from "../../api/fetchDOI";
 import { camelizeKeys } from "../../utils/changeCase";
 import AdditionalInfo from "../AdditionalInfo";
-import { addUserPaperData } from "../../firebase/firebaseFunctions";
-import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {
+  addUserPaperData,
+  getSelectUserPaperData,
+} from "../../firebase/firebaseFunctions";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
-import "react-toastify/dist/ReactToastify.css";
 import {
   TextField,
   Button,
@@ -24,13 +26,15 @@ import {
   FormHelperText,
   Checkbox,
 } from "@mui/material";
-import { doiData, paperData } from "../../types/index.d";
+import { doiData } from "../../types/index.d";
 
 type checkBoxOption = {
   label: string;
 };
 
 const SelectPaper = () => {
+  const { pageType, userPaperID } = useParams();
+
   const navigate = useNavigate();
   const checkBoxOptions: checkBoxOption[] = [
     {
@@ -66,7 +70,6 @@ const SelectPaper = () => {
   const [isDisabled16, setDisabled16] = useState<boolean>(false);
   const [isChecked141, setChecked141] = useState<boolean>(false);
 
-  const [count, setCount] = useState(0);
   const [isReproductionPackageAvailable, setReproductionPackageAvailable] =
     useState<boolean>(false);
   const [isError, setError] = useState<boolean>(false);
@@ -91,6 +94,27 @@ const SelectPaper = () => {
     original_reproduction_packages: [],
     authors_response: [],
   });
+
+  useEffect(() => {
+    if (
+      userPaperID !== undefined &&
+      pageType !== undefined &&
+      pageType === "edit"
+    ) {
+      getSelectUserPaperData(userPaperID)
+        .then((paperResponse) => {
+          setFormData((prev) => {
+            return {
+              ...prev,
+              ...paperResponse,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [userPaperID, pageType]);
 
   const formDataHandler = (event: any) => {
     setFormData((prev) => {
@@ -139,7 +163,7 @@ const SelectPaper = () => {
         if (typeof res !== "undefined") {
           if (res.success) {
             toast.success("Data submitted");
-            navigate(`/reproductions/index/edit/${res?.userPaperID}`);
+            navigate(`/reproductions/edit/${res?.userPaperID}`);
           } else {
             toast.error("Error submitting data");
           }
@@ -152,12 +176,7 @@ const SelectPaper = () => {
 
     // setSelectPaperData("submitted");
   };
-  const renderAdditional = () => {
-    setCount(count + 1);
-  };
-  // const renderedComponents = Array.from({ length: count }, (_, index) => (
-  //   <AdditionalInfo key={index} />
-  // ));
+
   const disableClick = (toggle: boolean, count: string) => {
     if (count === "1.2") {
       setDisabled12(toggle);
@@ -230,9 +249,6 @@ const SelectPaper = () => {
   return (
     <div>
       <Container>
-        <ToastContainer />
-        {/* Same as */}
-        <ToastContainer />
         <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
           Step 1: Declare a paper
         </Typography>
@@ -319,7 +335,11 @@ const SelectPaper = () => {
                   <TextField
                     label="Name of the journal or publication"
                     type={"text"}
-                    defaultValue={doiResponse?.publication_name}
+                    defaultValue={
+                      doiResponse?.publication_name
+                        ? doiResponse?.publication_name
+                        : ""
+                    }
                     variant="standard"
                     fullWidth
                   />
@@ -328,7 +348,7 @@ const SelectPaper = () => {
                   <TextField
                     label="Digital Object Identifier (or URL if no DOI available)"
                     type={"text"}
-                    defaultValue={doiResponse?.doi}
+                    defaultValue={doiResponse?.doi ? doiResponse?.doi : ""}
                     variant="standard"
                     fullWidth
                   />
@@ -337,9 +357,13 @@ const SelectPaper = () => {
                   <TextField
                     label="Year of Publication"
                     type={"text"}
-                    defaultValue={new Date(doiResponse?.publication_year)
-                      .getFullYear()
-                      .toString()}
+                    defaultValue={
+                      doiResponse?.publication_year
+                        ? new Date(doiResponse?.publication_year)
+                            .getFullYear()
+                            .toString()
+                        : "No year"
+                    }
                     variant="standard"
                     fullWidth
                   />
@@ -348,7 +372,9 @@ const SelectPaper = () => {
                   <TextField
                     label="Authors"
                     type={"text"}
-                    defaultValue={doiResponse?.author}
+                    defaultValue={
+                      doiResponse?.author ? doiResponse?.author : ""
+                    }
                     variant="standard"
                     fullWidth
                   />
@@ -365,7 +391,11 @@ const SelectPaper = () => {
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
-                  defaultValue=""
+                  defaultValue={
+                    formData?.reproduction_package_available
+                      ? formData?.reproduction_package_available
+                      : ""
+                  }
                   onChange={formDataHandler}
                   name="reproduction_package_available"
                 >
@@ -402,7 +432,11 @@ const SelectPaper = () => {
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
-                  defaultValue=""
+                  defaultValue={
+                    formData?.authors_contacted
+                      ? formData?.authors_contacted
+                      : ""
+                  }
                   name="authors_contacted"
                   onChange={formDataHandler}
                 >
@@ -441,15 +475,18 @@ const SelectPaper = () => {
                         key={index}
                         control={
                           <Checkbox
+                            checked={
+                              formData?.authors_response.length > 0 &&
+                              formData?.authors_response.includes(
+                                item?.label as never
+                              )
+                            }
                             name={item.label}
-                            // value={name}
-                            // checked={checkedState[index]}
                             onChange={() => handleCheckBoxData(index)}
                           />
                         }
                         onClick={() => setDisabled16(true)}
                         label={item.label}
-                        // sx={{ display: "block" }}
                       />
                     </>
                   );
@@ -457,25 +494,6 @@ const SelectPaper = () => {
               </FormControl>
             </ListItem>
 
-            {/* <ListItem>
-              <FormControl required disabled={isDisabled12 || isDisabled13}>
-                <FormLabel id="permission">
-                  1.5 Are the authors available for further questions for ACRe
-                  reproductions?
-                </FormLabel>
-                <RadioGroup
-                  onChange={formDataHandler}
-                  name="authorAvailableForFurtherQuestion"
-                >
-                  <FormControlLabel
-                    value="yes"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                </RadioGroup>
-              </FormControl>
-            </ListItem> */}
             <ListItem>
               <FormControl required disabled={isDisabled12}>
                 <FormLabel id="permission">
@@ -483,7 +501,11 @@ const SelectPaper = () => {
                   build a reproduction package from scratch?
                 </FormLabel>
                 <RadioGroup
-                  defaultValue=""
+                  defaultValue={
+                    formData?.reproduction_package_from_scratch
+                      ? formData?.reproduction_package_from_scratch
+                      : ""
+                  }
                   onChange={formDataHandler}
                   name="reproduction_package_from_scratch"
                 >
@@ -511,39 +533,6 @@ const SelectPaper = () => {
               </ListItem>
             ) : null}
             {isReproductionPackageAvailable ? (
-              // <ListItem>
-              //   <FormControl required fullWidth sx={{ py: 1 }}>
-              //     <FormLabel>
-              //       Record the main repository that stores the code for the
-              //       reproduction package provided by the authors.
-              //     </FormLabel>
-              //     <FormHelperText>
-              //       Contents of reproduction package
-              //     </FormHelperText>
-              //     <TextField
-              //       variant="standard"
-              //       name="name"
-              //       type={"text"}
-              //       placeholder="e.g. Main code repository with data"
-              //     ></TextField>
-              //     <TextField
-              //       type={"text"}
-              //       variant="standard"
-              //       onChange={formDataHandler}
-              //       name="reproductionData2"
-              //       placeholder="e.g. https://github.com/paper/paper"
-              //     ></TextField>
-              //     <FormLabel>
-              //       Are there additional data in different repositories? Use the
-              //       button below to add links to these as well.
-              //     </FormLabel>{" "}
-              //     {renderedComponents}
-              //     <Button variant="contained" onClick={renderAdditional}>
-              //       + Add additional reproduction packages for data
-              //     </Button>
-              //   </FormControl>
-              // </ListItem>
-
               <AdditionalInfo formData={formData} setFormData={setFormData} />
             ) : null}
           </List>
