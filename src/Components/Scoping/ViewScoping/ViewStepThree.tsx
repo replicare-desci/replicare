@@ -11,10 +11,12 @@ import {
 function ViewStepThree() {
   return (
     <Container>
-      <Button>claims2</Button>
-      <Typography variant="h6">Outline claims</Typography>
+      {/* <Button>claims2</Button> */}
+      <Typography variant="h6" my={2}>
+        Outline claims
+      </Typography>
       <Box sx={{ minWidth: 120 }}>
-        <Box boxShadow={1} p={2}>
+        <Box>
           <Box>
             <Typography>
               <b>3.1.1. </b>Provide a one-sentence summary of the claim you will
