@@ -10,9 +10,11 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link, useParams } from "react-router-dom";
+
+import { checkPaperExecutionState } from "../../firebase/firebaseFunctions";
 
 const SelectPaperOverview = () => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -43,6 +45,39 @@ const SelectPaperOverview = () => {
   // const handleReset = () => {
   //   setActiveStep(0);
   // };
+
+  const [paperExecutionState, setPaperExecutionState] = useState("");
+
+  useEffect(() => {
+    if (
+      userPaperID !== undefined &&
+      pageType !== undefined &&
+      pageType === "edit"
+    ) {
+      checkPaperExecutionState(userPaperID)
+        .then((data) => {
+          setPaperExecutionState(data);
+          checkPaperState(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [pageType, userPaperID]);
+
+  function checkPaperState(paperExecutionState: string) {
+    switch (paperExecutionState) {
+      case "candidate":
+        setActiveStep(0);
+        break;
+      case "declared":
+        setActiveStep(1);
+        break;
+      case "scoping":
+        setActiveStep(2);
+        break;
+    }
+  }
   return (
     <div>
       {/* <div>SelectPaperOverview</div> */}
@@ -56,7 +91,12 @@ const SelectPaperOverview = () => {
             <Step>
               <StepLabel>
                 Step 1:Declare a paper
-                <VisibilityIcon fontSize="medium" />
+                <Link
+                  style={{ display: "inline-block" }}
+                  to={`/reproductions/select-paper/view/${userPaperID}`}
+                >
+                  <VisibilityIcon fontSize="medium" />
+                </Link>
               </StepLabel>
 
               <StepContent>
@@ -68,7 +108,7 @@ const SelectPaperOverview = () => {
 
                 {pageType === "new" ? (
                   <Link
-                    to="/reproductions/index/new/select-paper"
+                    to="/reproductions/select-paper/new"
                     style={{ textDecoration: "none" }}
                   >
                     <Button variant="contained">Create this section</Button>
@@ -76,7 +116,7 @@ const SelectPaperOverview = () => {
                 ) : (
                   <>
                     <Link
-                      to="/reproductions/index/edit/select-paper"
+                      to={`/reproductions/select-paper/edit/${userPaperID}`}
                       style={{ textDecoration: "none", marginRight: 10 }}
                     >
                       <Button variant="contained">Edit this section</Button>
@@ -94,11 +134,11 @@ const SelectPaperOverview = () => {
             </Step>
             <Step>
               <StepLabel>Step 2:Scoping</StepLabel>{" "}
-              <Link to={`/reproductions/scoping/view/${userPaperID}`}>
-                {" "}
-                <Button>
-                  <VisibilityIcon />
-                </Button>
+              <Link
+                style={{ display: "inline-block" }}
+                to={`/reproductions/scoping/view/${userPaperID}`}
+              >
+                <VisibilityIcon fontSize="medium" />
               </Link>
               <StepContent>
                 <Typography>
@@ -110,24 +150,7 @@ const SelectPaperOverview = () => {
 
                 <>
                   <Link
-                    to="/reproductions/index/edit/scoping"
-                    style={{ textDecoration: "none", marginRight: 10 }}
-                  >
-                    <Button variant="contained">Edit this section</Button>
-                  </Link>
-                </>
-              </StepContent>
-              {pageType === "new" ? (
-                <Link
-                  to="/reproductions/index/edit/scoping/"
-                  style={{ textDecoration: "none" }}
-                >
-                  <Button variant="contained">Create this section</Button>
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/reproductions/index/edit/scoping"
+                    to={`/reproductions/scoping/edit/${userPaperID}`}
                     style={{ textDecoration: "none", marginRight: 10 }}
                   >
                     <Button variant="contained">Edit this section</Button>
@@ -140,11 +163,12 @@ const SelectPaperOverview = () => {
                     <Button variant="contained">View this section</Button>
                   </Link>
                 </>
-              )}
+              </StepContent>
             </Step>
             {/* step3 */}
             <Step>
-              <StepLabel>Step 3: Assessment</StepLabel> <VisibilityIcon />
+              <StepLabel>Step 3: Assessment</StepLabel>
+              {/* <VisibilityIcon /> */}
               <StepContent>
                 <Typography>
                   Describe in detail the available reproduction materials and
@@ -152,40 +176,41 @@ const SelectPaperOverview = () => {
                   reviewed in the previous stage, as well as the overall paper.
                   See detailed guidance here.
                 </Typography>
-                <>
+                {/* <>
                   <Link
                     to="/reproductions/index/edit/scoping"
                     style={{ textDecoration: "none", marginRight: 10 }}
                   >
                     <Button variant="contained">Edit this section</Button>
                   </Link>
-                </>
+                </> */}
               </StepContent>
             </Step>
             {/* step4 */}
             <Step>
-              <StepLabel>Step 4:Improvement</StepLabel> <VisibilityIcon />
+              <StepLabel>Step 4:Improvement</StepLabel>
+              {/* <VisibilityIcon /> */}
               <StepContent>
                 <Typography>
                   Record and/or propose ways to improve the reproducibility of
                   individual display items and/or the overall paper. See
                   detailed guidance here
                 </Typography>
-                <>
+                {/* <>
                   <Link
                     to="/reproductions/index/edit/scoping"
                     style={{ textDecoration: "none", marginRight: 10 }}
                   >
                     <Button variant="contained">Edit this section</Button>
                   </Link>
-                </>
+                </> */}
               </StepContent>
             </Step>
             {/* step5 */}
             <Step>
               <StepLabel>
                 Step 5:Robustness
-                <VisibilityIcon />
+                {/* <VisibilityIcon /> */}
               </StepLabel>
               <StepContent>
                 <Typography>
@@ -194,14 +219,14 @@ const SelectPaperOverview = () => {
                   interest, i.e. conducting robustness checks. See detailed
                   guidance here.
                 </Typography>
-                <>
+                {/* <>
                   <Link
                     to="/reproductions/index/edit/scoping"
                     style={{ textDecoration: "none", marginRight: 10 }}
                   >
                     <Button variant="contained">Edit this section</Button>
                   </Link>
-                </>
+                </> */}
               </StepContent>
             </Step>
           </Stepper>

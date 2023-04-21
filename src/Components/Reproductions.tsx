@@ -31,10 +31,7 @@ const Reproductions = () => {
             My work
           </Typography>
           <Grid item xs={12} xl={12}>
-            <Link
-              to="/reproductions/index/new"
-              style={{ textDecoration: "none" }}
-            >
+            <Link to="/reproductions/new" style={{ textDecoration: "none" }}>
               <Button variant="contained" onClick={newReproductionHandler}>
                 <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
               </Button>

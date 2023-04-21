@@ -86,7 +86,7 @@ const MyWork = () => {
                   Number of claims assessed: 0
                 </Typography>
                 <Box my={2}>
-                  <Link to={`/reproductions/index/edit/${item?.id}`}>
+                  <Link to={`/reproductions/edit/${item?.id}`}>
                     <Button variant="contained" sx={{ marginRight: 1 }}>
                       <EditIcon sx={{ fontSize: 18, mr: 1 }} />
                       Edit
