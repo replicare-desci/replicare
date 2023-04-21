@@ -14,7 +14,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 // import { formDataType } from "../types/context.d";
-import { UserContext } from "../context/ContextProvider";
 import { toast } from "react-toastify";
 import { paperData } from "../types/index.d";
 
@@ -290,9 +289,9 @@ async function createDefaultUserPaperData(userID: string) {
  * @work delete userPaper table from database
  * @param {string} userPaperID
  */
-async function deleteUserPaperData(userPaperID: string) {
+async function deleteUserPaperData(id: string) {
   try {
-    await deleteDoc(doc(db, "userPaper", userPaperID));
+    await deleteDoc(doc(db, "userPaper", id));
   } catch (error) {
     console.log(error);
   }
@@ -300,23 +299,19 @@ async function deleteUserPaperData(userPaperID: string) {
 
 /**
  * @work  getting the select user paper data from firestore database
- * @param userPaperID
+ * @param {string} id
  * @returns
  */
-async function getSelectUserPaperData(userPaperID: string) {
+async function getSelectUserPaperData(id: string) {
   let data: any = {};
   try {
-    let querySnapshot: any = await getDoc(doc(db, "userPaper", userPaperID));
+    let querySnapshot: any = await getDoc(doc(db, "userPaper", id));
 
-    // querySnapshot.forEach((doc: any) => {
-    //   if (doc.id == userPaperID) {
-    //     data.push(doc.data());
-    //   }
-    // });
+    if (querySnapshot && querySnapshot.id) {
+      console.log(querySnapshot.data());
 
-    console.log(querySnapshot.data());
-
-    data = { ...querySnapshot.data() };
+      data = { ...querySnapshot.data() };
+    }
   } catch (error) {
     console.log(error);
   }
@@ -324,12 +319,9 @@ async function getSelectUserPaperData(userPaperID: string) {
   return data;
 }
 
-async function appendUserPaperData(userPaperID: string, data: any) {
+async function appendUserPaperData(id: string, data: any) {
   try {
-    const updateSnapshot: any = await updateDoc(
-      doc(db, "userPaper", userPaperID),
-      data
-    );
+    const updateSnapshot: any = await updateDoc(doc(db, "userPaper", id), data);
 
     if (updateSnapshot.id !== null) {
       return updateSnapshot.id;
@@ -339,10 +331,33 @@ async function appendUserPaperData(userPaperID: string, data: any) {
   }
 }
 
+async function checkPaperExecutionState(id: string) {
+  /* 
+  Possible values of paper_type
+
+  - candidate
+  - declared
+  - scoping
+  
+  */
+  try {
+    const docRef = doc(db, "userPaper", id);
+    let querySnapshot: any = await getDoc(docRef);
+
+    if (querySnapshot && querySnapshot.id) {
+      const paper_type = querySnapshot.data()?.paper_type;
+
+      return paper_type;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return "";
+}
+
 export {
   existsEmail,
-  // saveUserWalletAddress,
-  // giveDoiDataBasedOnPaperID,
   getSelectUserPaperData,
   deleteUserPaperData,
   getUserPaperData,
@@ -351,6 +366,7 @@ export {
   existsWalletAddress,
   createDefaultUserPaperData,
   appendUserPaperData,
+  checkPaperExecutionState,
 };
 
 /*
