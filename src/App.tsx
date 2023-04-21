@@ -63,8 +63,19 @@ export default function App() {
                   </>
                 }
               />
+              {/* Route to reproductions */}
               <Route
-                path="/reproductions/index/:pageType/:userPaperID"
+                path="/reproductions/:pageType"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectPaperOverview />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/reproductions/:pageType/:userPaperID"
                 element={
                   <>
                     <Navbar />
@@ -74,11 +85,21 @@ export default function App() {
                 }
               />{" "}
               <Route
-                path="/reproductions/index/:pageType"
+                path="/reproductions/select-paper/:pageType"
                 element={
                   <>
                     <Navbar />
-                    <SelectPaperOverview />
+                    <SelectPaper />
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/reproductions/select-paper/:pageType/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectPaper />
                     <Footer />
                   </>
                 }
@@ -104,17 +125,7 @@ export default function App() {
                 }
               />
               <Route
-                path="/reproductions/index/:pageType/select-paper"
-                element={
-                  <>
-                    <Navbar />
-                    <SelectPaper />
-                    <Footer />
-                  </>
-                }
-              />
-              <Route
-                path="/reproductions/index/:pageType/scoping"
+                path="/reproductions/scoping/edit/:userPaperID"
                 element={
                   <>
                     <Navbar />
