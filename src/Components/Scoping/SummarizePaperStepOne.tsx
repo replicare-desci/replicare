@@ -15,14 +15,24 @@ import {
   Button,
 } from "@mui/material";
 
-import SaveIcon from "@mui/icons-material/Save";
-
 interface props {
   scopingData: any;
   setScopingData: any;
 }
 
 const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
+  // handle change
+  const summerizePaperChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+
+    setScopingData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <Typography variant={"h5"} component="h6" p={2}>
@@ -46,6 +56,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 variant="standard"
                 fullWidth
                 required
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
               />
             </FormControl>
           </ListItem>
@@ -55,7 +68,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.2</b> When did you start this exercise? (The exercise
                 started when you began reviewing candidate papers in stage 0.)
               </FormLabel>
-              <TextField type="date" variant="standard" />
+              <TextField
+                type="date"
+                variant="standard"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
+              />
             </FormControl>
           </ListItem>
           <ListItem component="li">
@@ -65,7 +84,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 includes your work on all stages of the activity, including
                 Scoping, Assessment, Improvements, and (optionally) Robustness.
               </FormLabel>
-              <TextField type="date" variant="standard" />
+              <TextField
+                type="date"
+                variant="standard"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
+              />
             </FormControl>
           </ListItem>
           <ListItem component="li">
@@ -74,7 +99,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.4</b> How many hours in total do you expect to work on this
                 project from start to finish?
               </FormLabel>
-              <TextField type="number" variant="standard" />
+              <TextField
+                type="number"
+                variant="standard"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
+              />
             </FormControl>
           </ListItem>
           <ListItem component="li">
@@ -171,6 +202,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 placeholder="e.g. low income households in the US that are below the federal poverty line"
                 variant="standard"
                 sx={{ py: 2 }}
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
               />
             </FormControl>
           </ListItem>{" "}
@@ -186,6 +220,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 placeholder="e.g. low income households around the world"
                 variant="outlined"
                 sx={{ py: 2 }}
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
               />
             </FormControl>
           </ListItem>{" "}
@@ -215,7 +252,14 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 after editing that section, you risk data loss. Exercise caution
                 ⚠️
               </Typography>
-              <TextField fullWidth required variant="standard" />
+              <TextField
+                fullWidth
+                required
+                variant="standard"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
+              />
             </FormControl>
           </ListItem>{" "}
           <ListItem component="li">
@@ -229,7 +273,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <RadioGroup
                 defaultValue=""
                 // onChange={formDataHandler}
-                name="buildFromScratch"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
               >
                 <FormControlLabel
                   value="This paper estimates the effect of X on Y for population P, using method M. Example: This paper investigates the impact of bicycle provision (X) on secondary school enrollment (Y) among young women in Bihar/India (P), using a Difference in Difference approach (M)."
@@ -309,7 +355,10 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <RadioGroup
                 defaultValue=""
                 // onChange={formDataHandler}
-                name="buildFromScratch"
+                // name="buildFromScratch"
+                name=""
+                id=""
+                onChange={summerizePaperChangeHandler}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                 <FormControlLabel
@@ -415,34 +464,6 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
           </FormControl>
         </ListItem>
         <Stepper />
-
-        <Grid xs={12} justifyContent={"flex-end"} display={"flex"} mb={10}>
-          {" "}
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              padding: 2,
-              borderRadius: 10,
-              px: 3,
-            }}
-          >
-            <SaveIcon
-              sx={{
-                mr: 1,
-              }}
-            />
-            <Typography
-              variant="button"
-              sx={{
-                // fontWeight: 600,
-                fontSize: 16,
-              }}
-            >
-              Save
-            </Typography>
-          </Button>
-        </Grid>
       </Grid>
     </>
   );

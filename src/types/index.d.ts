@@ -27,6 +27,16 @@ export type outputs = {
   attempt_all_inline_results_body: string;
   attempt_all_tables_appendix: string;
   attempt_all_figures_appendix: string;
+  num_tables_appendix: string;
+  num_figures_appendix: string;
+  num_tables_body: number;
+  num_figures_body: number;
+  num_inline_results_body: number;
+};
+
+export type claims = {
+  claimSummary: string;
+  econometric_categorization_confidence: string;
 };
 
 export type paperData = {
