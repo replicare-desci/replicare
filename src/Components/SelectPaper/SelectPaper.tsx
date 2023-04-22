@@ -4,6 +4,7 @@ import { camelizeKeys } from "../../utils/changeCase";
 import AdditionalInfo from "../AdditionalInfo";
 import {
   addUserPaperData,
+  appendUserPaperData,
   getSelectUserPaperData,
 } from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
@@ -25,8 +26,10 @@ import {
   RadioGroup,
   FormHelperText,
   Checkbox,
+  Box,
 } from "@mui/material";
 import { doiData } from "../../types/index.d";
+import { type } from "@testing-library/user-event/dist/type";
 
 type checkBoxOption = {
   label: string;
@@ -87,10 +90,10 @@ const SelectPaper = () => {
 
   // TODO: add type
   const [formData, setFormData] = useState({
-    reproduction_package_available: false,
-    authors_contacted: false,
+    reproduction_package_available: "no",
+    authors_contacted: "yes",
     authors_available: false,
-    reproduction_package_from_scratch: false,
+    reproduction_package_from_scratch: "yes",
     original_reproduction_packages: [],
     authors_response: [],
   });
@@ -124,7 +127,7 @@ const SelectPaper = () => {
       };
     });
 
-    console.log("formData", formData);
+    // console.log("formData", formData);
   };
 
   const userID: string = sessionStorage.getItem("id") as string;
@@ -135,15 +138,15 @@ const SelectPaper = () => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const data = Object.fromEntries(new FormData(form));
-    console.log("data", data);
+    // console.log("data", data);
 
     // console.log(116, formData);
 
     setFormData((prev: any) => {
       return {
         ...prev,
-        paper_type: "declared",
-        workflow_stage: "scoping",
+        paper_type: "candidate",
+        workflow_stage: "select_paper",
         start_date: new Date().toString(),
         shareable_link: false,
         is_author: true,
@@ -155,11 +158,11 @@ const SelectPaper = () => {
         authors_response: checkedState,
       };
     });
+    // send data to firebase
 
     addUserPaperData(formData, userID, doiResponse)
       .then((res) => {
         console.log("res", res);
-
         if (typeof res !== "undefined") {
           if (res.success) {
             toast.success("Data submitted");
@@ -173,6 +176,8 @@ const SelectPaper = () => {
         console.log("err", err);
         // toast.error("Error submitting data");
       });
+
+    console.log(formData, userID, doiResponse);
 
     // setSelectPaperData("submitted");
   };
@@ -190,14 +195,14 @@ const SelectPaper = () => {
   };
 
   const handleCheckBoxData = (position: number) => {
-    checkBoxOptions?.map((item: checkBoxOption, index: number) => {
+    checkBoxOptions?.forEach((item: checkBoxOption, index: number) => {
       if (index === position) {
         setCheckedState((prev) => [...prev, item.label]);
       }
     });
   };
 
-  console.log(checkedState);
+  // console.log(checkedState);
 
   // This function will fetch the DOI data from the DOI API
   function submitHandler(event: any) {
@@ -244,7 +249,28 @@ const SelectPaper = () => {
     // title [0]
     // autour[0] -> given , family
   }
-  console.log(doiResponse);
+  // console.log(doiResponse);
+
+  function changeWorkFlowStage(userPaperID: string) {
+    if (typeof userPaperID !== "undefined") {
+      setFormData((prev: any) => {
+        return {
+          ...prev,
+          workflow_stage: "scoping",
+          paper_type: "declared",
+        };
+      });
+      appendUserPaperData(userPaperID, formData)
+        .then(() => {
+          navigate(`/reproductions/edit/${userPaperID}`);
+        })
+        .catch((err) => {
+          console.log("Error submitting data", err);
+        });
+    } else {
+      console.log("userPaperID not defined");
+    }
+  }
 
   return (
     <div>
@@ -268,13 +294,10 @@ const SelectPaper = () => {
           asked to read the paper and define the scope of the reproduction
           exercise.
         </Typography>
-        <Grid
-          container
-          my={12}
-          // TODO: this will create error after uncommenting
-          component="form"
-          noValidate
+        <form
+          method="post"
           onSubmit={submitSelectPaperData}
+          style={{ marginTop: "2rem", marginBottom: "4rem" }}
         >
           <List>
             <ListItem>
@@ -394,7 +417,7 @@ const SelectPaper = () => {
                   defaultValue={
                     formData?.reproduction_package_available
                       ? formData?.reproduction_package_available
-                      : ""
+                      : "no"
                   }
                   onChange={formDataHandler}
                   name="reproduction_package_available"
@@ -435,7 +458,7 @@ const SelectPaper = () => {
                   defaultValue={
                     formData?.authors_contacted
                       ? formData?.authors_contacted
-                      : ""
+                      : "yes"
                   }
                   name="authors_contacted"
                   onChange={formDataHandler}
@@ -475,12 +498,6 @@ const SelectPaper = () => {
                         key={index}
                         control={
                           <Checkbox
-                            checked={
-                              formData?.authors_response.length > 0 &&
-                              formData?.authors_response.includes(
-                                item?.label as never
-                              )
-                            }
                             name={item.label}
                             onChange={() => handleCheckBoxData(index)}
                           />
@@ -504,7 +521,7 @@ const SelectPaper = () => {
                   defaultValue={
                     formData?.reproduction_package_from_scratch
                       ? formData?.reproduction_package_from_scratch
-                      : ""
+                      : "yes"
                   }
                   onChange={formDataHandler}
                   name="reproduction_package_from_scratch"
@@ -526,7 +543,12 @@ const SelectPaper = () => {
             </ListItem>
             {isDisabled16 ? (
               <ListItem>
-                <Button variant="contained">
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    userPaperID ? changeWorkFlowStage(userPaperID) : null
+                  }
+                >
                   You can declare this paper and continue the scoping portion of
                   the exercise.
                 </Button>
@@ -536,10 +558,20 @@ const SelectPaper = () => {
               <AdditionalInfo formData={formData} setFormData={setFormData} />
             ) : null}
           </List>
-          <Button type="submit" variant="contained">
-            Submit
-          </Button>
-        </Grid>
+          <Box sx={{ float: "right" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                padding: 2,
+                borderRadius: 10,
+                px: 3,
+              }}
+            >
+              Save
+            </Button>
+          </Box>
+        </form>
       </Container>
     </div>
   );

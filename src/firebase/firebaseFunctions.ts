@@ -305,10 +305,12 @@ async function deleteUserPaperData(id: string) {
 async function getSelectUserPaperData(id: string) {
   let data: any = {};
   try {
+    console.log(id);
+
     let querySnapshot: any = await getDoc(doc(db, "userPaper", id));
 
     if (querySnapshot && querySnapshot.id) {
-      console.log(querySnapshot.data());
+      console.log(querySnapshot.data(), querySnapshot.id);
 
       data = { ...querySnapshot.data() };
     }

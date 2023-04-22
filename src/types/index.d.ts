@@ -73,10 +73,10 @@ export type paperData = {
   whole_population: string;
   additional_population: string;
   possible_robustness_checks: string;
-  reproduction_package_available: boolean;
+  reproduction_package_available: string;
   authors_contacted: boolean;
   authors_available: boolean;
-  reproduction_package_from_scratch: boolean;
+  reproduction_package_from_scratch: string;
   will_assess_whole_paper: boolean;
   outputs: outputs;
   original_reproduction_packages: original_reproduction_packages[];

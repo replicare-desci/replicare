@@ -33,18 +33,23 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
   };
 
   const addIntoSystem = () => {
-    setFormData({
-      ...formData,
-      original_reproduction_packages: [
-        ...formData.original_reproduction_packages,
-        originalPackage,
-      ],
-    });
-
-    setOriginalPackage({
-      name: "",
-      url: "",
-    });
+    if (originalPackage.name.length > 0 && originalPackage.url.length > 0) {
+      setFormData({
+        ...formData,
+        original_reproduction_packages: [
+          ...formData.original_reproduction_packages,
+          originalPackage,
+        ],
+      });
+      setOriginalPackage({
+        name: "",
+        url: "",
+        stage: "original",
+        content_type: "code",
+      });
+    } else {
+      alert("Please fill the required fields");
+    }
   };
   return (
     <>
@@ -79,37 +84,52 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
         formData.original_reproduction_packages.map(
           (item: any, index: number) => {
             return (
-              <div>
-                <Box py={2} boxShadow={1} my={1} width={"50%"}>
+              <div key={index}>
+                <Box py={2} boxShadow={1} my={1} px={3} mx={2}>
                   <FormHelperText>
                     Contents of reproduction package
                   </FormHelperText>
-                  <TextField
-                    variant="standard"
-                    name="name"
-                    type={"text"}
-                    defaultValue={originalPackage.name}
-                    placeholder="e.g. Main code repository with data"
-                    onChange={(event: any) => {
-                      setOriginalPackage({
-                        ...originalPackage,
-                        name: event.target.value,
-                      });
-                    }}
-                  ></TextField>
-                  <TextField
-                    type={"text"}
-                    variant="standard"
-                    name="url"
-                    defaultValue={originalPackage.url}
-                    placeholder="e.g. https://github.com/paper/paper"
-                    onChange={(event: any) => {
-                      setOriginalPackage({
-                        ...originalPackage,
-                        url: event.target.value,
-                      });
-                    }}
-                  ></TextField>
+                  <div>
+                    {" "}
+                    <TextField
+                      required
+                      fullWidth
+                      variant="standard"
+                      name="name"
+                      type={"text"}
+                      defaultValue={item.name}
+                      placeholder="e.g. Main code repository with data"
+                      onChange={(event: any) => {
+                        if (event.target.value.length > 0) {
+                          setOriginalPackage({
+                            ...originalPackage,
+                            name: event.target.value,
+                          });
+                        }
+                      }}
+                    ></TextField>
+                  </div>
+                  <div>
+                    {" "}
+                    <TextField
+                      required
+                      type={"text"}
+                      fullWidth
+                      variant="standard"
+                      name="url"
+                      defaultValue={item.url}
+                      placeholder="e.g. https://github.com/paper/paper"
+                      onChange={(event: any) => {
+                        // required validation
+                        if (event.target.value.length > 0) {
+                          setOriginalPackage({
+                            ...originalPackage,
+                            url: event.target.value,
+                          });
+                        }
+                      }}
+                    ></TextField>
+                  </div>
                 </Box>
               </div>
             );
@@ -127,6 +147,7 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
             variant="standard"
             name="name"
             type={"text"}
+            value={originalPackage.name}
             defaultValue={originalPackage.name}
             placeholder="e.g. Main code repository with data"
             onChange={(event: any) => {
@@ -137,8 +158,10 @@ function AdditionalInfo({ formData, setFormData }: Props): JSX.Element {
             }}
           ></TextField>
           <TextField
+            required
             type={"text"}
             variant="standard"
+            value={originalPackage.url}
             name="url"
             defaultValue={originalPackage.url}
             placeholder="e.g. https://github.com/paper/paper"
