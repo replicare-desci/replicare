@@ -14,7 +14,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 // import { formDataType } from "../types/context.d";
-import { toast } from "react-toastify";
 import { paperData } from "../types/index.d";
 
 type userType = {
@@ -323,11 +322,7 @@ async function getSelectUserPaperData(id: string) {
 
 async function appendUserPaperData(id: string, data: any) {
   try {
-    const updateSnapshot: any = await updateDoc(doc(db, "userPaper", id), data);
-
-    if (updateSnapshot.id !== null) {
-      return updateSnapshot.id;
-    }
+    await updateDoc(doc(db, "userPaper", id), data);
   } catch (error) {
     console.log(error);
   }

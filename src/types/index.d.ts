@@ -16,9 +16,9 @@ export type original_reproduction_packages = {
 };
 
 export type revised_reproduction_packages = {
-  id: number;
-  stage: string;
-  content_type: string;
+  id?: number;
+  stage?: string;
+  content_type?: string;
   name: string;
   url: string;
 };
@@ -48,6 +48,7 @@ export type paperData = {
   authors_response: string[];
   authors_response_not_ready_date: string;
   authors_response_other: string;
+  claims: claims;
   claim_type: string;
   claim_type_other_description: string;
   created_at: string;
@@ -61,8 +62,6 @@ export type paperData = {
   authors_response_not_ready_date: string;
   expected_total_hours: number;
   num_claims: number;
-  claim_type: string;
-  claim_type_other_description: string;
   num_claims_will_assess: string;
   paper_type: string;
   workflow_stage: string;

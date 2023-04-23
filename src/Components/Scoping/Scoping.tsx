@@ -15,6 +15,7 @@ import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPacka
 import OutlineClaimsStepThree from "./OutlineClaimsStepThree/OutlineClaimsStepThree";
 import DeclareRobustnessChecksStepFour from "./DeclareRobustnessChecksStepFour";
 import { appendUserPaperData } from "../../firebase/firebaseFunctions";
+import { toast } from "react-toastify";
 
 const Scoping = () => {
   const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
@@ -37,7 +38,13 @@ const Scoping = () => {
     end_date: "",
     expected_total_hours: 1,
     familiarity_level: "",
-    outputs: [],
+    outputs: {
+      num_tables_body: 0,
+      num_figures_body: 0,
+      num_inline_results_body: 0,
+      num_tables_appendix: "",
+      num_figures_appendix: "",
+    },
     whole_population: "",
     additional_population: "",
     num_claims: 1,
@@ -49,7 +56,8 @@ const Scoping = () => {
     // step 1 data end
 
     // step 2 data start
-    revised_reproduction_data: [],
+    original_reproduction_packages: [],
+
     // step 2 data end
 
     // step 3 data start
@@ -59,11 +67,14 @@ const Scoping = () => {
   const { userPaperID } = useParams();
   function saveScopingData() {
     if (typeof userPaperID != "undefined") {
+      console.log(scopingData);
+
+      console.log(userPaperID);
+
       appendUserPaperData(userPaperID, scopingData)
-        .then((res) => {
-          if (res.id) {
-            console.log("data saved", res.id);
-          }
+        .then(() => {
+          console.log("data saved");
+          toast.success("Data Saved successfully");
         })
         .catch((err) => {
           console.log("error saving data", err);
@@ -82,7 +93,12 @@ const Scoping = () => {
           />
         );
       case 1:
-        return <AddRevisedReproductionPackagesStepTwo />;
+        return (
+          <AddRevisedReproductionPackagesStepTwo
+            scopingData={scopingData}
+            setScopingData={setScopingData}
+          />
+        );
       case 2:
         return <OutlineClaimsStepThree />;
       case 3:

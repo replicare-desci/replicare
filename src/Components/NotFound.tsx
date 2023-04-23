@@ -5,7 +5,7 @@ function NotFound(): JSX.Element {
   return (
     <Box
       sx={{
-        backgroundColor: "primary.main",
+        backgroundColor: "background.paper",
         height: "100vh",
         display: "grid",
         placeItems: "center",
