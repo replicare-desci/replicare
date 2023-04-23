@@ -16,9 +16,9 @@ const AddRevisedReproductionPackagesStepTwo = () => {
   const renderAdditional = () => {
     setCount(count + 1);
   };
-  const renderedComponents = Array.from({ length: count }, (_, index) => (
-    <AdditionalInfo key={index} />
-  ));
+  // const renderedComponents = Array.from({ length: count }, (_, index) => (
+  //   <AdditionalInfo key={index} />
+  // ));
   return (
     <div>
       <Box boxShadow={4} my={4}>
@@ -47,7 +47,7 @@ const AddRevisedReproductionPackagesStepTwo = () => {
               Are there additional data in different repositories? Use the
               button below to add links to these as well.
             </FormLabel>{" "}
-            {renderedComponents}
+            {/* {renderedComponents} */}
             <Button variant="contained" onClick={renderAdditional}>
               + Add additional reproduction packages for data
             </Button>

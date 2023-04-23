@@ -5,6 +5,7 @@ import { UserContext } from "./context/ContextProvider";
 import MetamaskImage from "./assets/images/Metamask.png";
 import WalletConnect from "./assets/images/WalletConnect.png";
 import Web3 from "web3";
+
 // import { use } from "@maticnetwork/maticjs";
 // import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
 // import {
@@ -193,6 +194,7 @@ function ConnectionWallet(): JSX.Element {
               {/* Connect */}
               {/* {<ConnectWalletPopUp />} */}
             </Button>
+            {/* <ConnectButton />; */}
           </Grid>
           <Grid item mt={1}>
             <Button
@@ -207,8 +209,11 @@ function ConnectionWallet(): JSX.Element {
                 ":hover": {
                   bgcolor: "primary.light",
                   // color: "white",
+
+                  // opacity: 0.7,
                 },
               }}
+              disabled
               onClick={connectMetamaskWallet}
             >
               <img src={WalletConnect} alt="Wallet connect" width={"100%"} />

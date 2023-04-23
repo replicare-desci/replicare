@@ -16,6 +16,7 @@ import Search from "./Search";
 import ConnectWalletPopUp from "./ConnectWalletPopUp";
 import ConnectionWallet from "../ConnectionWallet";
 import AddIcon from "@mui/icons-material/Add";
+import RainbowWallet from "../RainbowWallet";
 const Main = () => {
   const walletAddress = sessionStorage.getItem("walletAddress");
   return (
@@ -50,6 +51,7 @@ const Main = () => {
         <Grid item xs={8} my={10}>
           <Search />
         </Grid>
+        {/* <RainbowWallet /> */}
         <Grid item xs={8} justifyContent={"center"}>
           {walletAddress ? (
             <Link

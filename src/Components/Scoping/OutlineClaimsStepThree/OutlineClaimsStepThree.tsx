@@ -25,18 +25,18 @@ const OutlineClaimsStepThree = () => {
   const setTotalClaims = () => {
     setClaims(2);
   };
-  const [age, setAge] = React.useState("");
+  const [claim, setClaim] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+    setClaim(event.target.value as string);
   };
   function valuetext(value: number) {
     return `${value}°C`;
   }
 
   return (
-    <Container>
-      <Button onClick={setTotalClaims}>claims2</Button>
+    <Container sx={{ my: 4 }}>
+      {/* <Button onClick={setTotalClaims}>claims2</Button> */}
       <Typography variant="h6">Outline claims</Typography>
       <Box my={1}>
         <Typography>
@@ -59,18 +59,18 @@ const OutlineClaimsStepThree = () => {
       ) : (
         <>
           <Box sx={{ minWidth: 120 }}>
-            <FormControl>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            <FormControl fullWidth sx={{ my: 4 }}>
+              <InputLabel id="claim-select-dropdown-label">Claim</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                label="Age"
+                labelId="claim-select-dropdown"
+                id="claim-select-dropdown"
+                value={claim}
+                label="Claims"
                 onChange={handleChange}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={10}>Claim 1:</MenuItem>
+                {/* <MenuItem value={20}>Claim 2:</MenuItem> */}
+                {/* <MenuItem value={30}>Claim 3:</MenuItem> */}
               </Select>
             </FormControl>
             <Box boxShadow={1} p={2}>

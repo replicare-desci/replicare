@@ -10,7 +10,7 @@ import React from "react";
 
 const DeclareRobustnessChecksStepFour = () => {
   return (
-    <Container>
+    <Container sx={{ my: 4 }}>
       <Typography variant="h6">Declare possible robustness checks</Typography>
       <FormControl sx={{ my: 3 }}>
         <FormLabel>

@@ -29,18 +29,17 @@ dayjs.extend(localizedFormat);
 const MyWork = () => {
   const userID = sessionStorage.getItem("id") as string;
   const [userPaperID, setUserPaperID] = useState<string>("");
-
+  const [open, setOpen] = React.useState(false);
   const [data, setData] = useState([]);
   console.log(data);
 
-  const deleted = (userID: string) => {
-    deleteUserPaperData(userID);
+  // deletes the data from userPaper Table
+  const deleted = (userPaperID: string) => {
+    deleteUserPaperData(userPaperID);
     setData((prev) => {
-      return prev.filter((item: any) => item.id !== userID);
+      return prev.filter((item: any) => item.id !== userPaperID);
     });
   };
-
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (userPaperIDEvent: string) => {
     setUserPaperID(userPaperIDEvent);
@@ -67,27 +66,30 @@ const MyWork = () => {
             return (
               <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Please enter a title in the Select a paper step.
+                  Please enter a <strong>title</strong> in the Select a paper
+                  step.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Created on:{" "}
-                  {dayjs(item?.createdAt?.seconds * 1000).format("L LT")}
+                  <strong>{dayjs(item?.createdAt).format("L LT")}</strong>
+                  {/* {dayjs(item?.createdAt?.seconds * 1000).format("L LT")} */}
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Paper status: candidate Number of claims assessed: 0
+                  Paper status: <strong>candidate</strong> Number of claims
+                  assessed: 0
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Current stage: Selecting a Paper
+                  Current stage: <strong>Selecting a Paper</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Number of display items assessed: 0
+                  Number of display items assessed:<strong> 0</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Number of claims assessed: 0
+                  Number of claims assessed:<strong> 0</strong>
                 </Typography>
                 <Box my={2}>
-                  <Link to={`/reproductions/index/edit/${item?.id}`}>
+                  <Link to={`/reproductions/edit/${item?.id}`}>
                     <Button variant="contained" sx={{ marginRight: 1 }}>
                       <EditIcon sx={{ fontSize: 18, mr: 1 }} />
                       Edit

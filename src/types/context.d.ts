@@ -31,6 +31,7 @@ export type doiDataType = {
   doi: string;
   [key: string]: unknown;
 };
+
 // step-1
 export type SummarizePaper = {
   nickname: string;

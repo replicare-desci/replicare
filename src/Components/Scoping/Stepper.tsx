@@ -101,6 +101,10 @@ export default function HorizontalLinearStepper({
                 mr: 1,
                 backgroundColor: "background.paper",
                 color: "primary.light",
+                ":hover": {
+                  backgroundColor: "background.paper",
+                  opacity: 0.7,
+                },
               }}
             >
               Previous step

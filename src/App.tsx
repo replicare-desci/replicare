@@ -15,6 +15,7 @@ import { UserContext } from "./context/ContextProvider";
 // import { useBeforeUnload } from "react-router-dom";
 import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
+import ViewScoping from "./Components/Scoping/ViewScoping/ViewScoping";
 import Scoping from "./Components/Scoping/Scoping";
 import SummarizePaperStepOne from "./Components/Scoping/SummarizePaperStepOne";
 import DeclareRobustnessChecksStepFour from "./Components/Scoping/DeclareRobustnessChecksStepFour";
@@ -62,8 +63,19 @@ export default function App() {
                   </>
                 }
               />
+              {/* Route to reproductions */}
               <Route
-                path="/reproductions/index/:pageType/:userPaperID"
+                path="/reproductions/:pageType"
+                element={
+                  <>
+                    <Navbar />
+                    <SelectPaperOverview />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/reproductions/:pageType/:userPaperID"
                 element={
                   <>
                     <Navbar />
@@ -73,27 +85,17 @@ export default function App() {
                 }
               />{" "}
               <Route
-                path="/reproductions/index/:pageType"
+                path="/reproductions/select-paper/:pageType"
                 element={
                   <>
                     <Navbar />
-                    <SelectPaperOverview />
+                    <SelectPaper />
                     <Footer />
                   </>
                 }
-              />
+              />{" "}
               <Route
-                path="/reproductions/index/view/:userPaperID"
-                element={
-                  <>
-                    <Navbar />
-                    <ViewSelectPaper />
-                    <Footer />
-                  </>
-                }
-              />
-              <Route
-                path="/reproductions/index/:pageType/select-paper"
+                path="/reproductions/select-paper/:pageType/:userPaperID"
                 element={
                   <>
                     <Navbar />
@@ -103,7 +105,27 @@ export default function App() {
                 }
               />
               <Route
-                path="/reproductions/index/:pageType/scoping"
+                path="/reproductions/select-paper/view/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <ViewSelectPaper />
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/reproductions/scoping/view/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <ViewScoping />
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/reproductions/scoping/edit/:userPaperID"
                 element={
                   <>
                     <Navbar />
