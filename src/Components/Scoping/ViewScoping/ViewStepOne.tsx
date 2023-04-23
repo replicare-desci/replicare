@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Grid, List, Box, Stepper, Button } from "@mui/material";
 
 import SaveIcon from "@mui/icons-material/Save";
 
 const ViewStepOne = () => {
+  useEffect(() => {});
   return (
     <>
       <Typography variant={"h5"} component="h6" p={2}>

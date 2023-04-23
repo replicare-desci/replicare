@@ -9,6 +9,7 @@ import {
 } from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { paperData } from "../../types/index.d";
 
 import {
   TextField,
@@ -28,7 +29,6 @@ import {
   Box,
 } from "@mui/material";
 import { doiData } from "../../types/index.d";
-import { type } from "@testing-library/user-event/dist/type";
 
 type checkBoxOption = {
   label: string;
@@ -95,6 +95,18 @@ const SelectPaper = () => {
     reproduction_package_from_scratch: "yes",
     original_reproduction_packages: [],
     authors_response: [],
+    userID: "",
+    paper: doiResponse ? doiResponse : {},
+    paper_type: "candidate",
+    workflow_stage: "select_paper",
+    start_date: "",
+    shareable_link: false,
+    is_author: true,
+    is_creator: true,
+    claim_type: "",
+    claim_type_other_description: "",
+    familiarity_level: "",
+    expected_total_hours: 1,
   });
 
   useEffect(() => {
@@ -105,18 +117,8 @@ const SelectPaper = () => {
     ) {
       getSelectUserPaperData(userPaperID)
         .then((paperResponse) => {
-          setFormData((prev) => {
-            return {
-              ...prev,
-              ...paperResponse,
-            };
-          });
-          setDoiResponse((prev) => {
-            return {
-              ...prev,
-              ...paperResponse.paper,
-            };
-          });
+          setFormData(paperResponse);
+          setDoiResponse(paperResponse?.paper);
           setDoi(true);
         })
         .catch((err) => {
@@ -126,10 +128,12 @@ const SelectPaper = () => {
   }, [userPaperID, pageType]);
 
   const formDataHandler = (event: any) => {
+    const { name, value } = event.target;
+
     setFormData((prev) => {
       return {
         ...prev,
-        [event.target.name]: event.target.value,
+        [name]: value,
       };
     });
 
@@ -137,16 +141,10 @@ const SelectPaper = () => {
   };
 
   const userID: string = sessionStorage.getItem("id") as string;
-  const submitSelectPaperData = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+
+  const submitSelectPaperData = (event: React.FormEvent<HTMLFormElement>) => {
     // send form data to fireStore database on button click
     event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const data = Object.fromEntries(new FormData(form));
-    // console.log("data", data);
-
-    // console.log(116, formData);
 
     setFormData((prev: any) => {
       return {
@@ -166,26 +164,39 @@ const SelectPaper = () => {
         authors_response: checkedState,
       };
     });
-    // send data to firebase
-
-    addUserPaperData(formData, userID, doiResponse)
-      .then((res) => {
-        console.log("res", res);
-        if (typeof res !== "undefined") {
-          if (res.success) {
-            toast.success("Data submitted");
-            navigate(`/reproductions/edit/${res?.userPaperID}`);
-          } else {
+    if (userPaperID !== undefined && pageType !== undefined) {
+      if (pageType === "new") {
+        addUserPaperData(formData, userID, doiResponse)
+          .then((res) => {
+            console.log("res", res);
+            if (typeof res !== "undefined") {
+              if (res.success) {
+                toast.success("Data submitted");
+                // navigate(`/reproductions/edit/${res?.userPaperID}`);
+              } else {
+                toast.error("Error submitting data");
+              }
+            }
+          })
+          .catch((err) => {
+            console.log("err", err);
+            // toast.error("Error submitting data");
+          });
+      } else {
+        appendUserPaperData(userPaperID, formData)
+          .then(() => {
+            toast.success("Data Save successfully");
+          })
+          .catch((err) => {
+            // console.log("err", err);
             toast.error("Error submitting data");
-          }
-        }
-      })
-      .catch((err) => {
-        console.log("err", err);
-        // toast.error("Error submitting data");
-      });
+          });
+      }
 
-    console.log(formData, userID, doiResponse);
+      // send data to firebase
+
+      console.log(formData);
+    }
 
     // setSelectPaperData("submitted");
   };
@@ -224,7 +235,6 @@ const SelectPaper = () => {
       fetchDoi(doiString)
         .then(function (response: any) {
           setError(false);
-          setDoi((prev) => !prev);
           const newResponse = camelizeKeys(response);
           setDoiResponse((prev: any) => {
             return {
@@ -240,6 +250,25 @@ const SelectPaper = () => {
               doi: newResponse.message?.doi,
             };
           });
+
+          setFormData((prev) => {
+            return {
+              ...prev,
+              paper: {
+                ...prev.paper,
+                publication_year: newResponse.message?.created?.dateTime,
+                publication_name: newResponse.message?.publisher,
+                title: newResponse.message?.title[0],
+                journal_name: newResponse.message?.shortContainerTitle[0],
+                author: `${newResponse.message?.author
+                  .map((author: any) => `${author?.given} ${author?.family}`)
+                  .join(", ")}`,
+
+                doi: newResponse.message?.doi,
+              },
+            };
+          });
+          setDoi(true);
         })
 
         .catch(function (error: any) {
@@ -260,7 +289,7 @@ const SelectPaper = () => {
   // console.log(doiResponse);
 
   function changeWorkFlowStage(userPaperID: string) {
-    if (typeof userPaperID !== "undefined") {
+    if (userPaperID && typeof userPaperID !== "undefined") {
       setFormData((prev: any) => {
         return {
           ...prev,
@@ -347,7 +376,7 @@ const SelectPaper = () => {
                   ),
                 }}
               />
-            </ListItem>{" "}
+            </ListItem>
             <p style={{ color: "red", textAlign: "center" }}>
               {isError ? "Please enter DOI " : null}
             </p>
@@ -358,15 +387,21 @@ const SelectPaper = () => {
                     label="Title of the paper"
                     type={"text"}
                     defaultValue={doiResponse?.title ? doiResponse?.title : ""}
+                    value={doiResponse?.title ? doiResponse?.title : ""}
                     variant="standard"
                     fullWidth
                   />
-                </ListItem>{" "}
+                </ListItem>
                 <ListItem>
                   <TextField
                     label="Name of the journal or publication"
                     type={"text"}
                     defaultValue={
+                      doiResponse?.publication_name
+                        ? doiResponse?.publication_name
+                        : ""
+                    }
+                    value={
                       doiResponse?.publication_name
                         ? doiResponse?.publication_name
                         : ""
@@ -380,6 +415,7 @@ const SelectPaper = () => {
                     label="Digital Object Identifier (or URL if no DOI available)"
                     type={"text"}
                     defaultValue={doiResponse?.doi ? doiResponse?.doi : ""}
+                    value={doiResponse?.doi ? doiResponse?.doi : ""}
                     variant="standard"
                     fullWidth
                   />
@@ -389,6 +425,13 @@ const SelectPaper = () => {
                     label="Year of Publication"
                     type={"text"}
                     defaultValue={
+                      doiResponse?.publication_year
+                        ? new Date(doiResponse?.publication_year)
+                            .getFullYear()
+                            .toString()
+                        : "No year"
+                    }
+                    value={
                       doiResponse?.publication_year
                         ? new Date(doiResponse?.publication_year)
                             .getFullYear()
@@ -406,6 +449,7 @@ const SelectPaper = () => {
                     defaultValue={
                       doiResponse?.author ? doiResponse?.author : ""
                     }
+                    value={doiResponse?.author ? doiResponse?.author : ""}
                     variant="standard"
                     fullWidth
                   />
@@ -423,6 +467,11 @@ const SelectPaper = () => {
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
                   defaultValue={
+                    formData?.reproduction_package_available
+                      ? formData?.reproduction_package_available
+                      : "no"
+                  }
+                  value={
                     formData?.reproduction_package_available
                       ? formData?.reproduction_package_available
                       : "no"
@@ -464,6 +513,11 @@ const SelectPaper = () => {
                 <RadioGroup
                   aria-labelledby="is a reproduction package available for this paper?"
                   defaultValue={
+                    formData?.authors_contacted
+                      ? formData?.authors_contacted
+                      : "yes"
+                  }
+                  value={
                     formData?.authors_contacted
                       ? formData?.authors_contacted
                       : "yes"
@@ -510,7 +564,7 @@ const SelectPaper = () => {
                             onChange={() => handleCheckBoxData(index)}
                           />
                         }
-                        onClick={() => setDisabled16(true)}
+                        // onClick={() => setDisabled16(true)}
                         label={item.label}
                       />
                     </>
@@ -527,6 +581,11 @@ const SelectPaper = () => {
                 </FormLabel>
                 <RadioGroup
                   defaultValue={
+                    formData?.reproduction_package_from_scratch
+                      ? formData?.reproduction_package_from_scratch
+                      : "yes"
+                  }
+                  value={
                     formData?.reproduction_package_from_scratch
                       ? formData?.reproduction_package_from_scratch
                       : "yes"
