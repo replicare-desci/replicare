@@ -14,7 +14,6 @@ import {
   TextField,
   Button,
   Container,
-  Grid,
   Typography,
   List,
   ListItem,
@@ -112,6 +111,13 @@ const SelectPaper = () => {
               ...paperResponse,
             };
           });
+          setDoiResponse((prev) => {
+            return {
+              ...prev,
+              ...paperResponse.paper,
+            };
+          });
+          setDoi(true);
         })
         .catch((err) => {
           console.log(err);
@@ -145,6 +151,8 @@ const SelectPaper = () => {
     setFormData((prev: any) => {
       return {
         ...prev,
+        userID: userID,
+        paper: doiResponse,
         paper_type: "candidate",
         workflow_stage: "select_paper",
         start_date: new Date().toString(),

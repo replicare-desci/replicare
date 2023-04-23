@@ -130,6 +130,8 @@ async function getUserPaperData(
       }
     });
     handleUserPaperData(getDataReturnObj);
+    // console.log(getDataReturnObj);
+    return getDataReturnObj;
   } catch (e) {
     console.error("Error adding document: ", e);
   }
