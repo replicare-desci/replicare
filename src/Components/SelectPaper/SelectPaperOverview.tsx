@@ -177,6 +177,21 @@ const SelectPaperOverview = () => {
                   </Link>
                 </>
               </StepContent>
+              <>
+                <Link
+                  to={`/reproductions/scoping/edit/${userPaperID}`}
+                  style={{ textDecoration: "none", marginRight: 10 }}
+                >
+                  <Button variant="contained">Edit this section</Button>
+                </Link>
+
+                <Link
+                  to={`/reproductions/scoping/view/${userPaperID}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button variant="contained">View this section</Button>
+                </Link>
+              </>
             </Step>
             {/* step3 */}
             <Step>
