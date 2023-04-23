@@ -82,25 +82,30 @@ const SelectPaperOverview = () => {
     <div>
       {/* <div>SelectPaperOverview</div> */}
       <Container sx={{ py: 12 }}>
-        <Typography variant="h5" component="h1" mb={3}>
+        <Typography variant="h5" component="h1" mb={3} fontWeight={500}>
           Create a reproduction attempt
         </Typography>
 
         <Box>
           <Stepper activeStep={activeStep} orientation="vertical">
             <Step>
-              <StepLabel>
-                Step 1:Declare a paper
-                <Link
-                  style={{ display: "inline-block" }}
-                  to={`/reproductions/select-paper/view/${userPaperID}`}
-                >
-                  <VisibilityIcon fontSize="medium" />
-                </Link>
-              </StepLabel>
-
+              <Box display={"flex"}>
+                {" "}
+                <StepLabel>
+                  <Typography fontWeight={700}>Declare a paper</Typography>
+                </StepLabel>
+                <Box display={"flex"} mt={1} p={1}>
+                  {" "}
+                  <Link
+                    style={{ color: "#32454D" }}
+                    to={`/reproductions/select-paper/view/${userPaperID}`}
+                  >
+                    <VisibilityIcon fontSize="medium" />
+                  </Link>
+                </Box>
+              </Box>
               <StepContent>
-                <Typography>
+                <Typography my={2}>
                   Specify the research paper that you will analyze and provide
                   some basic information about its reproduction package. Please
                   refer to the documentation provided for further assistance.
@@ -133,13 +138,21 @@ const SelectPaperOverview = () => {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Step 2:Scoping</StepLabel>{" "}
-              <Link
-                style={{ display: "inline-block" }}
-                to={`/reproductions/scoping/view/${userPaperID}`}
-              >
-                <VisibilityIcon fontSize="medium" />
-              </Link>
+              <Box display={"flex"}>
+                {" "}
+                <StepLabel>
+                  <Typography fontWeight={700}>Scoping</Typography>
+                </StepLabel>
+                <Link
+                  style={{ display: "inline-block" }}
+                  to={`/reproductions/scoping/view/${userPaperID}`}
+                >
+                  <VisibilityIcon
+                    fontSize="medium"
+                    sx={{ mt: 1, mx: 1, color: "primary.main" }}
+                  />
+                </Link>
+              </Box>
               <StepContent>
                 <Typography>
                   Focusing on the declared paper from the previous stage, define
@@ -167,7 +180,9 @@ const SelectPaperOverview = () => {
             </Step>
             {/* step3 */}
             <Step>
-              <StepLabel>Step 3: Assessment</StepLabel>
+              <StepLabel>
+                <Typography fontWeight={700}>Assessment</Typography>
+              </StepLabel>
               {/* <VisibilityIcon /> */}
               <StepContent>
                 <Typography>
@@ -188,7 +203,9 @@ const SelectPaperOverview = () => {
             </Step>
             {/* step4 */}
             <Step>
-              <StepLabel>Step 4:Improvement</StepLabel>
+              <StepLabel>
+                <Typography fontWeight={700}>Improvement</Typography>
+              </StepLabel>
               {/* <VisibilityIcon /> */}
               <StepContent>
                 <Typography>
@@ -209,7 +226,7 @@ const SelectPaperOverview = () => {
             {/* step5 */}
             <Step>
               <StepLabel>
-                Step 5:Robustness
+                <Typography fontWeight={700}>Robustness</Typography>
                 {/* <VisibilityIcon /> */}
               </StepLabel>
               <StepContent>
