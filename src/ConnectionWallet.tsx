@@ -213,7 +213,7 @@ function ConnectionWallet(): JSX.Element {
                   // opacity: 0.7,
                 },
               }}
-              // disabled
+              disabled
               onClick={connectMetamaskWallet}
             >
               <img src={WalletConnect} alt="Wallet connect" width={"100%"} />
