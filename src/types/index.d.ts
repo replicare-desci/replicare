@@ -44,7 +44,7 @@ export type paperData = {
   userID: string;
   author_did_not_respond_as_of_date: string;
   authors_available: boolean;
-  authors_contacted: boolean;
+  authors_contacted: string;
   authors_response: string[];
   authors_response_not_ready_date: string;
   authors_response_other: string;
@@ -52,7 +52,7 @@ export type paperData = {
   claim_type: string;
   claim_type_other_description: string;
   created_at: string;
-  expected_total_hours: string;
+  expected_total_hours: number;
   familiarity_level: string;
   is_author: boolean;
   is_creator: boolean;

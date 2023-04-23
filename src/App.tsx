@@ -70,7 +70,7 @@ export default function App() {
                 }
               />
               {/* Route to reproductions */}
-              <Route
+              {/* <Route
                 path="/reproductions/:pageType"
                 element={
                   <>
@@ -79,7 +79,7 @@ export default function App() {
                     <Footer />
                   </>
                 }
-              />
+              /> */}
               <Route
                 path="/reproductions/:pageType/:userPaperID"
                 element={
@@ -90,7 +90,7 @@ export default function App() {
                   </>
                 }
               />{" "}
-              <Route
+              {/* <Route
                 path="/reproductions/select-paper/:pageType"
                 element={
                   <>
@@ -99,7 +99,7 @@ export default function App() {
                     <Footer />
                   </>
                 }
-              />{" "}
+              />{" "} */}
               <Route
                 path="/reproductions/select-paper/:pageType/:userPaperID"
                 element={

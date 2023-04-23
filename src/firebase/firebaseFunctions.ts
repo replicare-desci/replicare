@@ -273,17 +273,27 @@ async function createDefaultUserPaperData(userID: string) {
       will_assess_whole_paper: "",
       workflow_stage: "select_paper",
     });
+    console.log(ref.id);
 
     if (ref.id !== null) {
-      return true;
+      return {
+        success: true,
+        userPaperID: ref.id,
+      };
     } else {
-      return false;
+      return {
+        success: false,
+        userPaperID: "",
+      };
     }
   } catch (error) {
     console.log(error);
   }
 
-  return false;
+  return {
+    success: false,
+    userPaperID: "",
+  };
 }
 
 /**

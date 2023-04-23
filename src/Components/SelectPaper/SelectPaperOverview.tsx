@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Container,
-  Grid,
-  Paper,
   Step,
   StepContent,
   StepLabel,
@@ -113,7 +111,7 @@ const SelectPaperOverview = () => {
 
                 {pageType === "new" ? (
                   <Link
-                    to="/reproductions/select-paper/new"
+                    to={`/reproductions/select-paper/new/${userPaperID}`}
                     style={{ textDecoration: "none" }}
                   >
                     <Button variant="contained">Create this section</Button>
