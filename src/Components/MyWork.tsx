@@ -52,10 +52,14 @@ const MyWork = () => {
 
   const handleUserPaperData = (userPaperData: any) => {
     console.log(userPaperData);
-    setData(userPaperData);
   };
   useEffect(() => {
-    getUserPaperData(userID, handleUserPaperData);
+    getUserPaperData(userID, handleUserPaperData)
+      .then((res) => {
+        console.log("my work user data", res);
+        setData(res);
+      })
+      .catch((err) => console.log("error", err));
   }, [userID]);
 
   return (
@@ -65,14 +69,20 @@ const MyWork = () => {
           data?.map((item: any, index: number) => {
             return (
               <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  Please enter a <strong>title</strong> in the Select a paper
-                  step.
-                </Typography>
+                {item?.paper?.title ? (
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    Title : <strong>{item?.paper?.title}</strong>
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    Please enter a <strong>title</strong> in the Select a paper
+                    step.
+                  </Typography>
+                )}
+
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Created on:{" "}
                   <strong>{dayjs(item?.createdAt).format("L LT")}</strong>
-                  {/* {dayjs(item?.createdAt?.seconds * 1000).format("L LT")} */}
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 1 }}>

@@ -1,10 +1,12 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MyWork from "./MyWork";
 import { createDefaultUserPaperData } from "../firebase/firebaseFunctions";
 import { UserContext } from "../context/ContextProvider";
 import AddIcon from "@mui/icons-material/Add";
+
 const Reproductions = () => {
+  const navigate = useNavigate();
   const { store } = UserContext(); //from userContext we are fetching the user id
 
   // const userID = sessionStorage.getItem("id") as string; // we can also fetch userId from session/local storage if stored.
@@ -12,12 +14,14 @@ const Reproductions = () => {
   const userID: string = store?.user?.id;
 
   async function newReproductionHandler() {
-    const reproductionResponse: boolean = await createDefaultUserPaperData(
-      userID
-    );
+    const reproductionResponse: any = await createDefaultUserPaperData(userID);
 
-    if (reproductionResponse) {
+    if (
+      reproductionResponse.success &&
+      reproductionResponse.userPaperID !== ""
+    ) {
       console.log("reproduction created successfully");
+      navigate(`/reproductions/new/${reproductionResponse.userPaperID}`);
     } else {
       alert("some thing wrong");
     }
@@ -31,11 +35,9 @@ const Reproductions = () => {
             My work
           </Typography>
           <Grid item xs={12} xl={12}>
-            <Link to="/reproductions/new" style={{ textDecoration: "none" }}>
-              <Button variant="contained" onClick={newReproductionHandler}>
-                <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
-              </Button>
-            </Link>
+            <Button variant="contained" onClick={newReproductionHandler}>
+              <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
+            </Button>
           </Grid>
         </Grid>
         <MyWork />

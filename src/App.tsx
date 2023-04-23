@@ -21,12 +21,18 @@ import SummarizePaperStepOne from "./Components/Scoping/SummarizePaperStepOne";
 import DeclareRobustnessChecksStepFour from "./Components/Scoping/DeclareRobustnessChecksStepFour";
 import AddRevisedReproductionPackagesStepTwo from "./Components/Scoping/AddRevisedReproductionPackagesStepTwo";
 import OutlineClaimsStepThree from "./Components/Scoping/OutlineClaimsStepThree/OutlineClaimsStepThree";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 export default function App() {
   const { store } = UserContext();
   console.log(store);
   // useBeforeUnload((event: BeforeUnloadEvent) => sessionStorage.clear());
   return (
     <BrowserRouter>
+      <ToastContainer />
+      {/* Same as */}
+      <ToastContainer />
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
@@ -64,7 +70,7 @@ export default function App() {
                 }
               />
               {/* Route to reproductions */}
-              <Route
+              {/* <Route
                 path="/reproductions/:pageType"
                 element={
                   <>
@@ -73,7 +79,7 @@ export default function App() {
                     <Footer />
                   </>
                 }
-              />
+              /> */}
               <Route
                 path="/reproductions/:pageType/:userPaperID"
                 element={
@@ -84,7 +90,7 @@ export default function App() {
                   </>
                 }
               />{" "}
-              <Route
+              {/* <Route
                 path="/reproductions/select-paper/:pageType"
                 element={
                   <>
@@ -93,7 +99,7 @@ export default function App() {
                     <Footer />
                   </>
                 }
-              />{" "}
+              />{" "} */}
               <Route
                 path="/reproductions/select-paper/:pageType/:userPaperID"
                 element={

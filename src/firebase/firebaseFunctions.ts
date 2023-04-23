@@ -14,7 +14,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 // import { formDataType } from "../types/context.d";
-import { toast } from "react-toastify";
 import { paperData } from "../types/index.d";
 
 type userType = {
@@ -131,6 +130,8 @@ async function getUserPaperData(
       }
     });
     handleUserPaperData(getDataReturnObj);
+    // console.log(getDataReturnObj);
+    return getDataReturnObj;
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -272,17 +273,27 @@ async function createDefaultUserPaperData(userID: string) {
       will_assess_whole_paper: "",
       workflow_stage: "select_paper",
     });
+    console.log(ref.id);
 
     if (ref.id !== null) {
-      return true;
+      return {
+        success: true,
+        userPaperID: ref.id,
+      };
     } else {
-      return false;
+      return {
+        success: false,
+        userPaperID: "",
+      };
     }
   } catch (error) {
     console.log(error);
   }
 
-  return false;
+  return {
+    success: false,
+    userPaperID: "",
+  };
 }
 
 /**
@@ -323,11 +334,7 @@ async function getSelectUserPaperData(id: string) {
 
 async function appendUserPaperData(id: string, data: any) {
   try {
-    const updateSnapshot: any = await updateDoc(doc(db, "userPaper", id), data);
-
-    if (updateSnapshot.id !== null) {
-      return updateSnapshot.id;
-    }
+    await updateDoc(doc(db, "userPaper", id), data);
   } catch (error) {
     console.log(error);
   }
