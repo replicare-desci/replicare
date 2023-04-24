@@ -6,6 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Scoping from "./Scoping";
+import { Link, useParams } from "react-router-dom";
 
 const steps = [
   "Summarize paper",
@@ -27,6 +28,7 @@ export default function HorizontalLinearStepper({
     return skipped.has(step);
   };
 
+  const { userPaperID } = useParams();
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -89,9 +91,11 @@ export default function HorizontalLinearStepper({
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             {" "}
-            <Button variant="contained" sx={{ marginX: 1 }}>
-              return to stages overview
-            </Button>
+            <Link to={`/reproductions/edit/${userPaperID}`}>
+              <Button variant="contained" sx={{ marginX: 1 }}>
+                return to stages overview
+              </Button>
+            </Link>
             <Button
               color="inherit"
               disabled={activeStep === 0}

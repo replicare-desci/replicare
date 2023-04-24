@@ -1,33 +1,67 @@
 import { Container, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Stepper from "../Stepper";
 import ViewStepOne from "./ViewStepOne";
 import ViewStepFour from "./ViewStepFour";
 import ViewStepThree from "./ViewStepThree";
 import ViewStepTwo from "./ViewStepTwo";
-
+import { useParams } from "react-router-dom";
+import { getSelectUserPaperData } from "../../../firebase/firebaseFunctions";
+import { paperData } from "../../../types/index.d";
 const ViewScoping = () => {
+  // fetch scoping data start
+  const [userPaperData, setUserPaperData] = useState<paperData>();
+  const { userPaperID } = useParams();
+  useEffect(() => {
+    getSelectUserPaperData(userPaperID as string)
+      .then((data) => {
+        setUserPaperData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [userPaperID]);
+  // fetch scoping data end
+
   const [oneTen, setOneTen] = useState<number>(-1);
   const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   function scopeStepRender(activeStep: number) {
-    switch (activeStep) {
-      case 0:
-        return (
-          <ViewStepOne
-          // scopingDataStep1={scopingDataStep1}
-          // setScopingDataStep1={setScopingDataStep1}
-          />
-        );
-      case 1:
-        return <ViewStepTwo />;
-      case 2:
-        return <ViewStepThree />;
-      case 3:
-        return <ViewStepFour />;
-      default:
-        return <Typography>This component does not exists</Typography>;
+    if (userPaperData !== undefined) {
+      switch (activeStep) {
+        case 0:
+          return (
+            <ViewStepOne
+              userPaperData={userPaperData}
+              setUserPaperData={setUserPaperData}
+            />
+          );
+        case 1:
+          return (
+            <ViewStepTwo
+              userPaperData={userPaperData}
+              setUserPaperData={setUserPaperData}
+            />
+          );
+        case 2:
+          return (
+            <ViewStepThree
+              userPaperData={userPaperData}
+              setUserPaperData={setUserPaperData}
+            />
+          );
+        case 3:
+          return (
+            <ViewStepFour
+              userPaperData={userPaperData}
+              setUserPaperData={setUserPaperData}
+            />
+          );
+        default:
+          return <Typography>This component does not exists</Typography>;
+      }
     }
   }
   return (

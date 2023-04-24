@@ -1,7 +1,14 @@
 import { Box, Container, FormHelperText, Typography } from "@mui/material";
 import React from "react";
 
-const ViewStepTwo = () => {
+import { paperData } from "../../../types/index.d";
+const ViewStepTwo = ({
+  userPaperData,
+  setUserPaperData,
+}: {
+  userPaperData: paperData;
+  setUserPaperData: any;
+}) => {
   return (
     <Container>
       <Box my={4}>
@@ -24,8 +31,25 @@ const ViewStepTwo = () => {
         </Typography>
         {/* <FormHelperText>Contents of reproduction package</FormHelperText> */}
         <Box p={1} boxShadow={1} py={3} my={3} border={1}>
-          <Typography sx={{ fontWeight: 600 }}>Package Name : </Typography>
-          <Typography sx={{ fontWeight: 600 }}>Package URL : </Typography>
+          {userPaperData?.revised_reproduction_packages.length > 0 ? (
+            userPaperData?.revised_reproduction_packages.map(
+              (item: any, index: number) => {
+                return (
+                  <>
+                    {" "}
+                    <Typography sx={{ fontWeight: 500 }}>
+                      Package Name : {item?.name ? item?.name : "N/A"}
+                    </Typography>
+                    <Typography sx={{ fontWeight: 500 }}>
+                      Package URL : {item?.url ? item?.url : "N/A"}
+                    </Typography>
+                  </>
+                );
+              }
+            )
+          ) : (
+            <Typography sx={{ fontWeight: 500 }}>N/A</Typography>
+          )}
         </Box>
         {/* <Typography>
           Are there additional data in different repositories? Use the button
