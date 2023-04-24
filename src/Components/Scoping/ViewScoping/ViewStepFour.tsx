@@ -1,7 +1,14 @@
 import { Box, Container, Typography } from "@mui/material";
 import React from "react";
 
-const ViewStepFour = () => {
+import { paperData } from "../../../types/index.d";
+const ViewStepFour = ({
+  userPaperData,
+  setUserPaperData,
+}: {
+  userPaperData: paperData;
+  setUserPaperData: any;
+}) => {
   return (
     <Container>
       <Typography variant="h6" my={2}>
