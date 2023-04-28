@@ -103,8 +103,8 @@ const Scoping = () => {
         return <OutlineClaimsStepThree />;
       case 3:
         return <DeclareRobustnessChecksStepFour />;
-      default:
-        return <Typography>This component does not exists</Typography>;
+      // default:
+      //   return <Typography>This component does not exists</Typography>;
     }
   }
   return (

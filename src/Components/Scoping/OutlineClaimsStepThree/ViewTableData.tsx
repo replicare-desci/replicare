@@ -8,41 +8,41 @@ const columns: GridColDef[] = [
     field: "firstName",
     headerName: "Preferred Specification",
     width: 170,
-    editable: true,
+    editable: false,
   },
   {
     field: "lastName",
     headerName: "Alternative Spec #1",
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: "age",
     headerName: "Alternative Spec #2",
     type: "number",
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: "age",
     headerName: "Alternative Spec #3",
     type: "number",
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: "age",
     headerName: "Alternative Spec #4",
     type: "number",
     width: 150,
-    editable: true,
+    editable: false,
   },
   {
     field: "age",
     headerName: "Alternative Spec #5",
     type: "number",
     width: 150,
-    editable: true,
+    editable: false,
   },
   // {
   //   field: "fullName",
@@ -106,7 +106,7 @@ const rows = [
   },
 ];
 
-export default function TableData() {
+export default function ViewTableData() {
   return (
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
