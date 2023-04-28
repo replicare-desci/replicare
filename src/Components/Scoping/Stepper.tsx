@@ -6,7 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Scoping from "./Scoping";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const steps = [
   "Summarize paper",
@@ -22,6 +22,7 @@ export default function HorizontalLinearStepper({
   activeStep: number;
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const navigate = useNavigate();
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepSkipped = (step: number) => {
@@ -38,6 +39,10 @@ export default function HorizontalLinearStepper({
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+    if (activeStep === 3) {
+      navigate(`/reproductions/edit/${userPaperID}`);
+      // console.log("s");
+    }
   };
 
   const handleBack = () => {

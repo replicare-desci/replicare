@@ -152,7 +152,7 @@ const SelectPaper = () => {
 
             if (
               paperResponse?.authors_response !== undefined &&
-              paperResponse?.authors_response.length > 0
+              paperResponse?.authors_response?.length > 0
             ) {
               setCheckedState(paperResponse?.authors_response);
             }
@@ -169,6 +169,7 @@ const SelectPaper = () => {
         })
         .catch((err) => {
           console.log(err);
+          toast.error("something is wrong about this code");
           setDoi(false);
         });
     }
@@ -189,37 +190,34 @@ const SelectPaper = () => {
     // send form data to fireStore database on button click
     event.preventDefault();
 
-    console.log(checkedState);
+    setFormData((prev: any) => {
+      return {
+        ...prev,
+        userID: userID,
+        paper: doiResponse,
+        start_date: new Date().toString(),
+        shareable_link: false,
+        is_author: true,
+        is_creator: true,
+        expected_total_hours: 1,
+        claim_type: "",
+        claim_type_other_description: "",
+        familiarity_level: "",
+        authors_response: checkedState,
+        project_nickname: "",
+        authors_response_other: "",
+        summary: "",
+        whole_population: "",
+        additional_population: "",
+        original_reproduction_packages: originalPackages,
+      };
+    });
 
     if (
-      originalPackages &&
-      originalPackages[0].name !== "" &&
-      originalPackages[0].url !== "" &&
+      (originalPackages && originalPackages.length > 0) ||
       checkedState.length > 0
     ) {
       console.log("execute");
-      setFormData((prev: any) => {
-        return {
-          ...prev,
-          userID: userID,
-          paper: doiResponse,
-          start_date: new Date().toString(),
-          shareable_link: false,
-          is_author: true,
-          is_creator: true,
-          expected_total_hours: 1,
-          claim_type: "",
-          claim_type_other_description: "",
-          familiarity_level: "",
-          authors_response: checkedState,
-          project_nickname: "",
-          authors_response_other: "",
-          summary: "",
-          whole_population: "",
-          additional_population: "",
-          original_reproduction_packages: originalPackages,
-        };
-      });
 
       if (userPaperID !== undefined && pageType !== undefined) {
         console.log(formData);
@@ -232,7 +230,11 @@ const SelectPaper = () => {
             console.log("err", err);
             toast.error("Error submitting data");
           });
+      } else {
+        toast.error("Edit mode undefined");
       }
+    } else {
+      toast.error("Please fill all the required fields");
     }
   };
 
@@ -319,6 +321,29 @@ const SelectPaper = () => {
         formData?.workflow_stage === "scoping" &&
         response
       ) {
+        setFormData((prev: any) => {
+          return {
+            ...prev,
+            userID: userID,
+            paper: doiResponse,
+            start_date: new Date().toString(),
+            shareable_link: false,
+            is_author: true,
+            is_creator: true,
+            expected_total_hours: 1,
+            claim_type: "",
+            claim_type_other_description: "",
+            familiarity_level: "",
+            authors_response: checkedState,
+            project_nickname: "",
+            authors_response_other: "",
+            summary: "",
+            whole_population: "",
+            additional_population: "",
+            original_reproduction_packages: originalPackages,
+          };
+        });
+
         appendUserPaperData(userPaperID, formData)
           .then(() => {
             toast.success("Paper declared successfully");
@@ -328,391 +353,388 @@ const SelectPaper = () => {
           .catch((err) => {
             console.log("Error submitting data", err);
           });
+      } else {
+        toast.error("Paper declaration not working");
       }
     } else {
+      toast.error("ID not defined");
       console.log("userPaperID not defined");
     }
   }
 
   return (
-    <div>
-      <Container>
-        <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
-          Step 1: Declare a paper
-        </Typography>
-        <Typography variant={"subtitle1"} p={2}>
-          Specify the research paper that you will analyze and provide some
-          basic information about its reproduction package. Please refer to the
-          documentation provided for further assistance
-        </Typography>{" "}
-        <Typography variant={"h5"} component="h6" p={2}>
-          Basic information
-        </Typography>
-        <Typography variant={"subtitle1"} px={2}>
-          At this point, you are not expected to review the reproduction
-          materials in detail, as you will dedicate most of your time to this in
-          later stages of the exercise. If materials are available, you will
-          declare this paper as your target to reproduce. Only then you will be
-          asked to read the paper and define the scope of the reproduction
-          exercise.
-        </Typography>
-        <Box
-          sx={{
-            paddingTop: 3,
-            paddingLeft: 2,
-            paddingRight: 2,
-          }}
-        >
-          <Button variant="contained" onClick={() => navigate(-1)}>
-            Return to stages overview
-          </Button>
-        </Box>
-        <form
-          method="post"
-          onSubmit={submitSelectPaperData}
-          style={{ marginTop: "2rem", marginBottom: "4rem" }}
-        >
-          <List>
-            <ListItem>
-              <ListItemText>
-                1.1 Enter the{" "}
-                <span>
-                  <a
-                    href="https://en.wikipedia.org/wiki/Digital_object_identifier"
-                    target={"_blank"}
-                    rel="noreferrer"
+    <Container>
+      <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
+        Step 1: Declare a paper
+      </Typography>
+      <Typography variant={"subtitle1"} p={2}>
+        Specify the research paper that you will analyze and provide some basic
+        information about its reproduction package. Please refer to the
+        documentation provided for further assistance
+      </Typography>{" "}
+      <Typography variant={"h5"} component="h6" p={2}>
+        Basic information
+      </Typography>
+      <Typography variant={"subtitle1"} px={2}>
+        At this point, you are not expected to review the reproduction materials
+        in detail, as you will dedicate most of your time to this in later
+        stages of the exercise. If materials are available, you will declare
+        this paper as your target to reproduce. Only then you will be asked to
+        read the paper and define the scope of the reproduction exercise.
+      </Typography>
+      <Box
+        sx={{
+          paddingTop: 3,
+          paddingLeft: 2,
+          paddingRight: 2,
+        }}
+      >
+        <Button variant="contained" onClick={() => navigate(-1)}>
+          Return to stages overview
+        </Button>
+      </Box>
+      <form
+        method="post"
+        onSubmit={submitSelectPaperData}
+        style={{ marginTop: "2rem", marginBottom: "4rem" }}
+      >
+        <List>
+          <ListItem>
+            <ListItemText>
+              1.1 Enter the{" "}
+              <span>
+                <a
+                  href="https://en.wikipedia.org/wiki/Digital_object_identifier"
+                  target={"_blank"}
+                  rel="noreferrer"
+                >
+                  DOI
+                </a>
+              </span>{" "}
+              for the paper that you have chosen to reproduce for this activity
+              and we will fetch some basic information. Please use the
+              prefix/suffix notation, e.g. 10.1257/aer.20101199.
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <TextField
+              label="Digital Object Identifier (or URL if no DOI available)"
+              variant="standard"
+              type={"text"}
+              fullWidth
+              id="doi"
+              name="doi"
+              onChange={(e: any) => setDoiString(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <Button
+                    type="button"
+                    onClick={submitHandler}
+                    variant="contained"
+                    sx={{ width: "20%" }}
                   >
-                    DOI
-                  </a>
+                    Search DOI
+                  </Button>
+                ),
+              }}
+            />
+          </ListItem>
+          <p style={{ color: "red", textAlign: "center" }}>
+            {isError ? "Please enter DOI " : null}
+          </p>
+          {getDoi && doiResponse && Object.keys(doiResponse).length > 0 ? (
+            <>
+              <ListItem>
+                <TextField
+                  label="Title of the paper"
+                  type={"text"}
+                  value={doiResponse?.title ? doiResponse?.title : ""}
+                  variant="standard"
+                  fullWidth
+                />
+              </ListItem>
+              <ListItem>
+                <TextField
+                  label="Name of the journal or publication"
+                  type={"text"}
+                  value={
+                    doiResponse?.publication_name
+                      ? doiResponse?.publication_name
+                      : ""
+                  }
+                  variant="standard"
+                  fullWidth
+                />
+              </ListItem>{" "}
+              <ListItem>
+                <TextField
+                  label="Digital Object Identifier (or URL if no DOI available)"
+                  type={"text"}
+                  value={doiResponse?.doi ? doiResponse?.doi : ""}
+                  variant="standard"
+                  fullWidth
+                />
+              </ListItem>
+              <ListItem>
+                <TextField
+                  label="Year of Publication"
+                  type={"text"}
+                  value={
+                    doiResponse?.publication_year
+                      ? new Date(doiResponse?.publication_year)
+                          .getFullYear()
+                          .toString()
+                      : "No year"
+                  }
+                  variant="standard"
+                  fullWidth
+                />
+              </ListItem>
+              <ListItem>
+                <TextField
+                  label="Authors"
+                  type={"text"}
+                  value={doiResponse?.author ? doiResponse?.author : ""}
+                  variant="standard"
+                  fullWidth
+                />
+              </ListItem>
+            </>
+          ) : null}
+          {/* doi fetch ends here  */}
+        </List>
+        <List>
+          <ListItem>
+            <FormControl required>
+              <FormLabel id="reproduction-package-available?">
+                1.2 is a reproduction package available for this paper?
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="is a reproduction package available for this paper?"
+                value={
+                  formData?.reproduction_package_available
+                    ? formData?.reproduction_package_available
+                    : null
+                }
+                onChange={formDataHandler}
+                name="reproduction_package_available"
+              >
+                <FormControlLabel
+                  value="true"
+                  control={<Radio />}
+                  label="true"
+                />
+                <FormControlLabel
+                  value="false"
+                  control={<Radio />}
+                  label="false"
+                />
+              </RadioGroup>
+            </FormControl>
+          </ListItem>
+          <ListItem>
+            <FormControl
+              required
+              disabled={
+                formData?.reproduction_package_available === "" ||
+                formData?.reproduction_package_available === "true"
+                  ? true
+                  : false
+              }
+            >
+              <FormLabel id="authors_contacted">
+                1.3 Have you contacted the authors for a reproduction package?
+                Consult the{" "}
+                <span>
+                  <a href="https://docs.replicare.dev">docs</a>
                 </span>{" "}
-                for the paper that you have chosen to reproduce for this
-                activity and we will fetch some basic information. Please use
-                the prefix/suffix notation, e.g. 10.1257/aer.20101199.
-              </ListItemText>
-            </ListItem>
-            <ListItem>
-              <TextField
-                label="Digital Object Identifier (or URL if no DOI available)"
-                variant="standard"
-                type={"text"}
-                fullWidth
-                id="doi"
-                name="doi"
-                onChange={(e: any) => setDoiString(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <Button
-                      type="button"
-                      onClick={submitHandler}
-                      variant="contained"
-                      sx={{ width: "20%" }}
-                    >
-                      Search DOI
-                    </Button>
-                  ),
-                }}
-              />
-            </ListItem>
-            <p style={{ color: "red", textAlign: "center" }}>
-              {isError ? "Please enter DOI " : null}
-            </p>
-            {getDoi && doiResponse && Object.keys(doiResponse).length > 0 ? (
-              <>
-                <ListItem>
-                  <TextField
-                    label="Title of the paper"
-                    type={"text"}
-                    value={doiResponse?.title ? doiResponse?.title : ""}
-                    variant="standard"
-                    fullWidth
-                  />
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    label="Name of the journal or publication"
-                    type={"text"}
-                    value={
-                      doiResponse?.publication_name
-                        ? doiResponse?.publication_name
-                        : ""
-                    }
-                    variant="standard"
-                    fullWidth
-                  />
-                </ListItem>{" "}
-                <ListItem>
-                  <TextField
-                    label="Digital Object Identifier (or URL if no DOI available)"
-                    type={"text"}
-                    value={doiResponse?.doi ? doiResponse?.doi : ""}
-                    variant="standard"
-                    fullWidth
-                  />
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    label="Year of Publication"
-                    type={"text"}
-                    value={
-                      doiResponse?.publication_year
-                        ? new Date(doiResponse?.publication_year)
-                            .getFullYear()
-                            .toString()
-                        : "No year"
-                    }
-                    variant="standard"
-                    fullWidth
-                  />
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    label="Authors"
-                    type={"text"}
-                    value={doiResponse?.author ? doiResponse?.author : ""}
-                    variant="standard"
-                    fullWidth
-                  />
-                </ListItem>
-              </>
-            ) : null}
-            {/* doi fetch ends here  */}
-          </List>
-          <List>
-            <ListItem>
-              <FormControl required>
-                <FormLabel id="reproduction-package-available?">
-                  1.2 is a reproduction package available for this paper?
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="is a reproduction package available for this paper?"
-                  value={
-                    formData?.reproduction_package_available
-                      ? formData?.reproduction_package_available
-                      : null
-                  }
-                  onChange={formDataHandler}
-                  name="reproduction_package_available"
-                >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio />}
-                    label="true"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio />}
-                    label="false"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </ListItem>
-            <ListItem>
-              <FormControl
-                required
-                disabled={
-                  formData?.reproduction_package_available === "" ||
-                  formData?.reproduction_package_available === "true"
-                    ? true
-                    : false
+                for recommendations on contacting authors.
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="authors_contacted"
+                value={
+                  formData?.authors_contacted
+                    ? formData?.authors_contacted
+                    : null
                 }
+                name="authors_contacted"
+                onChange={formDataHandler}
               >
-                <FormLabel id="authors_contacted">
-                  1.3 Have you contacted the authors for a reproduction package?
-                  Consult the{" "}
-                  <span>
-                    <a href="https://docs.replicare.dev">docs</a>
-                  </span>{" "}
-                  for recommendations on contacting authors.
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="authors_contacted"
-                  value={
-                    formData?.authors_contacted
-                      ? formData?.authors_contacted
-                      : null
+                <FormControlLabel
+                  value="true"
+                  disabled={
+                    formData?.reproduction_package_available === "" ||
+                    formData?.reproduction_package_available === "true"
+                      ? true
+                      : false
                   }
-                  name="authors_contacted"
-                  onChange={formDataHandler}
-                >
-                  <FormControlLabel
-                    value="true"
-                    disabled={
-                      formData?.reproduction_package_available === "" ||
-                      formData?.reproduction_package_available === "true"
-                        ? true
-                        : false
-                    }
-                    control={<Radio />}
-                    label="true"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    disabled={
-                      formData?.reproduction_package_available === "" ||
-                      formData?.reproduction_package_available === "true"
-                        ? true
-                        : false
-                    }
-                    control={<Radio />}
-                    label="false"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormHelperText>
-                *Wait a few weeks for the authors to reply, then summarize your
-                interaction below.
-              </FormHelperText>
-            </ListItem>
-            <ListItem>
-              <FormControl
-                required
-                disabled={
-                  formData?.authors_contacted === "" ||
-                  formData?.authors_contacted === "true"
-                    ? true
-                    : false
-                }
-              >
-                <FormLabel>
-                  1.4 How did the authors respond? Select all that apply.
-                </FormLabel>
-                {checkBoxOptions.length > 0 &&
-                  checkBoxOptions?.map(
-                    (item: checkBoxOption, index: number) => {
-                      return (
-                        <>
-                          <FormControlLabel
-                            disabled={
-                              formData?.authors_contacted === "" ||
-                              formData?.authors_contacted === "true"
-                                ? true
+                  control={<Radio />}
+                  label="true"
+                />
+                <FormControlLabel
+                  value="false"
+                  disabled={
+                    formData?.reproduction_package_available === "" ||
+                    formData?.reproduction_package_available === "true"
+                      ? true
+                      : false
+                  }
+                  control={<Radio />}
+                  label="false"
+                />
+              </RadioGroup>
+            </FormControl>
+            <FormHelperText>
+              *Wait a few weeks for the authors to reply, then summarize your
+              interaction below.
+            </FormHelperText>
+          </ListItem>
+          <ListItem>
+            <FormControl
+              required
+              disabled={
+                formData?.authors_contacted === "" ||
+                formData?.authors_contacted === "true"
+                  ? true
+                  : false
+              }
+            >
+              <FormLabel>
+                1.4 How did the authors respond? Select all that apply.
+              </FormLabel>
+              {checkBoxOptions.length > 0 &&
+                checkBoxOptions?.map((item: checkBoxOption, index: number) => {
+                  return (
+                    <>
+                      <FormControlLabel
+                        disabled={
+                          formData?.authors_contacted === "" ||
+                          formData?.authors_contacted === "true"
+                            ? true
+                            : false
+                        }
+                        key={index}
+                        control={
+                          <Checkbox
+                            name={item.label}
+                            checked={
+                              checkedState?.length > 0 &&
+                              typeof item?.label === "string"
+                                ? !!checkedState.includes(item?.label)
                                 : false
                             }
-                            key={index}
-                            control={
-                              <Checkbox
-                                name={item.label}
-                                checked={
-                                  checkedState?.length > 0 &&
-                                  typeof item?.label === "string"
-                                    ? !!checkedState.includes(item?.label)
-                                    : false
-                                }
-                                onChange={(
-                                  event: React.ChangeEvent<HTMLInputElement>
-                                ) => {
-                                  if (event.target.checked) {
-                                    setCheckedState((prevState: string[]) => [
-                                      ...prevState,
-                                      event.target.name,
-                                    ]);
-                                  } else {
-                                    setCheckedState((prevState: string[]) =>
-                                      prevState.filter(
-                                        (item: string) =>
-                                          item !== event.target.name
-                                      )
-                                    );
-                                  }
-                                }}
-                              />
-                            }
-                            label={item.label}
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              if (event.target.checked) {
+                                setCheckedState((prevState: string[]) => [
+                                  ...prevState,
+                                  event.target.name,
+                                ]);
+                              } else {
+                                setCheckedState((prevState: string[]) =>
+                                  prevState.filter(
+                                    (item: string) => item !== event.target.name
+                                  )
+                                );
+                              }
+                            }}
                           />
-                        </>
-                      );
-                    }
-                  )}
-              </FormControl>
-            </ListItem>
+                        }
+                        label={item.label}
+                      />
+                    </>
+                  );
+                })}
+            </FormControl>
+          </ListItem>
 
+          <ListItem>
+            <FormControl
+              required
+              disabled={
+                formData?.reproduction_package_available === "" ||
+                formData?.reproduction_package_available === "true"
+                  ? true
+                  : false
+              }
+            >
+              <FormLabel id="permission">
+                1.5 If there are no reproduction packages, are you willing to
+                build a reproduction package from scratch?
+              </FormLabel>
+              <RadioGroup
+                value={
+                  formData?.reproduction_package_from_scratch
+                    ? formData?.reproduction_package_from_scratch
+                    : null
+                }
+                onChange={formDataHandler}
+                name="reproduction_package_from_scratch"
+              >
+                <FormControlLabel
+                  value="true"
+                  control={<Radio />}
+                  label="true"
+                  disabled={
+                    formData?.reproduction_package_available === "" ||
+                    formData?.reproduction_package_available === "true"
+                      ? true
+                      : false
+                  }
+                />
+                <FormControlLabel
+                  value="false"
+                  control={<Radio />}
+                  label="false"
+                  disabled={
+                    formData?.reproduction_package_available === "" ||
+                    formData?.reproduction_package_available === "true"
+                      ? true
+                      : false
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </ListItem>
+
+          {formData?.reproduction_package_available === "true" &&
+          formData?.original_reproduction_packages !== undefined ? (
+            <AdditionalInfo
+              originalPackages={originalPackages}
+              setOriginalPackages={setOriginalPackages}
+            />
+          ) : null}
+
+          {formData?.reproduction_package_from_scratch === "true" ? (
             <ListItem>
-              <FormControl
-                required
-                disabled={
-                  formData?.reproduction_package_available === "" ||
-                  formData?.reproduction_package_available === "true"
-                    ? true
-                    : false
+              <Button
+                variant="contained"
+                onClick={() =>
+                  userPaperID ? changeWorkFlowStage(userPaperID) : null
                 }
               >
-                <FormLabel id="permission">
-                  1.5 If there are no reproduction packages, are you willing to
-                  build a reproduction package from scratch?
-                </FormLabel>
-                <RadioGroup
-                  value={
-                    formData?.reproduction_package_from_scratch
-                      ? formData?.reproduction_package_from_scratch
-                      : null
-                  }
-                  onChange={formDataHandler}
-                  name="reproduction_package_from_scratch"
-                >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio />}
-                    label="true"
-                    disabled={
-                      formData?.reproduction_package_available === "" ||
-                      formData?.reproduction_package_available === "true"
-                        ? true
-                        : false
-                    }
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio />}
-                    label="false"
-                    disabled={
-                      formData?.reproduction_package_available === "" ||
-                      formData?.reproduction_package_available === "true"
-                        ? true
-                        : false
-                    }
-                  />
-                </RadioGroup>
-              </FormControl>
+                You can declare this paper and continue the scoping portion of
+                the exercise.
+              </Button>
             </ListItem>
-
-            {formData?.reproduction_package_available === "true" &&
-            formData?.original_reproduction_packages !== undefined ? (
-              <AdditionalInfo
-                originalPackages={originalPackages}
-                setOriginalPackages={setOriginalPackages}
-              />
-            ) : null}
-
-            {formData?.reproduction_package_from_scratch === "true" ? (
-              <ListItem>
-                <Button
-                  variant="contained"
-                  onClick={() =>
-                    userPaperID ? changeWorkFlowStage(userPaperID) : null
-                  }
-                >
-                  You can declare this paper and continue the scoping portion of
-                  the exercise.
-                </Button>
-              </ListItem>
-            ) : null}
-          </List>
-          <Box sx={{ float: "right" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                padding: 2,
-                borderRadius: 10,
-                px: 3,
-              }}
-            >
-              Save
-            </Button>
-          </Box>
-        </form>
-      </Container>
-    </div>
+          ) : null}
+        </List>
+        <Box sx={{ float: "right" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              padding: 2,
+              borderRadius: 10,
+              px: 3,
+            }}
+          >
+            Save
+          </Button>
+        </Box>
+      </form>
+    </Container>
   );
 };
 

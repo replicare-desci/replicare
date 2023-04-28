@@ -24,47 +24,26 @@ function AdditionalInfo({
   function fillIntoDefaultFields(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    setOriginalPackages((prevState: original_reproduction_packages[]) => {
-      return [
+    console.log("name: ", name, ", value: ", value);
+
+    if (name === "name") {
+      setOriginalPackages((prevState: original_reproduction_packages[]) => [
+        { ...prevState[0], name: value },
+      ]);
+    } else if (name === "url") {
+      setOriginalPackages((prevState: original_reproduction_packages[]) => [
         {
           ...prevState[0],
-          [name]: value,
+          url: value,
         },
-      ];
-    });
+      ]);
+    }
 
     console.log(originalPackages);
   }
 
   return (
     <>
-      {/* {isDelete ? (
-        <div>
-          <Box py={2} boxShadow={1} my={1} width={"100%"}>
-            <FormControl sx={{ paddingX: 2 }} fullWidth>
-              <TextField
-                label="Contents of reproduction package"
-                fullWidth
-                variant="standard"
-                placeholder="e.g. Main code repository with data"
-              ></TextField>
-              <TextField
-                variant="standard"
-                placeholder="e.g. https://github.com/paper/paper"
-              ></TextField>
-
-              <Button
-                variant="contained"
-                sx={{ width: "10%", my: 2, textTransform: "unset", px: 5 }}
-                onClick={deleted}
-              >
-                Delete
-              </Button>
-            </FormControl>
-          </Box>
-        </div>
-      ) : null} */}
-
       {/* {formData.original_reproduction_packages.length > 1 &&
         formData.original_reproduction_packages.map(
           (item: any, index: number) => {

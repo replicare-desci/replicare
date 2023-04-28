@@ -120,8 +120,9 @@ const Scoping = () => {
         </Typography>{" "}
         <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {scopeStepRender(activeStep)}
+        <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {/* <SummarizePaperStepOne /> */}
-        <Grid xs={12} justifyContent={"flex-end"} display={"flex"} mb={10}>
+        <Grid justifyContent={"flex-end"} display={"flex"} mb={10}>
           {" "}
           <Button
             type="submit"
