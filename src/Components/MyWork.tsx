@@ -91,7 +91,7 @@ const MyWork = () => {
                   Paper status: <strong>{item?.paper_type}</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Current stage: <strong>Selecting a Paper</strong>
+                  Current stage: <strong>{item?.workflow_stage}</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Number of display items assessed:<strong> 0</strong>
