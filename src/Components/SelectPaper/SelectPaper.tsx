@@ -122,7 +122,10 @@ const SelectPaper = () => {
       },
     ],
     authors_response: [],
+    // userID: "",
     paper: doiResponse ? doiResponse : null,
+    paper_type: "candidate",
+    workflow_stage: "select_paper",
     start_date: "",
     shareable_link: false,
     is_author: true,
@@ -131,8 +134,6 @@ const SelectPaper = () => {
     claim_type_other_description: "",
     familiarity_level: "",
     expected_total_hours: 1,
-    paper_type: "candidate",
-    workflow_stage: "select_paper",
   });
 
   useEffect(() => {
