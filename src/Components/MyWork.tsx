@@ -14,6 +14,7 @@ import {
   deleteUserPaperData,
 } from "../firebase/firebaseFunctions";
 import { Link } from "react-router-dom";
+import { paperData } from "../types/index.d";
 
 import { useState, useEffect } from "react";
 import React from "react";
@@ -53,6 +54,7 @@ const MyWork = () => {
   const handleUserPaperData = (userPaperData: any) => {
     console.log(userPaperData);
   };
+
   useEffect(() => {
     getUserPaperData(userID, handleUserPaperData)
       .then((res) => {
@@ -66,7 +68,7 @@ const MyWork = () => {
     <>
       <Container>
         {data.length !== 0 ? (
-          data?.map((item: any, index: number) => {
+          data?.map((item: paperData, index: number) => {
             return (
               <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
                 {item?.paper?.title ? (
@@ -82,11 +84,11 @@ const MyWork = () => {
 
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Created on:{" "}
-                  <strong>{dayjs(item?.createdAt).format("L LT")}</strong>
+                  <strong>{item.created_at.toDate().toLocaleString()}</strong>
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Paper status: <strong>candidate</strong>
+                  Paper status: <strong>{item?.paper_type}</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Current stage: <strong>Selecting a Paper</strong>

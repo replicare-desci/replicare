@@ -51,7 +51,7 @@ export type paperData = {
   claims?: claims;
   claim_type?: string;
   claim_type_other_description?: string;
-  created_at?: string;
+  created_at?: any;
   expected_total_hours?: number;
   familiarity_level?: string;
   is_author?: boolean;

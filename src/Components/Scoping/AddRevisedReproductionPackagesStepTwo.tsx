@@ -81,7 +81,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
                       variant="standard"
                       name="name"
                       type={"text"}
-                      defaultValue={item.name}
+                      value={item.name}
                       placeholder="e.g. Main code repository with data"
                       onChange={(event: any) => {
                         if (event.target.value.length > 0) {
@@ -101,7 +101,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
                       fullWidth
                       variant="standard"
                       name="url"
-                      defaultValue={item.url}
+                      value={item.url}
                       placeholder="e.g. https://github.com/paper/paper"
                       onChange={(event: any) => {
                         // required validation
@@ -131,7 +131,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
               variant="standard"
               type={"text"}
               value={revisedPackage.name}
-              defaultValue={revisedPackage.name}
+              // value={revisedPackage.name}
               onChange={(event: any) => {
                 setRevisedPackage({
                   ...revisedPackage,
@@ -144,7 +144,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
             <TextField
               type={"text"}
               value={revisedPackage.url}
-              defaultValue={revisedPackage.url}
+              // value={revisedPackage.url}
               variant="standard"
               onChange={(event: any) => {
                 setRevisedPackage({

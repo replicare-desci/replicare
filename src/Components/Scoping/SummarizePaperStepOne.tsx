@@ -116,7 +116,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.5</b> How would you rate your familiarity with this paper?
               </FormLabel>
               <RadioGroup
-                defaultValue=""
+                // defaultValue=""
                 onChange={summerizePaperChangeHandler}
                 name="familiarity_level"
               >
@@ -310,7 +310,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 required
                 variant="standard"
                 name="num_claims"
-                defaultValue={1}
+                value={1}
                 // id=""
                 onChange={summerizePaperChangeHandler}
               />
@@ -325,7 +325,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 or something else?
               </FormLabel>
               <RadioGroup
-                defaultValue=""
+                // defaultValue=""
                 // onChange={formDataHandler}
                 name="claim_type_other_description"
                 // id=""
@@ -403,7 +403,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.12</b> Do you plan to investigate the entire paper?
               </FormLabel>
               <RadioGroup
-                defaultValue=""
+                // defaultValue=""
                 name="will_access_whole_paper"
                 onChange={summerizePaperChangeHandler}
               >
