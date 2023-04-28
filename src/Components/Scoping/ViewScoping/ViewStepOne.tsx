@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Grid, List, Box, Stepper, Button } from "@mui/material";
 
 import { paperData } from "../../../types/index.d";
-import SaveIcon from "@mui/icons-material/Save";
 
 // TODO: need to update fields
 
@@ -123,7 +122,9 @@ const ViewStepOne = ({
                 results) are included in the paper's main body?
               </Typography>
               <Box p={1} boxShadow={1} py={2} border={1}>
-                {userPaperData?.outputs.num_tables_body ? (
+                {typeof userPaperData !== "undefined" &&
+                userPaperData?.outputs &&
+                userPaperData?.outputs.num_tables_body ? (
                   <Typography variant="body1" sx={{ mb: 1 }}>
                     {userPaperData?.outputs.num_tables_body}
                   </Typography>
@@ -143,7 +144,9 @@ const ViewStepOne = ({
               </Typography>
 
               <Box p={1} boxShadow={1} py={2} border={1}>
-                {userPaperData?.outputs.num_tables_appendix ? (
+                {typeof userPaperData !== "undefined" &&
+                userPaperData?.outputs &&
+                userPaperData?.outputs.num_tables_appendix ? (
                   <Typography variant="body1" sx={{ mb: 1 }}>
                     {userPaperData?.project_nickname}
                   </Typography>

@@ -59,8 +59,8 @@ const ViewScoping = () => {
               setUserPaperData={setUserPaperData}
             />
           );
-        default:
-          return <Typography>This component does not exists</Typography>;
+        // default:
+        //   return <Typography>This component does not exists</Typography>;
       }
     }
   }

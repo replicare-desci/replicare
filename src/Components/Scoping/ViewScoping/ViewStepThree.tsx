@@ -4,9 +4,11 @@ import {
   Container,
   Radio,
   RadioGroup,
+  Slider,
   TextField,
   Typography,
 } from "@mui/material";
+import ViewTableData from "../OutlineClaimsStepThree/ViewTableData";
 
 import { paperData } from "../../../types/index.d";
 function ViewStepThree({
@@ -25,11 +27,12 @@ function ViewStepThree({
       <Box sx={{ minWidth: 120 }}>
         <Box>
           <Box>
-            <Typography>
+            <Typography my={2}>
               <b>3.1.1. </b>Provide a one-sentence summary of the claim you will
               be assessing.
             </Typography>
-            <Typography variant="caption" my={2}>
+
+            <Typography variant="caption">
               Structure your summary as follows: "The paper tested the effect of
               X on Y for population P, using method M. The main results show an
               effect of magnitude E (specify units and standard errors)" or "The
@@ -40,27 +43,20 @@ function ViewStepThree({
               for all of the scientific claims that you will analyze as part of
               the entire exercise.
             </Typography>
-            <TextField placeholder="Summary" />
+            <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}></Box>
           </Box>
           <Box>
             <Typography>
               <b>3.1.2. </b>Provide your own short title for the claim.
             </Typography>
-            <TextField
-              placeholder="e.g. effects of wages"
-              label="Short title of the claim"
-              sx={{ my: 1 }}
-            />
+            <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}></Box>
           </Box>
           <Box>
             <Typography>
               <b>3.1.3. </b>For this claim: describe the population for which
               the estimates apply.
             </Typography>
-            <TextField
-              placeholder="e.g. low income households in oregen below the poverty line , that apply for and make use of a specific benefit"
-              sx={{ my: 1 }}
-            />
+            <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}></Box>
           </Box>
           <Box>
             <Typography>
@@ -68,6 +64,7 @@ function ViewStepThree({
               specification, i.e., a specific regression model estimated for
               this claim you will be assessing?
             </Typography>
+            <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}></Box>
           </Box>
           <Box>
             <Typography>
@@ -103,7 +100,12 @@ function ViewStepThree({
               them accordingly. When editing the .csv file, do not add
               additional rows or change the variable names in the first column.
             </Typography>
+
+            <Box>
+              <ViewTableData />
+            </Box>
           </Box>
+
           <Box>
             <Typography>
               <b>3.1.6. </b>How confident are you in your categorization of the
@@ -111,7 +113,19 @@ function ViewStepThree({
             </Typography>
             <Box display={"flex"} m={2}>
               <Typography>Low Confidence</Typography>
-
+              <Slider
+                aria-label="Confidence level"
+                defaultValue={3}
+                // getAriaValueText={valuetext}
+                valueLabelDisplay="on"
+                step={1}
+                disabled
+                // value={}
+                sx={{ width: "70%", mx: 5 }}
+                marks
+                min={1}
+                max={5}
+              />{" "}
               <Typography>High Confidence</Typography>
             </Box>
           </Box>

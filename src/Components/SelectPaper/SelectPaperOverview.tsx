@@ -17,17 +17,17 @@ import { checkPaperExecutionState } from "../../firebase/firebaseFunctions";
 const SelectPaperOverview = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  // const handleNext = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  // };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  // };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
   const { pageType, userPaperID } = useParams();
 
   // const [activeStep, setActiveStep] = React.useState(0);
@@ -47,11 +47,7 @@ const SelectPaperOverview = () => {
   const [paperExecutionState, setPaperExecutionState] = useState("");
 
   useEffect(() => {
-    if (
-      userPaperID !== undefined &&
-      pageType !== undefined &&
-      pageType === "edit"
-    ) {
+    if (userPaperID !== undefined && pageType !== undefined) {
       checkPaperExecutionState(userPaperID)
         .then((data) => {
           setPaperExecutionState(data);
@@ -76,6 +72,7 @@ const SelectPaperOverview = () => {
         break;
     }
   }
+
   return (
     <div>
       {/* <div>SelectPaperOverview</div> */}
@@ -92,15 +89,16 @@ const SelectPaperOverview = () => {
                 <StepLabel>
                   <Typography fontWeight={700}>Declare a paper</Typography>
                 </StepLabel>
-                <Box display={"flex"} mt={1} p={1}>
-                  {" "}
-                  <Link
-                    style={{ color: "#32454D" }}
-                    to={`/reproductions/select-paper/view/${userPaperID}`}
-                  >
-                    <VisibilityIcon fontSize="medium" />
-                  </Link>
-                </Box>
+                {paperExecutionState === "declared" ? (
+                  <Box display={"flex"} mt={1} p={1}>
+                    <Link
+                      style={{ color: "#32454D" }}
+                      to={`/reproductions/select-paper/view/${userPaperID}`}
+                    >
+                      <VisibilityIcon fontSize="medium" />
+                    </Link>
+                  </Box>
+                ) : null}
               </Box>
               <StepContent>
                 <Typography my={2}>
@@ -141,15 +139,17 @@ const SelectPaperOverview = () => {
                 <StepLabel>
                   <Typography fontWeight={700}>Scoping</Typography>
                 </StepLabel>
-                <Link
-                  style={{ display: "inline-block" }}
-                  to={`/reproductions/scoping/view/${userPaperID}`}
-                >
-                  <VisibilityIcon
-                    fontSize="medium"
-                    sx={{ mt: 1, mx: 1, color: "primary.main" }}
-                  />
-                </Link>
+                {paperExecutionState === "scoping" ? (
+                  <Link
+                    style={{ display: "inline-block" }}
+                    to={`/reproductions/scoping/view/${userPaperID}`}
+                  >
+                    <VisibilityIcon
+                      fontSize="medium"
+                      sx={{ mt: 1, mx: 1, color: "primary.main" }}
+                    />
+                  </Link>
+                ) : null}
               </Box>
               <StepContent>
                 <Typography>
@@ -175,7 +175,7 @@ const SelectPaperOverview = () => {
                   </Link>
                 </>
               </StepContent>
-              <>
+              {/* <>
                 <Link
                   to={`/reproductions/scoping/edit/${userPaperID}`}
                   style={{ textDecoration: "none", marginRight: 10 }}
@@ -189,7 +189,7 @@ const SelectPaperOverview = () => {
                 >
                   <Button variant="contained">View this section</Button>
                 </Link>
-              </>
+              </> */}
             </Step>
             {/* step3 */}
             <Step>

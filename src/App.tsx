@@ -17,11 +17,8 @@ import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
 import ViewScoping from "./Components/Scoping/ViewScoping/ViewScoping";
 import Scoping from "./Components/Scoping/Scoping";
-import SummarizePaperStepOne from "./Components/Scoping/SummarizePaperStepOne";
-import DeclareRobustnessChecksStepFour from "./Components/Scoping/DeclareRobustnessChecksStepFour";
-import AddRevisedReproductionPackagesStepTwo from "./Components/Scoping/AddRevisedReproductionPackagesStepTwo";
-import OutlineClaimsStepThree from "./Components/Scoping/OutlineClaimsStepThree/OutlineClaimsStepThree";
-import { ToastContainer, toast } from "react-toastify";
+
+import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 export default function App() {

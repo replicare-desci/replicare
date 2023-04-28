@@ -1,4 +1,4 @@
-import { app, db } from "./firebase";
+import { db } from "./firebase";
 
 import {
   collection,
@@ -14,7 +14,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 // import { formDataType } from "../types/context.d";
-import { paperData } from "../types/index.d";
 
 type userType = {
   firstName: string;
@@ -272,6 +271,24 @@ async function createDefaultUserPaperData(userID: string) {
       shareable_link: false,
       will_assess_whole_paper: "",
       workflow_stage: "select_paper",
+      original_reproduction_packages: [
+        {
+          content_type: "code",
+          name: "",
+          stage: "revised",
+          url: "",
+        },
+      ],
+      revised_reproduction_packages: [
+        {
+          content_type: "code",
+          name: "",
+          stage: "revised",
+          url: "",
+        },
+      ],
+      paper: null,
+      expected_total_hours: 1,
     });
     console.log(ref.id);
 
@@ -321,8 +338,6 @@ async function getSelectUserPaperData(id: string) {
     let querySnapshot: any = await getDoc(doc(db, "userPaper", id));
 
     if (querySnapshot && querySnapshot.id) {
-      console.log(querySnapshot.data(), querySnapshot.id);
-
       data = { ...querySnapshot.data() };
     }
   } catch (error) {
@@ -334,7 +349,9 @@ async function getSelectUserPaperData(id: string) {
 
 async function appendUserPaperData(id: string, data: any) {
   try {
-    await updateDoc(doc(db, "userPaper", id), data);
+    if (id && typeof id !== "undefined" && Object.keys(data).length > 0) {
+      await updateDoc(doc(db, "userPaper", id), data);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -344,9 +361,9 @@ async function checkPaperExecutionState(id: string) {
   /* 
   Possible values of paper_type
 
-  - candidate
-  - declared
-  - scoping
+  - candidate => default state
+  - declared => after declaring the paper on step 1
+  - scoping => after declaration on step 2
   
   */
   try {

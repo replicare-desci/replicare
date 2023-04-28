@@ -78,17 +78,26 @@ export default function HorizontalLinearStepper({
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <Box>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Box>
+              <Link to={`/reproductions/edit/${userPaperID}`}>
+                <Button variant="contained" sx={{ marginX: 1 }}>
+                  return to stages overview
+                </Button>
+              </Link>
+            </Box>
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
+            {/* <Button onClick={handleReset}>Reset</Button> */}
           </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             {" "}
             <Link to={`/reproductions/edit/${userPaperID}`}>
