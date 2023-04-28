@@ -86,8 +86,7 @@ const MyWork = () => {
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Paper status: <strong>candidate</strong> Number of claims
-                  assessed: 0
+                  Paper status: <strong>candidate</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Current stage: <strong>Selecting a Paper</strong>

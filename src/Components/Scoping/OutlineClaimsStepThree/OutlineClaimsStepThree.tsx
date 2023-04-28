@@ -120,7 +120,7 @@ const OutlineClaimsStepThree = () => {
                 </FormLabel>
                 <RadioGroup>
                   <FormControlLabel
-                    value="Yes"
+                    value="yes"
                     control={<Radio />}
                     label="Yes"
                   />{" "}
@@ -183,6 +183,7 @@ const OutlineClaimsStepThree = () => {
                     getAriaValueText={valuetext}
                     valueLabelDisplay="on"
                     step={1}
+                    // value={}
                     sx={{ width: "70%", mx: 5 }}
                     marks
                     min={1}

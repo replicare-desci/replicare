@@ -8,7 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 
-function ViewStepThree() {
+import { paperData } from "../../../types/index.d";
+function ViewStepThree({
+  userPaperData,
+  setUserPaperData,
+}: {
+  userPaperData: paperData;
+  setUserPaperData: any;
+}) {
   return (
     <Container>
       {/* <Button>claims2</Button> */}
