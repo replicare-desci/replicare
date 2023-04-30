@@ -27,9 +27,18 @@ export default function App() {
   // useBeforeUnload((event: BeforeUnloadEvent) => sessionStorage.clear());
   return (
     <BrowserRouter>
-      <ToastContainer />
-      {/* Same as */}
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>

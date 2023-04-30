@@ -18,6 +18,8 @@ import { appendUserPaperData } from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
 
 const Scoping = () => {
+  const { userPaperID } = useParams();
+  const userID: string = sessionStorage.getItem("id") as string;
   const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
   const [scopingDataStep2, setScopingDataStep2] =
     useState<AddRevisedReproductionPackage>();
@@ -32,6 +34,8 @@ const Scoping = () => {
   // global state for scoping
   const [scopingData, setScopingData] = useState({
     // step 1 data start
+    userID: userID,
+    id: userPaperID as string,
     project_nickname: "",
     revised_reproduction_packages: [],
     start_date: "",
@@ -50,21 +54,56 @@ const Scoping = () => {
     num_claims: 1,
     claim_type_other_description: "",
     will_access_whole_paper: false, //wil investigate
-    num_claims_will_assess: 1,
+    num_claims_will_assess: "",
     summary: "",
 
     // step 1 data end
 
     // step 2 data start
-    original_reproduction_packages: [],
+    // revised_reproduction_packages: {
+    //   id: 1,
+    //   stage: "",
+    //   content_type: "",
+    //   name: "",
+    //   url: "",
+    // },
 
     // step 2 data end
 
     // step 3 data start
+    claims: {
+      claimSummary: "",
+      econometric_categorization_confidence: "",
+      estimates: {
+        column: "",
+        confidence_interval: "",
+        econometric_method: "",
+        estimate: "",
+        // id: 1,
+        inline_paragraph: "",
+        name: "",
+        other_econometric_method: "",
+        other_statistic: "",
+        p_value: "",
+        page: "",
+        row: "",
+        standard_error: "",
+        units: "",
+      },
+      focused_population: "",
+      // id: number;
+      identified_preferred_specification: "",
+      short_description: "",
+    },
+    econometric_categorization_confidence: "",
 
     // step 3 data end
+
+    // step 4 data starts
+    possible_robustness_checks: "",
+    // step 4 data ends
   });
-  const { userPaperID } = useParams();
+  // const { userPaperID } = useParams();
   function saveScopingData() {
     if (typeof userPaperID != "undefined") {
       console.log(scopingData);
@@ -100,9 +139,19 @@ const Scoping = () => {
           />
         );
       case 2:
-        return <OutlineClaimsStepThree />;
+        return (
+          <OutlineClaimsStepThree
+            scopingData={scopingData}
+            setScopingData={setScopingData}
+          />
+        );
       case 3:
-        return <DeclareRobustnessChecksStepFour />;
+        return (
+          <DeclareRobustnessChecksStepFour
+            scopingData={scopingData}
+            setScopingData={setScopingData}
+          />
+        );
       // default:
       //   return <Typography>This component does not exists</Typography>;
     }

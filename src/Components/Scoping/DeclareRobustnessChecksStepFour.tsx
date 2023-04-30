@@ -6,9 +6,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { paperData, revised_reproduction_packages } from "../../types";
 import React from "react";
+interface props {
+  scopingData: paperData;
+  setScopingData: any;
+}
+const DeclareRobustnessChecksStepFour = ({
+  scopingData,
+  setScopingData,
+}: props) => {
+  const DeclareRobustnessChecksHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
 
-const DeclareRobustnessChecksStepFour = () => {
+    setScopingData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log(scopingData);
+  };
   return (
     <Container sx={{ my: 4 }}>
       <Typography variant="h6">Declare possible robustness checks</Typography>
@@ -24,13 +42,17 @@ const DeclareRobustnessChecksStepFour = () => {
         </FormLabel>
         <TextField
           sx={{ my: 1 }}
+          required
+          onChange={DeclareRobustnessChecksHandler}
+          name="possible_robustness_checks"
           multiline
           rows={5}
           fullWidth
           placeholder="Possible robustness check"
         />
       </FormControl>
-      <Button variant="contained">Save and move to assessment stage</Button>
+      {/* TODO: need to do this  */}
+      {/* <Button variant="contained">Save and move to assessment stage</Button> */}
     </Container>
   );
 };

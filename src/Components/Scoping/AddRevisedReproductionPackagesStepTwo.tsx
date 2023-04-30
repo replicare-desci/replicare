@@ -7,10 +7,10 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
-import { revised_reproduction_packages } from "../../types";
+import React, { useState, useEffect } from "react";
+import { paperData, revised_reproduction_packages } from "../../types";
 interface props {
-  scopingData: any;
+  scopingData: paperData;
   setScopingData: any;
 }
 
@@ -23,24 +23,22 @@ const AddRevisedReproductionPackagesStepTwo = ({
   //   setCount(count + 1);
   // };
   // handle change
-  const addRevisedPackageChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = event.target;
-
-    setScopingData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const addIntoSystem = () => {
+  const addRevisedPackageChangeHandler = () => {
     if (revisedPackage.name.length > 0 && revisedPackage.url.length > 0) {
-      setScopingData({
-        ...scopingData,
-        original_reproduction_packages: [
-          ...scopingData.original_reproduction_packages,
-          revisedPackage,
-        ],
+      setScopingData((prev: paperData) => {
+        if (
+          prev.original_reproduction_packages &&
+          typeof prev.original_reproduction_packages !== "undefined" &&
+          prev.original_reproduction_packages.length > 0
+        ) {
+          return {
+            ...prev,
+            revised_reproduction_packages: [
+              ...prev.original_reproduction_packages,
+            ],
+          };
+        }
+        console.log(scopingData);
       });
       setRevisedPackage({
         name: "",
@@ -52,6 +50,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
       alert("Please fill the required fields");
     }
   };
+
   const [revisedPackage, setRevisedPackage] =
     useState<revised_reproduction_packages>({
       name: "",
@@ -62,10 +61,27 @@ const AddRevisedReproductionPackagesStepTwo = ({
   // const renderedComponents = Array.from({ length: count }, (_, index) => (
   //   <AdditionalInfo key={index} />
   // ));
+
+  useEffect(() => {
+    setScopingData((prev: paperData) => {
+      if (
+        prev?.original_reproduction_packages !== undefined &&
+        prev?.original_reproduction_packages?.length > 0
+      ) {
+        return {
+          ...prev,
+          revised_reproduction_packages: [
+            ...prev?.original_reproduction_packages,
+          ],
+        };
+      }
+    });
+  }, [setScopingData]);
   return (
     <div>
-      {scopingData.original_reproduction_packages.length > 0 &&
-        scopingData.original_reproduction_packages.map(
+      {scopingData?.original_reproduction_packages !== undefined &&
+        scopingData?.original_reproduction_packages?.length > 0 &&
+        scopingData?.original_reproduction_packages?.map(
           (item: any, index: number) => {
             return (
               <div key={index}>
@@ -160,7 +176,10 @@ const AddRevisedReproductionPackagesStepTwo = ({
               button below to add links to these as well.
             </FormLabel>{" "}
             {/* {renderedComponents} */}
-            <Button variant="contained" onClick={addIntoSystem}>
+            <Button
+              variant="contained"
+              onClick={addRevisedPackageChangeHandler}
+            >
               + Add additional reproduction packages for data
             </Button>
           </FormControl>
