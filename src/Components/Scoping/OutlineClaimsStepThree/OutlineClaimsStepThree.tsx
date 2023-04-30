@@ -1,25 +1,26 @@
 import {
   Box,
-  Button,
   Container,
   FormControl,
   FormControlLabel,
-  FormHelperText,
   FormLabel,
   InputLabel,
   MenuItem,
   Radio,
   RadioGroup,
   Select,
-  SelectChangeEvent,
   Slider,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import TableData from "./TableData";
-
-const OutlineClaimsStepThree = () => {
+import { paperData } from "../../../types";
+interface props {
+  scopingData: paperData;
+  setScopingData: any;
+}
+const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
   const [isClaims, setClaims] = useState(2);
 
   const setTotalClaims = () => {
@@ -27,12 +28,26 @@ const OutlineClaimsStepThree = () => {
   };
   const [claim, setClaim] = React.useState("");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setClaim(event.target.value as string);
+  // handle change
+  const OutlineClaimsChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+
+    setScopingData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log("scopingData  ", scopingData);
   };
-  function valuetext(value: number) {
-    return `${value}°C`;
-  }
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   // setClaim(event.target.value);
+  //   // setScopingData({
+  //   //   ...scopingData,
+  //   //   [event.target.name]: event.target.value,
+  //   // });
+  //   // console.log(event.target.name, "+", event.target.value);
+  // };
 
   return (
     <Container sx={{ my: 4 }}>
@@ -64,9 +79,11 @@ const OutlineClaimsStepThree = () => {
               <Select
                 labelId="claim-select-dropdown"
                 id="claim-select-dropdown"
-                value={claim}
+                // name="claim"
+                // type="text"
+                // value={claim}
                 label="Claims"
-                onChange={handleChange}
+                // onChange={OutlineClaimsChangeHandler}
               >
                 <MenuItem value={10}>Claim 1:</MenuItem>
                 {/* <MenuItem value={20}>Claim 2:</MenuItem> */}
@@ -90,7 +107,13 @@ const OutlineClaimsStepThree = () => {
                   use the same units of measurement for all of the scientific
                   claims that you will analyze as part of the entire exercise.
                 </Typography>
-                <TextField placeholder="Summary" />
+                <TextField
+                  placeholder="Summary"
+                  name="claimSummary"
+                  required
+                  type="text"
+                  onChange={OutlineClaimsChangeHandler}
+                />
               </FormControl>
               <FormControl fullWidth sx={{ my: 2 }}>
                 <FormLabel>
@@ -98,7 +121,11 @@ const OutlineClaimsStepThree = () => {
                 </FormLabel>
                 <TextField
                   placeholder="e.g. effects of wages"
+                  type="text"
+                  required
+                  name="short_description"
                   label="Short title of the claim"
+                  onChange={OutlineClaimsChangeHandler}
                   sx={{ my: 1 }}
                 />
               </FormControl>{" "}
@@ -109,6 +136,10 @@ const OutlineClaimsStepThree = () => {
                 </FormLabel>
                 <TextField
                   placeholder="e.g. low income households in oregen below the poverty line , that apply for and make use of a specific benefit"
+                  type="text"
+                  required
+                  onChange={OutlineClaimsChangeHandler}
+                  name="focused_population"
                   sx={{ my: 1 }}
                 />
               </FormControl>{" "}
@@ -118,7 +149,15 @@ const OutlineClaimsStepThree = () => {
                   analytical specification, i.e., a specific regression model
                   estimated for this claim you will be assessing?
                 </FormLabel>
-                <RadioGroup>
+                <RadioGroup
+                  // value={
+                  //   scopingData?.claims?.identified_preferred_specification
+                  //     ? scopingData?.claims?.identified_preferred_specification
+                  //     : null
+                  // }
+                  name="identified_preferred_specification"
+                  onChange={OutlineClaimsChangeHandler}
+                >
                   <FormControlLabel
                     value="yes"
                     control={<Radio />}
@@ -180,10 +219,14 @@ const OutlineClaimsStepThree = () => {
                   <Slider
                     aria-label="Confidence level"
                     defaultValue={3}
-                    getAriaValueText={valuetext}
+                    name="econometric_categorization_confidence"
+                    onChange={() => OutlineClaimsChangeHandler}
+                    // onChange={OutlineClaimsChangeHandler}
                     valueLabelDisplay="on"
                     step={1}
-                    // value={}
+                    // value={
+                    //   scopingData?.claims?.econometric_categorization_confidence
+                    // }
                     sx={{ width: "70%", mx: 5 }}
                     marks
                     min={1}

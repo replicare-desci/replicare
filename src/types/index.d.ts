@@ -24,19 +24,39 @@ export type revised_reproduction_packages = {
 };
 
 export type outputs = {
-  attempt_all_inline_results_body: string;
-  attempt_all_tables_appendix: string;
-  attempt_all_figures_appendix: string;
-  num_tables_appendix: string;
-  num_figures_appendix: string;
-  num_tables_body: number;
-  num_figures_body: number;
-  num_inline_results_body: number;
+  attempt_all_inline_results_body?: string;
+  attempt_all_tables_appendix?: string;
+  attempt_all_figures_appendix?: string;
+  num_tables_appendix?: string;
+  num_figures_appendix?: string;
+  num_tables_body?: number;
+  num_figures_body?: number;
+  num_inline_results_body?: number;
 };
-
+export type estimates = {
+  column?: string;
+  confidence_interval?: string;
+  econometric_method?: string;
+  estimate?: string;
+  // id?: number;
+  inline_paragraph?: string;
+  name?: string;
+  other_econometric_method?: string;
+  other_statistic?: string;
+  p_value?: string;
+  page?: string;
+  row?: string;
+  standard_error?: string;
+  units?: string;
+};
 export type claims = {
-  claimSummary: string;
-  econometric_categorization_confidence: string;
+  claimSummary?: string;
+  econometric_categorization_confidence?: string;
+  estimates?: estimates;
+  focused_population?: string;
+  // id?: number;
+  identified_preferred_specification?: string;
+  short_description?: string;
 };
 
 export type paperData = {
