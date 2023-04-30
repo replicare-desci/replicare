@@ -354,7 +354,7 @@ const SelectPaper = () => {
             console.log("Error submitting data", err);
           });
       } else {
-        toast.error("Paper declaration not working");
+        toast.error("Save before declaring");
       }
     } else {
       toast.error("ID not defined");
