@@ -68,7 +68,7 @@ export type paperData = {
   authors_response?: string[];
   authors_response_not_ready_date?: string;
   authors_response_other?: string;
-  claims?: claims;
+  claims?: claims | null;
   claim_type?: string;
   claim_type_other_description?: string;
   created_at?: any;

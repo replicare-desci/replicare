@@ -91,21 +91,22 @@ const Scoping = () => {
         units: "",
       },
       focused_population: "",
-      // id: number;
       identified_preferred_specification: "",
       short_description: "",
     },
     econometric_categorization_confidence: "",
-
     // step 3 data end
 
     // step 4 data starts
     possible_robustness_checks: "",
-    // step 4 data ends
   });
-  // const { userPaperID } = useParams();
+
   function saveScopingData() {
-    if (typeof userPaperID != "undefined") {
+    if (
+      typeof userPaperID != "undefined" &&
+      userID !== undefined &&
+      userPaperID !== undefined
+    ) {
       console.log(scopingData);
 
       console.log(userPaperID);
@@ -127,8 +128,6 @@ const Scoping = () => {
           <SummarizePaperStepOne
             scopingData={scopingData}
             setScopingData={setScopingData}
-            // scopingDataStep1={scopingDataStep1}
-            // setScopingDataStep1={setScopingDataStep1}
           />
         );
       case 1:
