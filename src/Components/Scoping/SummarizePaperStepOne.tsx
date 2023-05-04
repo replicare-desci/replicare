@@ -22,7 +22,7 @@ interface props {
 
 const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
-
+  // const inputRef = React.useRef<HTMLInputElement>();
   // handle change
   const summerizePaperChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -73,6 +73,10 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 type="date"
                 variant="standard"
+                // inputRef={inputRef}
+                // onClick={() => {
+                //   inputRef.current.showPicker();
+                // }}
                 name="start_date"
                 // id=""
                 onChange={summerizePaperChangeHandler}
