@@ -2,31 +2,22 @@ import Sidebar from "../Sidebar";
 // import ConnectionWallet from "../ConnectionWallet";
 import { Link } from "react-router-dom";
 import ConnectWalletPopUp from "../ConnectWalletPopUp";
-import {
-  AppBar,
-  Box,
-  Button,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 import logo from "../../assets/images/logo.png";
+import RainbowWallet from "../../RainbowWallet";
+
 const Navbar = () => {
   return (
     <div>
       <AppBar position="relative" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
-          {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}
+          {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}{" "}
           <Link to="/">
             <Box
               component="img"
               sx={{
-                // height: "10%",
                 width: "100%",
-
-                // color: "primary.light",
-                // py: 1,
               }}
               alt="replicare logo."
               src={logo}
@@ -46,23 +37,42 @@ const Navbar = () => {
               {" "}
               <Button
                 sx={{
-                  color: "primary.main",
-                  backgroundColor: "background.default",
+                  // color: "primary.main",
+                  // backgroundColor: "background.default",
 
-                  mx: 2,
+                  // mx: 2,
+                  // ":hover": {
+                  //   backgroundColor: "background.paper",
+
+                  //   color: "primary.light",
+                  // },
+
+                  color: "primary.main",
+                  marginX: 1,
+                  backgroundColor: "background.default",
+                  // paddingX: 3,
+                  textTransform: "unset",
+                  fontSize: 16,
+                  fontWeight: "800",
+                  borderRadius: 2,
+                  transition: "all 100ms ease-in-out",
+
                   ":hover": {
                     backgroundColor: "background.paper",
-
-                    color: "primary.light",
+                    transform: "scale(1.02)",
                   },
                 }}
                 variant="contained"
               >
-                <ArticleIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                🗒️
+                {/* <ArticleIcon sx={{ fontSize: 18, mr: 0.5 }} /> */}
                 Docs
               </Button>
             </Link>
-            <ConnectWalletPopUp /> <Sidebar />
+            {/* <ConnectWalletPopUp /> */}
+            <RainbowWallet />
+
+            <Sidebar />
           </Box>
         </Toolbar>
       </AppBar>
