@@ -1,7 +1,7 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import {
   RainbowKitProvider,
-  lightTheme,
+  // lightTheme,
   connectorsForWallets,
   useConnectModal,
   useAccountModal,
@@ -15,15 +15,14 @@ import {
   walletConnectWallet,
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig, useAccount } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { UserContext } from "./context/ContextProvider";
-import Web3 from "web3";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
@@ -69,77 +68,73 @@ const wagmiClient = createClient({
 });
 
 export default function RainbowWallet() {
-  const { openAccountModal } = useAccountModal();
-
-  const { openConnectModal } = useConnectModal();
-
   const { store, setStore } = UserContext();
 
-  const [isMetamaskInstalled, setIsMetamaskInstalled] =
-    useState<boolean>(false);
+  // const [isMetamaskInstalled, setIsMetamaskInstalled] =
+  //   useState<boolean>(false);
+  const { address, isConnecting, isDisconnected } = useAccount();
 
-  useEffect(() => {
-    if (newWindow.ethereum) {
-      //check if Metamask wallet is installed
-      setIsMetamaskInstalled(true);
-    }
-    // if (openAccountModal !== undefined) {
-    //   openAccountModal();
-    // }
-  }, []);
+  // if (isConnecting) return <div>Connecting…</div>
+  // if (isDisconnected) return <div>Disconnected</div>
 
-  function detectCurrentProvider() {
-    let provider;
+  // function detectCurrentProvider() {
+  //   let provider;
 
-    if (newWindow.ethereum) {
-      provider = newWindow.ethereum;
-    } else if (newWindow.web3) {
-      provider = newWindow.web3.currentProvider;
-    } else {
-      console.log("Non-ethereum browser detected. You should install Metamask");
-    }
-    return provider;
-  }
+  //   if (newWindow.ethereum) {
+  //     provider = newWindow.ethereum;
+  //   } else if (newWindow.web3) {
+  //     provider = newWindow.web3.currentProvider;
+  //   } else {
+  //     console.log("Non-ethereum browser detected. You should install Metamask");
+  //   }
+  //   return provider;
+  // }
 
-  function handleUserData(userData: any) {
-    console.log("userData", userData);
+  const handleUserData = useCallback(
+    (userData: any) => {
+      console.log("userData", userData);
 
-    setStore((prev) => {
-      return {
-        ...prev,
-        user: {
-          ...prev.user,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          walletAddress: userData.walletAddress,
-          emailID: userData.emailID,
-          id: userData.id,
-          isVerified: userData.isVerified,
-        },
-      };
-    });
-    sessionStorage.setItem(
-      "firstName",
-      userData.firstName ? userData.firstName : ""
-    );
-    sessionStorage.setItem(
-      "lastName",
-      userData.lastName ? userData.lastName : ""
-    );
-    sessionStorage.setItem(
-      "walletAddress",
-      userData.walletAddress ? userData.walletAddress : ""
-    );
-    sessionStorage.setItem("emailID", userData.emailID ? userData.emailID : "");
-    sessionStorage.setItem("id", userData.id ? userData.id : "");
+      setStore((prev) => {
+        return {
+          ...prev,
+          user: {
+            ...prev.user,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            walletAddress: userData.walletAddress,
+            emailID: userData.emailID,
+            id: userData.id,
+            isVerified: userData.isVerified,
+          },
+        };
+      });
+      sessionStorage.setItem(
+        "firstName",
+        userData.firstName ? userData.firstName : ""
+      );
+      sessionStorage.setItem(
+        "lastName",
+        userData.lastName ? userData.lastName : ""
+      );
+      sessionStorage.setItem(
+        "walletAddress",
+        userData.walletAddress ? userData.walletAddress : ""
+      );
+      sessionStorage.setItem(
+        "emailID",
+        userData.emailID ? userData.emailID : ""
+      );
+      sessionStorage.setItem("id", userData.id ? userData.id : "");
 
-    sessionStorage.setItem(
-      "isVerified",
-      userData.isVerified ? "true" : "false"
-    );
-  }
+      sessionStorage.setItem(
+        "isVerified",
+        userData.isVerified ? "true" : "false"
+      );
+    },
+    [setStore]
+  );
 
-  function signOutWallet() {
+  const signOutWallet = useCallback(() => {
     sessionStorage.clear();
     setStore((prev) => {
       return {
@@ -155,31 +150,59 @@ export default function RainbowWallet() {
         },
       };
     });
-  }
+  }, [setStore]);
 
-  async function connectMetamaskWallet(): Promise<void> {
+  const connectMetamaskWallet = useCallback(() => {
     try {
-      const currentProvider = detectCurrentProvider();
-      if (currentProvider) {
-        await currentProvider.request({ method: "eth_requestAccounts" });
-        const web3 = new Web3(currentProvider);
-        const userAccount = await web3.eth.getAccounts();
+      // const currentProvider = detectCurrentProvider();
+      // if (currentProvider) {
+      //   await currentProvider.request({ method: "eth_requestAccounts" });
+      //   const web3 = new Web3(currentProvider);
+      //   const userAccount = await web3.eth.getAccounts();
 
-        const account = userAccount[0];
-        await web3.eth.personal
-          .sign("Authentication", account, "test password")
+      //   const account = userAccount[0];
+      //   await web3.eth.personal
+      //     .sign("Authentication", account, "test password")
+      //     .then((resp) => console.log(resp))
+      //     .catch((error) => console.log(error));
+
+      //   await web3.eth.getBalance(account);
+      // }
+      if (address !== undefined) {
+        console.log("address", address);
+        getUserData(address, handleUserData)
           .then((resp) => console.log(resp))
           .catch((error) => console.log(error));
-
-        await getUserData(account, handleUserData);
-
-        await web3.eth.getBalance(account);
       }
     } catch (err) {
       console.log(err);
       alert(`Something went wrong: ${err}`);
     }
-  }
+  }, [address, handleUserData]);
+  useEffect(() => {
+    if (newWindow.ethereum) {
+      //check if Metamask wallet is installed
+      // setIsMetamaskInstalled(true);
+    }
+    // if (openAccountModal !== undefined) {
+    //   openAccountModal();
+    // }
+    if (address !== undefined) {
+      connectMetamaskWallet();
+    }
+    if (isDisconnected) {
+      signOutWallet();
+    }
+    console.log(address);
+    console.log(isConnecting);
+    console.log(isDisconnected);
+  }, [
+    address,
+    isConnecting,
+    isDisconnected,
+    connectMetamaskWallet,
+    signOutWallet,
+  ]);
 
   return (
     <WagmiConfig client={wagmiClient}>
@@ -247,8 +270,6 @@ export default function RainbowWallet() {
                           variant="contained"
                           onClick={(event: any) => {
                             openConnectModal();
-                            connectMetamaskWallet();
-                            console.log(event.target, account, chain, ready);
                           }}
                         >
                           👤 Sign in
@@ -287,7 +308,7 @@ export default function RainbowWallet() {
                       <div style={{ display: "flex", gap: 12 }}>
                         <Button
                           onClick={openChainModal}
-                          onChange={connectMetamaskWallet}
+                          // onChange={connectMetamaskWallet}
                           sx={{
                             color: "primary.main",
 

@@ -50,7 +50,7 @@ const Navbar = () => {
                   color: "primary.main",
                   marginX: 1,
                   backgroundColor: "background.default",
-                  paddingX: 3,
+                  // paddingX: 3,
                   textTransform: "unset",
                   fontSize: 16,
                   fontWeight: "800",
@@ -64,7 +64,8 @@ const Navbar = () => {
                 }}
                 variant="contained"
               >
-                🗒️ <ArticleIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                🗒️
+                {/* <ArticleIcon sx={{ fontSize: 18, mr: 0.5 }} /> */}
                 Docs
               </Button>
             </Link>
