@@ -19,7 +19,15 @@ function AdditionalInfo({
   originalPackages,
   setOriginalPackages,
 }: Props): JSX.Element {
-  const addIntoSystem = () => {};
+  const addIntoSystem = () => {
+    // setOriginalPackages((prevState: original_reproduction_packages[]) => [
+    //   ...prevState,
+    //   {
+    //     name: "",
+    //     url: "",
+    //   },
+    // ]);
+  };
 
   function fillIntoDefaultFields(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;

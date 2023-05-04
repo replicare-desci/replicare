@@ -71,6 +71,15 @@ const MyWork = () => {
           data?.map((item: paperData, index: number) => {
             return (
               <Box key={index} boxShadow={2} p={2} my={2} borderRadius={1}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Please give your project a {/* TODO: nor working */}
+                  <strong>
+                    {item?.claims?.claimSummary
+                      ? item?.claims?.claimSummary
+                      : "nickname"}
+                  </strong>{" "}
+                  in the Scoping step.
+                </Typography>
                 {item?.paper?.title ? (
                   <Typography variant="body1" sx={{ mb: 1 }}>
                     Title : <strong>{item?.paper?.title}</strong>
@@ -91,7 +100,12 @@ const MyWork = () => {
                   Paper status: <strong>{item?.paper_type}</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Current stage: <strong>{item?.workflow_stage}</strong>
+                  Current stage:{" "}
+                  <strong>
+                    {item?.workflow_stage &&
+                      item?.workflow_stage?.charAt(0).toUpperCase() +
+                        item?.workflow_stage.slice(1).replace("_", " ")}
+                  </strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Number of display items assessed:<strong> 0</strong>

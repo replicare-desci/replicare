@@ -66,9 +66,9 @@ const SelectPaper = () => {
       label:
         "Shared detailed instructions on how to access the data (for restricted access only).",
     },
-    {
-      label: "Did not respond. As of:",
-    },
+    // {
+    //   label: "Did not respond. As of:",
+    // },
   ];
   const [doiString, setDoiString] = useState<string>();
   const [getDoi, setDoi] = useState<boolean>(false);
@@ -109,7 +109,7 @@ const SelectPaper = () => {
       {
         content_type: "code",
         name: "",
-        stage: "revised",
+        stage: "original",
         url: "",
       },
     ],
@@ -302,6 +302,9 @@ const SelectPaper = () => {
     // autour[0] -> given , family
   }
 
+  function changePaperStage(userPaperID: string) {
+    // TODO:need to make this function to change paper stage to abondone candidate
+  }
   function changeWorkFlowStage(userPaperID: string) {
     if (userPaperID && typeof userPaperID !== "undefined") {
       setFormData((prev: any) => {
@@ -609,7 +612,7 @@ const SelectPaper = () => {
                       <FormControlLabel
                         disabled={
                           formData?.authors_contacted === "" ||
-                          formData?.authors_contacted === "true"
+                          formData?.authors_contacted === "false"
                             ? true
                             : false
                         }
@@ -683,6 +686,7 @@ const SelectPaper = () => {
                       : false
                   }
                 />
+
                 <FormControlLabel
                   value="false"
                   control={<Radio />}
@@ -695,6 +699,25 @@ const SelectPaper = () => {
                   }
                 />
               </RadioGroup>
+              {formData?.reproduction_package_from_scratch === "false" ? (
+                <Box my={3}>
+                  {" "}
+                  <Typography>
+                    Without a reproduction package, you cannot declare this
+                    paper and continue to the next stage of this reproduction.
+                    Please record this paper as abandoned if you're unable to
+                    locate its reproduction package.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() =>
+                      userPaperID ? changePaperStage(userPaperID) : null
+                    }
+                  >
+                    Record this paper as "abandoned"
+                  </Button>
+                </Box>
+              ) : null}
             </FormControl>
           </ListItem>
 
@@ -706,7 +729,8 @@ const SelectPaper = () => {
             />
           ) : null}
 
-          {formData?.reproduction_package_from_scratch === "true" ? (
+          {formData?.reproduction_package_from_scratch === "true" ||
+          formData?.reproduction_package_available === "true" ? (
             <ListItem>
               <Button
                 variant="contained"
@@ -740,4 +764,4 @@ const SelectPaper = () => {
 
 export default SelectPaper;
 
-// TODO: 1.3 and 1.4 mai by default false check lgana hai
+// TODO: 1.3 and 1.4 mai by default false check lagana hai
