@@ -5,14 +5,14 @@ import {
   Button,
   Divider,
   List,
-  ListItem,
   SwipeableDrawer,
   Typography,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
-
+import gitcoinLogo from "../assets/images/gitcoin.png";
+import twitterLogo from "../assets/images/twitter.png";
 type Anchor = "right";
 
 export default function Sidebar() {
@@ -63,8 +63,7 @@ export default function Sidebar() {
           >
             <span className="hover-underline-animation ">Home</span>
           </Typography>
-        </Link>
-
+        </Link>{" "}
         <Link
           to="/reproductions"
           style={{ textDecoration: "none" }}
@@ -91,9 +90,8 @@ export default function Sidebar() {
             component={"p"}
           >
             Search Reproductions
-          </Typography>
+          </Typography>{" "}
         </Link>
-
         <Link
           to="https://docs.replicare.dev/"
           style={{ textDecoration: "none" }}
@@ -107,8 +105,7 @@ export default function Sidebar() {
           >
             Documentation
           </Typography>
-        </Link>
-
+        </Link>{" "}
         {/* <Typography
           className="hover-underline-animation"
           variant="h4"
@@ -124,8 +121,36 @@ export default function Sidebar() {
         >
           Metrics
         </Typography> */}
-
-        <Divider />
+        <Divider />{" "}
+        <Link
+          to="https://twitter.com/replicare_desci"
+          style={{ textDecoration: "none" }}
+          target={"_blank"}
+        >
+          <Box my={1}>
+            <img
+              src={twitterLogo}
+              alt="twitter-logo"
+              width={"35%"}
+              // height={"80%"}
+            />
+          </Box>
+        </Link>{" "}
+        <Link
+          to="https://explorer.gitcoin.co/#/round/1/0x6e8dc2e623204d61b0e59e668702654ae336c9f7/0x6e8dc2e623204d61b0e59e668702654ae336c9f7-4"
+          style={{ textDecoration: "none" }}
+          target={"_blank"}
+        >
+          <Box>
+            {" "}
+            <img
+              src={gitcoinLogo}
+              alt="gitcoin-grant-logo"
+              width={"35%"}
+              // height={"50px"}
+            />
+          </Box>
+        </Link>{" "}
         {/* <ListItem sx={{ padding: 0, marginY: 1 }}>
           <Link to="/update" style={{ textDecoration: "none" }}>
             <Button
@@ -148,7 +173,6 @@ export default function Sidebar() {
             </Button>
           </Link>
         </ListItem> */}
-
         {/* <ListItem sx={{ padding: 0, margin: 0 }}>
           <Link to={"/sign-in"} style={{ textDecoration: "none" }}>
             <Button

@@ -13,15 +13,16 @@ import {
   Box,
   Stepper,
 } from "@mui/material";
+import { paperData } from "../../types";
 
 interface props {
-  scopingData: any;
+  scopingData: paperData;
   setScopingData: any;
 }
 
 const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
-
+  // const inputRef = React.useRef<HTMLInputElement>();
   // handle change
   const summerizePaperChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -72,6 +73,10 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 type="date"
                 variant="standard"
+                // inputRef={inputRef}
+                // onClick={() => {
+                //   inputRef.current.showPicker();
+                // }}
                 name="start_date"
                 // id=""
                 onChange={summerizePaperChangeHandler}
@@ -251,6 +256,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 fullWidth
                 required
+                type="text"
                 placeholder="e.g. low income households in the US that are below the federal poverty line"
                 variant="standard"
                 sx={{ py: 2 }}
@@ -269,6 +275,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 fullWidth
                 required
+                type="text"
                 placeholder="e.g. low income households around the world"
                 variant="outlined"
                 sx={{ py: 2 }}
@@ -309,9 +316,18 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 required
                 variant="standard"
                 name="num_claims"
-                value={1}
+                type="number"
+                // defaultValue={1}
+                value={scopingData?.num_claims ? scopingData?.num_claims : 1}
                 // id=""
-                onChange={summerizePaperChangeHandler}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  if (
+                    parseInt(event.target.value) < 5 &&
+                    parseInt(event.target.value) >= 1
+                  ) {
+                    summerizePaperChangeHandler(event);
+                  }
+                }}
               />
             </FormControl>
           </ListItem>{" "}

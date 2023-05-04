@@ -34,11 +34,20 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
   ) => {
     const { name, value } = event.target;
 
-    setScopingData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log("scopingData  ", scopingData);
+    if (
+      scopingData &&
+      scopingData !== null &&
+      scopingData?.claims !== undefined
+    ) {
+      console.log(scopingData && scopingData?.claims);
+      setScopingData((prev: paperData) => ({
+        ...prev,
+        claims: {
+          ...prev.claims,
+          [name]: value,
+        },
+      }));
+    }
   };
   // const handleChange = (event: SelectChangeEvent) => {
   //   // setClaim(event.target.value);
@@ -110,7 +119,11 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                 <TextField
                   placeholder="Summary"
                   name="claimSummary"
+                  id="claimSummary"
                   required
+                  value={
+                    scopingData?.claims && scopingData?.claims?.claimSummary
+                  }
                   type="text"
                   onChange={OutlineClaimsChangeHandler}
                 />
@@ -124,8 +137,13 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   type="text"
                   required
                   name="short_description"
+                  id="short_description"
                   label="Short title of the claim"
                   onChange={OutlineClaimsChangeHandler}
+                  value={
+                    scopingData?.claims &&
+                    scopingData?.claims?.short_description
+                  }
                   sx={{ my: 1 }}
                 />
               </FormControl>{" "}
@@ -140,6 +158,10 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   required
                   onChange={OutlineClaimsChangeHandler}
                   name="focused_population"
+                  value={
+                    scopingData?.claims &&
+                    scopingData?.claims?.focused_population
+                  }
                   sx={{ my: 1 }}
                 />
               </FormControl>{" "}
@@ -150,13 +172,14 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   estimated for this claim you will be assessing?
                 </FormLabel>
                 <RadioGroup
-                  // value={
-                  //   scopingData?.claims?.identified_preferred_specification
-                  //     ? scopingData?.claims?.identified_preferred_specification
-                  //     : null
-                  // }
                   name="identified_preferred_specification"
+                  id="identified_preferred_specification"
                   onChange={OutlineClaimsChangeHandler}
+                  value={
+                    scopingData?.claims?.identified_preferred_specification
+                      ? scopingData?.claims?.identified_preferred_specification
+                      : ""
+                  }
                 >
                   <FormControlLabel
                     value="yes"

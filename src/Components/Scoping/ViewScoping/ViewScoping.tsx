@@ -25,8 +25,6 @@ const ViewScoping = () => {
   }, [userPaperID]);
   // fetch scoping data end
 
-  const [oneTen, setOneTen] = useState<number>(-1);
-  const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
   function scopeStepRender(activeStep: number) {
     if (userPaperData !== undefined) {
@@ -77,7 +75,6 @@ const ViewScoping = () => {
         </Typography>{" "}
         <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {scopeStepRender(activeStep)}
-        {/* <SummarizePaperStepOne /> */}
       </Container>
     </>
   );

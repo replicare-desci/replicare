@@ -5,7 +5,6 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Scoping from "./Scoping";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const steps = [
@@ -58,9 +57,9 @@ export default function HorizontalLinearStepper({
   //   });
   // };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <Box sx={{ width: "100%" }}>

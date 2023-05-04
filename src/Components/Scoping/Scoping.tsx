@@ -1,14 +1,14 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
 import SummarizePaperStepOne from "./SummarizePaperStepOne";
-import {
-  DeclareRobustnessChecks,
-  AddRevisedReproductionPackage,
-  SummarizePaper,
-} from "../../types/context.d";
+// import {
+//   DeclareRobustnessChecks,
+//   AddRevisedReproductionPackage,
+//   SummarizePaper,
+// } from "../../types/context.d";
 import SaveIcon from "@mui/icons-material/Save";
 import { useParams } from "react-router-dom";
-import { paperData } from "../../types/index.d";
+// import { paperData } from "../../types/index.d";
 
 import Stepper from "./Stepper";
 import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPackagesStepTwo";
@@ -20,15 +20,15 @@ import { toast } from "react-toastify";
 const Scoping = () => {
   const { userPaperID } = useParams();
   const userID: string = sessionStorage.getItem("id") as string;
-  const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
-  const [scopingDataStep2, setScopingDataStep2] =
-    useState<AddRevisedReproductionPackage>();
-  const [scopingDataStep4, setScopingDataStep4] =
-    useState<DeclareRobustnessChecks>();
+  // const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
+  // const [scopingDataStep2, setScopingDataStep2] =
+  // useState<AddRevisedReproductionPackage>();
+  // const [scopingDataStep4, setScopingDataStep4] =
+  // useState<DeclareRobustnessChecks>();
   //TODO: const [scopingDataStep3, setScopingDataStep3] =
   // useState<>();
-  const [oneTen, setOneTen] = useState<number>(-1);
-  const [oneTwelve, setOneTwelve] = useState<boolean>(false);
+  // const [oneTen, setOneTen] = useState<number>(-1);
+  // const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
 
   // global state for scoping
@@ -91,21 +91,22 @@ const Scoping = () => {
         units: "",
       },
       focused_population: "",
-      // id: number;
       identified_preferred_specification: "",
       short_description: "",
     },
     econometric_categorization_confidence: "",
-
     // step 3 data end
 
     // step 4 data starts
     possible_robustness_checks: "",
-    // step 4 data ends
   });
-  // const { userPaperID } = useParams();
+
   function saveScopingData() {
-    if (typeof userPaperID != "undefined") {
+    if (
+      typeof userPaperID != "undefined" &&
+      userID !== undefined &&
+      userPaperID !== undefined
+    ) {
       console.log(scopingData);
 
       console.log(userPaperID);
@@ -127,8 +128,6 @@ const Scoping = () => {
           <SummarizePaperStepOne
             scopingData={scopingData}
             setScopingData={setScopingData}
-            // scopingDataStep1={scopingDataStep1}
-            // setScopingDataStep1={setScopingDataStep1}
           />
         );
       case 1:
@@ -170,6 +169,7 @@ const Scoping = () => {
         <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {scopeStepRender(activeStep)}
         <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
+        {<strong>*Please save before going to next step* </strong>}
         {/* <SummarizePaperStepOne /> */}
         <Grid justifyContent={"flex-end"} display={"flex"} mb={10}>
           {" "}

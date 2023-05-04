@@ -275,7 +275,7 @@ async function createDefaultUserPaperData(userID: string) {
         {
           content_type: "code",
           name: "",
-          stage: "revised",
+          stage: "original",
           url: "",
         },
       ],
