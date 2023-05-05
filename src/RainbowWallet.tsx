@@ -3,8 +3,6 @@ import {
   RainbowKitProvider,
   // lightTheme,
   connectorsForWallets,
-  useConnectModal,
-  useAccountModal,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
 
@@ -14,9 +12,11 @@ import {
   coinbaseWallet,
   walletConnectWallet,
   ledgerWallet,
+  trustWallet,
+  zerionWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { configureChains, createClient, WagmiConfig, useAccount } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
+import { optimism, polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -30,7 +30,7 @@ import { ExpandMore } from "@mui/icons-material";
 const newWindow: any = window as any;
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, arbitrum],
+  [optimism, polygon],
   [
     alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID as string }),
     publicProvider(),
@@ -47,6 +47,11 @@ const connectors = connectorsForWallets([
         projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
         chains,
       }),
+      zerionWallet({ chains }),
+      // phantomWallet({
+      //   chains,
+      // }),
+      trustWallet({ chains }),
     ],
   },
   {
@@ -207,6 +212,7 @@ export default function RainbowWallet() {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
+        initialChain={optimism}
         chains={chains}
         theme={darkTheme({
           accentColor: "#EFECEC",
