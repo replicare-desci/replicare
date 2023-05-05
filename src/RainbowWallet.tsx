@@ -213,6 +213,7 @@ export default function RainbowWallet() {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
         initialChain={optimism}
+        coolMode
         chains={chains}
         theme={darkTheme({
           accentColor: "#EFECEC",
