@@ -52,7 +52,7 @@ const Navbar = () => {
                   backgroundColor: "background.default",
                   // paddingX: 3,
                   textTransform: "unset",
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "800",
                   borderRadius: 2,
                   transition: "all 100ms ease-in-out",

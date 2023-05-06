@@ -22,6 +22,8 @@ interface props {
 
 const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
+  const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
+
   // const inputRef = React.useRef<HTMLInputElement>();
   // handle change
   const summerizePaperChangeHandler = (
@@ -348,7 +350,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               >
                 <FormControlLabel
                   value="This paper estimates the effect of X on Y for population P, using method M. Example: This paper investigates the impact of bicycle provision (X) on secondary school enrollment (Y) among young women in Bihar/India (P), using a Difference in Difference approach (M)."
-                  control={<Radio />}
+                  control={
+                    <Radio onChange={() => otherTypeSetChecked(false)} />
+                  }
                   label={
                     <Box>
                       <Typography
@@ -371,7 +375,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <FormControlLabel
                   value="This paper estimates the value of Y (estimated or predicted) for population P under conditions X (optional) using method M. Example: Drawing on a unique Swiss data set (P) and exploiting systematic anomalies in countries portfolio investment positions (M), I find that around 8% of the global financial wealth of households is held in tax havens (Y) 
                     "
-                  control={<Radio />}
+                  control={
+                    <Radio onChange={() => otherTypeSetChecked(false)} />
+                  }
                   label={
                     <Box>
                       <Typography
@@ -393,20 +399,29 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                     </Box>
                   }
                 />{" "}
-                {/* TODO: This field is not working
+                {/* TODO: This field is not working if clicking both then its working otherwise not
                  */}
                 <FormControlLabel
                   sx={{ my: 1 }}
                   value={claimTypeOther}
-                  control={<Radio />}
-                  label={
-                    <TextField
-                      fullWidth
-                      // name="claim_type_other_description"
-                      onChange={(e) => setClaimTypeOther(e.target.value)}
-                      label="Other"
-                      variant="outlined"
+                  control={
+                    <Radio
+                      checked={otherTypeChecked}
+                      onChange={() => otherTypeSetChecked(true)}
                     />
+                  }
+                  label={
+                    otherTypeChecked ? (
+                      <TextField
+                        fullWidth
+                        name="claim_type_other_description"
+                        onChange={(e) => setClaimTypeOther(e.target.value)}
+                        label="Other"
+                        variant="outlined"
+                      />
+                    ) : (
+                      "Others"
+                    )
                   }
                 />{" "}
               </RadioGroup>

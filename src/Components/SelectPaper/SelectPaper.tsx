@@ -303,7 +303,36 @@ const SelectPaper = () => {
   }
 
   function changePaperStage(userPaperID: string) {
-    // TODO:need to make this function to change paper stage to abondone candidate
+    if (userPaperID && typeof userPaperID !== "undefined") {
+      setFormData((prev: any) => {
+        return {
+          ...prev,
+          workflow_stage: "abandoned",
+          paper_type: "abandoned_candidate",
+        };
+      });
+      const response: boolean = window.confirm(
+        "Abandoned papers will be recorded under the public, identified privacy settings. Do you want to record this paper as abandoned?"
+      );
+
+      if (
+        formData?.paper_type === "abandoned_candidate" &&
+        formData?.workflow_stage === "abandoned" &&
+        response
+      ) {
+        appendUserPaperData(userPaperID, formData)
+          .then(() => {
+            toast.success("Paper abandoned successfully");
+
+            navigate(`/reproductions`);
+          })
+          .catch((err) => {
+            console.log("Error submitting data", err);
+          });
+      } else {
+        toast.error("Error in abandoning paper");
+      }
+    }
   }
   function changeWorkFlowStage(userPaperID: string) {
     if (userPaperID && typeof userPaperID !== "undefined") {
@@ -663,6 +692,7 @@ const SelectPaper = () => {
               }
             >
               <FormLabel id="permission">
+                {/* TODO: DATA IS NOT SAVING EVEN AFTER PRESSING SAVE 2 times */}
                 1.5 If there are no reproduction packages, are you willing to
                 build a reproduction package from scratch?
               </FormLabel>
