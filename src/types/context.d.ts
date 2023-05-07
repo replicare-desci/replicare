@@ -1,5 +1,15 @@
 import { Dispatch, SetStateAction } from "react";
 
+export type authUserType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  emailID: string;
+  walletAddress: string;
+  chain: string;
+  isVerified: boolean;
+};
+
 export type ContextType = {
   user: {
     id: string;
@@ -7,6 +17,7 @@ export type ContextType = {
     lastName: string;
     emailID: string;
     walletAddress: string;
+    chain: string;
     isVerified: boolean;
   };
 };

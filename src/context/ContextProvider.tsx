@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { app, auth } from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
 import { ContextInterface, ContextType } from "../types/context.d";
 
 // initialize the store and setStore values
@@ -15,6 +15,7 @@ const defaultState: ContextInterface = {
       firstName: "",
       lastName: "",
       walletAddress: "",
+      chain: "",
       emailID: "",
       id: "",
       isVerified: false,
@@ -27,28 +28,32 @@ const defaultState: ContextInterface = {
 export const ContextDefault = createContext(defaultState);
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
-  var firstNameLocal = sessionStorage.getItem("firstName");
-  var lastNameLocal = sessionStorage.getItem("lastName");
-  var walletAddressLocal = sessionStorage.getItem("walletAddress");
-  var emailIDLocal = sessionStorage.getItem("emailID");
-  var idLocal = sessionStorage.getItem("id");
-  var isVerifiedLocal = sessionStorage.getItem("isVerified");
+  let firstNameLocal = sessionStorage.getItem("firstName");
+  let lastNameLocal = sessionStorage.getItem("lastName");
+  let walletAddressLocal = sessionStorage.getItem("walletAddress");
+  let chainLocal = sessionStorage.getItem("chain");
+  let emailIDLocal = sessionStorage.getItem("emailID");
+  let idLocal = sessionStorage.getItem("id");
+  let isVerifiedLocal = sessionStorage.getItem("isVerified");
 
   const [store, setStore] = useState<ContextType>({
     user: {
       firstName: firstNameLocal || "",
       lastName: lastNameLocal || "",
       walletAddress: walletAddressLocal || "",
+      chain: chainLocal || "",
       emailID: emailIDLocal || "",
       id: idLocal || "",
       isVerified: isVerifiedLocal === "true" ? true : false,
     },
   });
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      console.log(user);
-    });
-  }, []);
+
+  // FIXME: uncomment after research for multiple output consoles and states
+  // useEffect(() => {
+  //   auth.onAuthStateChanged((user) => {
+  //     console.log("Firebase state", user);
+  //   });
+  // }, []);
 
   return (
     <ContextDefault.Provider value={{ store, setStore }}>

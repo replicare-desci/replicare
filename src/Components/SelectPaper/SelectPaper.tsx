@@ -100,7 +100,7 @@ const SelectPaper = () => {
   // TODO: add type
   const [formData, setFormData] = useState<paperData>({
     id: userPaperID as string,
-    userID: userID,
+    userID: userID ?? "",
     reproduction_package_available: "",
     authors_contacted: "",
     authors_available: false,
@@ -134,6 +134,7 @@ const SelectPaper = () => {
     claim_type_other_description: "",
     familiarity_level: "",
     expected_total_hours: 1,
+    claims: null,
   });
 
   useEffect(() => {
@@ -203,7 +204,10 @@ const SelectPaper = () => {
         claim_type: "",
         claim_type_other_description: "",
         familiarity_level: "",
-        authors_response: checkedState,
+        authors_response:
+          checkedState !== undefined && checkedState.length > 0
+            ? checkedState
+            : [],
         project_nickname: "",
         authors_response_other: "",
         summary: "",
@@ -215,7 +219,8 @@ const SelectPaper = () => {
 
     if (
       (originalPackages && originalPackages.length > 0) ||
-      checkedState.length > 0
+      (checkedState.length > 0 &&
+        formData?.authors_response?.length === checkedState?.length)
     ) {
       console.log("execute");
 
@@ -303,7 +308,36 @@ const SelectPaper = () => {
   }
 
   function changePaperStage(userPaperID: string) {
-    // TODO:need to make this function to change paper stage to abondone candidate
+    if (userPaperID && typeof userPaperID !== "undefined") {
+      setFormData((prev: any) => {
+        return {
+          ...prev,
+          workflow_stage: "abandoned",
+          paper_type: "abandoned_candidate",
+        };
+      });
+      const response: boolean = window.confirm(
+        "Abandoned papers will be recorded under the public, identified privacy settings. Do you want to record this paper as abandoned?"
+      );
+
+      if (
+        formData?.paper_type === "abandoned_candidate" &&
+        formData?.workflow_stage === "abandoned" &&
+        response
+      ) {
+        appendUserPaperData(userPaperID, formData)
+          .then(() => {
+            toast.success("Paper abandoned successfully");
+
+            navigate(`/reproductions`);
+          })
+          .catch((err) => {
+            console.log("Error submitting data", err);
+          });
+      } else {
+        toast.error("Error in abandoning paper");
+      }
+    }
   }
   function changeWorkFlowStage(userPaperID: string) {
     if (userPaperID && typeof userPaperID !== "undefined") {
@@ -597,7 +631,7 @@ const SelectPaper = () => {
               required
               disabled={
                 formData?.authors_contacted === "" ||
-                formData?.authors_contacted === "true"
+                formData?.authors_contacted === "false"
                   ? true
                   : false
               }
@@ -663,6 +697,7 @@ const SelectPaper = () => {
               }
             >
               <FormLabel id="permission">
+                {/* TODO: DATA IS NOT SAVING EVEN AFTER PRESSING SAVE 2 times */}
                 1.5 If there are no reproduction packages, are you willing to
                 build a reproduction package from scratch?
               </FormLabel>

@@ -97,7 +97,15 @@ const MyWork = () => {
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 1 }}>
-                  Paper status: <strong>{item?.paper_type}</strong>
+                  Paper status:{" "}
+                  <strong>
+                    {item?.paper_type &&
+                      item?.paper_type?.charAt(0).toUpperCase() +
+                        item?.paper_type?.slice(1).replace("_", " ")}
+
+                    {/* {item?.paper_type &&
+                      item?.paper_type.split("_").join(" ").toString()} */}
+                  </strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Current stage:{" "}
