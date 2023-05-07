@@ -346,6 +346,7 @@ async function appendUserPaperData(id: string, data: any) {
   try {
     if (id && typeof id !== "undefined" && Object.keys(data).length > 0) {
       await updateDoc(doc(db, "userPaper", id), data);
+      console.log();
     }
   } catch (error) {
     console.log(error);
