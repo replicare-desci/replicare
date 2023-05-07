@@ -51,24 +51,22 @@ export type estimates = {
 };
 export type claims = {
   claimSummary?: string;
-  econometric_categorization_confidence?: string;
-  estimates?: estimates;
+  econometric_categorization_confidence?: number;
   focused_population?: string;
-  // id?: number;
   identified_preferred_specification?: string;
   short_description?: string;
+  estimates: estimates;
 };
 
 export type paperData = {
   id: string;
   userID: string;
   author_did_not_respond_as_of_date?: string;
-  authors_available?: boolean;
   authors_contacted?: string;
   authors_response?: string[];
   authors_response_not_ready_date?: string;
   authors_response_other?: string;
-  claims?: claims | null;
+  claims: claims | null;
   claim_type?: string;
   claim_type_other_description?: string;
   created_at?: any;
@@ -96,9 +94,9 @@ export type paperData = {
   authors_contacted?: boolean;
   authors_available?: boolean;
   reproduction_package_from_scratch?: string;
-  will_assess_whole_paper?: boolean;
   outputs?: outputs;
   original_reproduction_packages?: original_reproduction_packages[];
   revised_reproduction_packages?: revised_reproduction_packages[];
   project_nickname?: string;
+  will_assess_whole_paper?: string;
 };

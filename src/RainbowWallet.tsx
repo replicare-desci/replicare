@@ -15,19 +15,25 @@ import {
   trustWallet,
   zerionWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { configureChains, createClient, WagmiConfig, useAccount } from "wagmi";
+import {
+  configureChains,
+  createClient,
+  WagmiConfig,
+  useAccount,
+  useNetwork,
+} from "wagmi";
 import { optimism, polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { UserContext } from "./context/ContextProvider";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
-const newWindow: any = window as any;
+import { authUserType } from "./types/context.d";
 
 const { chains, provider } = configureChains(
   [optimism, polygon],
@@ -48,9 +54,7 @@ const connectors = connectorsForWallets([
         chains,
       }),
       zerionWallet({ chains }),
-      // phantomWallet({
-      //   chains,
-      // }),
+
       trustWallet({ chains }),
     ],
   },
@@ -73,43 +77,27 @@ const wagmiClient = createClient({
 });
 
 export default function RainbowWallet() {
-  const { store, setStore } = UserContext();
+  const { setStore } = UserContext();
 
-  // const [isMetamaskInstalled, setIsMetamaskInstalled] =
-  //   useState<boolean>(false);
   const { address, isConnecting, isDisconnected } = useAccount();
-
-  // if (isConnecting) return <div>Connecting…</div>
-  // if (isDisconnected) return <div>Disconnected</div>
-
-  // function detectCurrentProvider() {
-  //   let provider;
-
-  //   if (newWindow.ethereum) {
-  //     provider = newWindow.ethereum;
-  //   } else if (newWindow.web3) {
-  //     provider = newWindow.web3.currentProvider;
-  //   } else {
-  //     console.log("Non-ethereum browser detected. You should install Metamask");
-  //   }
-  //   return provider;
-  // }
+  const { chain } = useNetwork();
 
   const handleUserData = useCallback(
-    (userData: any) => {
-      console.log("userData", userData);
+    (userData: authUserType) => {
+      // console.log("userData", userData);
 
-      setStore((prev) => {
+      setStore((prev: any) => {
         return {
           ...prev,
           user: {
             ...prev.user,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            walletAddress: userData.walletAddress,
-            emailID: userData.emailID,
-            id: userData.id,
-            isVerified: userData.isVerified,
+            firstName: userData.firstName ? userData.firstName : "",
+            lastName: userData.lastName ? userData.lastName : "",
+            walletAddress: userData.walletAddress ? userData.walletAddress : "",
+            chain: userData.chain ? userData.chain : "",
+            emailID: userData.emailID ? userData.emailID : "",
+            id: userData.id ? userData.id : "",
+            isVerified: userData.isVerified ? "true" : "false",
           },
         };
       });
@@ -125,6 +113,7 @@ export default function RainbowWallet() {
         "walletAddress",
         userData.walletAddress ? userData.walletAddress : ""
       );
+      sessionStorage.setItem("chain", userData.chain ? userData.chain : "");
       sessionStorage.setItem(
         "emailID",
         userData.emailID ? userData.emailID : ""
@@ -173,9 +162,10 @@ export default function RainbowWallet() {
 
       //   await web3.eth.getBalance(account);
       // }
-      if (address !== undefined) {
-        console.log("address", address);
-        getUserData(address, handleUserData)
+      if (address !== undefined && chain?.unsupported !== undefined) {
+        console.log("Chain name 185", chain?.name);
+
+        getUserData(address, chain?.name, handleUserData)
           .then((resp) => console.log(resp))
           .catch((error) => console.log(error));
       }
@@ -183,24 +173,16 @@ export default function RainbowWallet() {
       console.log(err);
       alert(`Something went wrong: ${err}`);
     }
-  }, [address, handleUserData]);
+  }, [address, chain?.name, chain?.unsupported, handleUserData]);
+
   useEffect(() => {
-    if (newWindow.ethereum) {
-      //check if Metamask wallet is installed
-      // setIsMetamaskInstalled(true);
-    }
-    // if (openAccountModal !== undefined) {
-    //   openAccountModal();
-    // }
     if (address !== undefined) {
       connectMetamaskWallet();
     }
+
     if (isDisconnected) {
       signOutWallet();
     }
-    console.log(address);
-    console.log(isConnecting);
-    console.log(isDisconnected);
   }, [
     address,
     isConnecting,

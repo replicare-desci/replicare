@@ -100,7 +100,7 @@ const SelectPaper = () => {
   // TODO: add type
   const [formData, setFormData] = useState<paperData>({
     id: userPaperID as string,
-    userID: userID,
+    userID: userID ?? "",
     reproduction_package_available: "",
     authors_contacted: "",
     authors_available: false,
@@ -134,6 +134,7 @@ const SelectPaper = () => {
     claim_type_other_description: "",
     familiarity_level: "",
     expected_total_hours: 1,
+    claims: null,
   });
 
   useEffect(() => {
@@ -203,7 +204,10 @@ const SelectPaper = () => {
         claim_type: "",
         claim_type_other_description: "",
         familiarity_level: "",
-        authors_response: checkedState,
+        authors_response:
+          checkedState !== undefined && checkedState.length > 0
+            ? checkedState
+            : [],
         project_nickname: "",
         authors_response_other: "",
         summary: "",
@@ -215,7 +219,8 @@ const SelectPaper = () => {
 
     if (
       (originalPackages && originalPackages.length > 0) ||
-      checkedState.length > 0
+      (checkedState.length > 0 &&
+        formData?.authors_response?.length === checkedState?.length)
     ) {
       console.log("execute");
 
@@ -626,7 +631,7 @@ const SelectPaper = () => {
               required
               disabled={
                 formData?.authors_contacted === "" ||
-                formData?.authors_contacted === "true"
+                formData?.authors_contacted === "false"
                   ? true
                   : false
               }

@@ -1,38 +1,28 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import SummarizePaperStepOne from "./SummarizePaperStepOne";
-// import {
-//   DeclareRobustnessChecks,
-//   AddRevisedReproductionPackage,
-//   SummarizePaper,
-// } from "../../types/context.d";
-import SaveIcon from "@mui/icons-material/Save";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-// import { paperData } from "../../types/index.d";
+import SummarizePaperStepOne from "./SummarizePaperStepOne";
+
+import SaveIcon from "@mui/icons-material/Save";
 
 import Stepper from "./Stepper";
 import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPackagesStepTwo";
 import OutlineClaimsStepThree from "./OutlineClaimsStepThree/OutlineClaimsStepThree";
 import DeclareRobustnessChecksStepFour from "./DeclareRobustnessChecksStepFour";
-import { appendUserPaperData } from "../../firebase/firebaseFunctions";
+import {
+  appendUserPaperData,
+  getSelectUserPaperData,
+} from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
+import { claims, paperData } from "../../types/index.d";
 
 const Scoping = () => {
-  const { userPaperID } = useParams();
+  const { userPaperID, pageType } = useParams();
   const userID: string = sessionStorage.getItem("id") as string;
-  // const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
-  // const [scopingDataStep2, setScopingDataStep2] =
-  // useState<AddRevisedReproductionPackage>();
-  // const [scopingDataStep4, setScopingDataStep4] =
-  // useState<DeclareRobustnessChecks>();
-  //TODO: const [scopingDataStep3, setScopingDataStep3] =
-  // useState<>();
-  // const [oneTen, setOneTen] = useState<number>(-1);
-  // const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
 
   // global state for scoping
-  const [scopingData, setScopingData] = useState({
+  const [scopingData, setScopingData] = useState<paperData>({
     // step 1 data start
     userID: userID,
     id: userPaperID as string,
@@ -53,74 +43,38 @@ const Scoping = () => {
     additional_population: "",
     num_claims: 1,
     claim_type_other_description: "",
-    will_access_whole_paper: false, //wil investigate
+    will_assess_whole_paper: "", //wil investigate
     num_claims_will_assess: "",
     summary: "",
-
-    // step 1 data end
-
-    // step 2 data start
-    // revised_reproduction_packages: {
-    //   id: 1,
-    //   stage: "",
-    //   content_type: "",
-    //   name: "",
-    //   url: "",
-    // },
-
-    // step 2 data end
-
-    // step 3 data start
-    claims: {
-      claimSummary: "",
-      econometric_categorization_confidence: "",
-      estimates: {
-        column: "",
-        confidence_interval: "",
-        econometric_method: "",
-        estimate: "",
-        // id: 1,
-        inline_paragraph: "",
-        name: "",
-        other_econometric_method: "",
-        other_statistic: "",
-        p_value: "",
-        page: "",
-        row: "",
-        standard_error: "",
-        units: "",
-      },
-      focused_population: "",
-      identified_preferred_specification: "",
-      short_description: "",
-    },
-    econometric_categorization_confidence: "",
-    // step 3 data end
-
-    // step 4 data starts
+    // step 4:
     possible_robustness_checks: "",
+    // step 3 :
+    claims: null,
+  });
+  // step 3:
+  const [claimState, setClaimState] = useState<claims>({
+    claimSummary: "",
+    econometric_categorization_confidence: 0,
+    focused_population: "",
+    identified_preferred_specification: "",
+    short_description: "",
+    estimates: {
+      column: "",
+      confidence_interval: "",
+      econometric_method: "",
+      estimate: "",
+      inline_paragraph: "",
+      name: "",
+      other_econometric_method: "",
+      other_statistic: "",
+      p_value: "",
+      page: "",
+      row: "",
+      standard_error: "",
+      units: "",
+    },
   });
 
-  function saveScopingData() {
-    if (
-      typeof userPaperID != "undefined" &&
-      userID !== undefined &&
-      userPaperID !== undefined
-    ) {
-      console.log(scopingData);
-
-      console.log(userPaperID);
-
-      appendUserPaperData(userPaperID, scopingData)
-        .then(() => {
-          console.log("data saved");
-          toast.success("Data Saved successfully");
-        })
-        .catch((err) => {
-          console.log("error saving data", err);
-        });
-    }
-  }
   function scopeStepRender(activeStep: number) {
     switch (activeStep) {
       case 0:
@@ -142,6 +96,8 @@ const Scoping = () => {
           <OutlineClaimsStepThree
             scopingData={scopingData}
             setScopingData={setScopingData}
+            claimState={claimState}
+            setClaimState={setClaimState}
           />
         );
       case 3:
@@ -155,6 +111,53 @@ const Scoping = () => {
       //   return <Typography>This component does not exists</Typography>;
     }
   }
+
+  useEffect(() => {
+    if (userPaperID !== undefined) {
+      getSelectUserPaperData(userPaperID)
+        .then((scopeResponse: paperData) => {
+          setScopingData(scopeResponse);
+
+          if (
+            scopeResponse?.claims !== null &&
+            scopeResponse?.claims !== undefined
+          ) {
+            setClaimState(scopeResponse?.claims);
+          }
+        })
+        .catch((err: any) => console.log(err));
+    }
+  }, [pageType, userPaperID]);
+
+  // This function saves everything
+  function saveScopingData() {
+    if (userID !== undefined && userPaperID !== undefined) {
+      console.log(scopingData);
+      console.log(claimState);
+
+      console.log(userPaperID);
+
+      if (claimState !== undefined && claimState !== null) {
+        setScopingData((prev: paperData) => {
+          return {
+            ...prev,
+            claims: claimState,
+          };
+        });
+      } else {
+        toast.error("error saving data ");
+      }
+      appendUserPaperData(userPaperID, scopingData)
+        .then(() => {
+          console.log("data saved");
+          toast.success("Data Saved successfully");
+        })
+        .catch((err) => {
+          console.log("error saving data", err);
+        });
+    }
+  }
+
   return (
     <>
       <Container>

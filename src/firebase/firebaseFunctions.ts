@@ -13,39 +13,33 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { authUserType } from "../types/context.d";
 // import { formDataType } from "../types/context.d";
-
-type userType = {
-  firstName: string;
-  lastName: string;
-  emailID: string;
-  walletAddress: string;
-  id: string;
-  isVerified: boolean;
-};
 
 /**
  * @work getUserData function is getting the user data from the firebase
  * @param {string} walletAddress
+ * @param {string} chain
  * @param {function} handleUserData
  */
 async function getUserData(
   walletAddress: string,
-  handleUserData: (userData: userType) => void
+  chain: string,
+  handleUserData: (userData: authUserType) => void
 ) {
   console.log("walletAddress", walletAddress);
-  let getDataReturnObj: userType = {
-    firstName: "",
-    lastName: "",
-    emailID: "",
-    walletAddress: "",
-    id: "",
-    isVerified: false,
-  };
-  try {
-    const docRef = collection(db, "user");
 
-    // existsWalletAddress(walletAddress).then().catch();
+  try {
+    let getDataReturnObj: authUserType = {
+      firstName: "",
+      lastName: "",
+      emailID: "",
+      walletAddress: "",
+      chain: "",
+      id: "",
+      isVerified: false,
+    };
+    const docRef = collection(db, "user");
 
     if (await existsWalletAddress(walletAddress)) {
       onSnapshot(docRef, (snapshots: any) => {
@@ -60,7 +54,8 @@ async function getUserData(
               lastName: doc.data().lastName,
               emailID: doc.data().emailID,
               walletAddress: doc.data().walletAddress,
-              id: doc.id,
+              chain: doc.data().chain,
+              id: doc.data().id,
               isVerified: doc.data().isVerified,
             };
             handleUserData(getDataReturnObj);
@@ -71,6 +66,7 @@ async function getUserData(
       const walletAddressRef = collection(db, "user");
       addDoc(walletAddressRef, {
         walletAddress: walletAddress,
+        chain: chain,
         isVerified: true,
         createdAt: Timestamp.now(),
       })
@@ -88,6 +84,7 @@ async function getUserData(
                     lastName: doc.data().lastName,
                     emailID: doc.data().emailID,
                     walletAddress: doc.data().walletAddress,
+                    chain: doc.data().chain,
                     id: doc.id,
                     isVerified: doc.data().isVerified,
                   };
@@ -253,7 +250,7 @@ async function createDefaultUserPaperData(userID: string) {
   try {
     const ref = await addDoc(userPaperCollectionRef, {
       userID: userID,
-      authors_available: "",
+      authors_available: false,
       authors_contacted: "",
       authors_response: [],
       created_at: Timestamp.now(),
@@ -333,8 +330,6 @@ async function deleteUserPaperData(id: string) {
 async function getSelectUserPaperData(id: string) {
   let data: any = {};
   try {
-    console.log(id);
-
     let querySnapshot: any = await getDoc(doc(db, "userPaper", id));
 
     if (querySnapshot && querySnapshot.id) {
