@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { UserContext } from "../../context/ContextProvider";
 import {
   Typography,
   Grid,
@@ -13,14 +14,9 @@ import {
   Box,
   Stepper,
 } from "@mui/material";
-import { paperData } from "../../types";
 
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-}
-
-const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
+const SummarizePaperStepOne = () => {
+  const { store, setStore } = UserContext();
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
   const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
 
@@ -31,10 +27,15 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   ) => {
     const { name, value } = event.target;
 
-    setScopingData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setStore((prev: any) => {
+      return {
+        ...prev,
+        paperData: {
+          ...prev.paperData,
+          [name]: value,
+        },
+      };
+    });
   };
 
   return (
@@ -44,7 +45,6 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
       </Typography>
       <Grid container component="form" noValidate>
         <List component="ol">
-          {" "}
           <ListItem component="li">
             <FormControl>
               <FormLabel sx={{ my: 1 }}>
@@ -62,8 +62,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 required
                 name="project_nickname"
                 value={
-                  scopingData?.project_nickname
-                    ? scopingData?.project_nickname
+                  store?.paperData?.project_nickname
+                    ? store?.paperData?.project_nickname
                     : ""
                 }
                 id="project_nickname"
@@ -80,8 +80,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 type="date"
                 variant="standard"
+                id="start_date"
                 name="start_date"
-                value={scopingData?.start_date ? scopingData?.start_date : ""}
+                value={
+                  store?.paperData?.start_date
+                    ? store?.paperData?.start_date
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -98,7 +103,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 variant="standard"
                 name="end_date"
                 id="end_date"
-                value={scopingData?.end_date ? scopingData?.end_date : ""}
+                value={
+                  store?.paperData?.end_date ? store?.paperData?.end_date : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -115,8 +122,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="expected_total_hours"
                 id="expected_total_hours"
                 value={
-                  scopingData?.expected_total_hours
-                    ? scopingData?.expected_total_hours
+                  store?.paperData?.expected_total_hours
+                    ? store?.paperData?.expected_total_hours
                     : 0
                 }
                 onChange={summerizePaperChangeHandler}
@@ -133,8 +140,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="familiarity_level"
                 id="familiarity_level"
                 value={
-                  scopingData?.familiarity_level
-                    ? scopingData?.familiarity_level
+                  store?.paperData?.familiarity_level
+                    ? store?.paperData?.familiarity_level
                     : ""
                 }
               >
@@ -170,18 +177,23 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 id="num_tables_body"
                 label="# of tables included in the main body"
                 value={
-                  scopingData?.outputs?.num_tables_body
-                    ? scopingData?.outputs?.num_tables_body
+                  store?.paperData?.outputs?.num_tables_body
+                    ? store?.paperData?.outputs?.num_tables_body
                     : 0
                 }
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 variant="standard"
                 sx={{ py: 2 }}
@@ -190,22 +202,27 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 fullWidth
                 required
                 type={"number"}
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 name="num_figures_body"
                 id="num_figures_body"
                 label="# of figures included in the main body"
                 variant="standard"
                 value={
-                  scopingData?.outputs?.num_figures_body
-                    ? scopingData?.outputs?.num_figures_body
+                  store?.paperData?.outputs?.num_figures_body
+                    ? store?.paperData?.outputs?.num_figures_body
                     : 0
                 }
                 sx={{ py: 2 }}
@@ -216,18 +233,23 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 id="num_inline_results_body"
                 type={"number"}
                 value={
-                  scopingData?.outputs?.num_inline_results_body
-                    ? scopingData?.outputs?.num_inline_results_body
+                  store?.paperData?.outputs?.num_inline_results_body
+                    ? store?.paperData?.outputs?.num_inline_results_body
                     : 0
                 }
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 required
                 label="# of inline results are included in the main body"
@@ -250,18 +272,23 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 label="# of tables included in appendix"
                 variant="standard"
                 value={
-                  scopingData?.outputs?.num_tables_appendix
-                    ? scopingData?.outputs?.num_tables_appendix
+                  store?.paperData?.outputs?.num_tables_appendix
+                    ? store?.paperData?.outputs?.num_tables_appendix
                     : ""
                 }
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 sx={{ py: 2 }}
               />
@@ -273,18 +300,23 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 label="# of figures included in appendix"
                 variant="standard"
                 value={
-                  scopingData?.outputs?.num_figures_appendix
-                    ? scopingData?.outputs?.num_figures_appendix
+                  store?.paperData?.outputs?.num_figures_appendix
+                    ? store?.paperData?.outputs?.num_figures_appendix
                     : ""
                 }
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 sx={{ py: 2 }}
               />
@@ -307,8 +339,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="whole_population"
                 id="whole_population"
                 value={
-                  scopingData?.whole_population
-                    ? scopingData?.whole_population
+                  store?.paperData?.whole_population
+                    ? store?.paperData?.whole_population
                     : ""
                 }
                 onChange={summerizePaperChangeHandler}
@@ -331,8 +363,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="additional_population"
                 id="additional_population"
                 value={
-                  scopingData?.additional_population
-                    ? scopingData?.additional_population
+                  store?.paperData?.additional_population
+                    ? store?.paperData?.additional_population
                     : ""
                 }
                 onChange={summerizePaperChangeHandler}
@@ -372,7 +404,11 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="num_claims"
                 id="num_claims"
                 type="number"
-                value={scopingData?.num_claims ? scopingData?.num_claims : 1}
+                value={
+                  store?.paperData?.num_claims
+                    ? store?.paperData?.num_claims
+                    : 1
+                }
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   if (
                     parseInt(event.target.value) < 5 &&
@@ -396,8 +432,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="claim_type_other_description"
                 id="claim_type_other_description"
                 value={
-                  scopingData?.claim_type_other_description
-                    ? scopingData?.claim_type_other_description
+                  store?.paperData?.claim_type_other_description
+                    ? store?.paperData?.claim_type_other_description
                     : ""
                 }
                 onChange={summerizePaperChangeHandler}
@@ -474,6 +510,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                         //     ? scopingData?.claim_type_other_description
                         //     : ""
                         // }
+
                         onChange={(e) => setClaimTypeOther(e.target.value)}
                         label="Other"
                         variant="outlined"
@@ -495,8 +532,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 name="will_assess_whole_paper"
                 id="will_assess_whole_paper"
                 value={
-                  scopingData?.will_assess_whole_paper
-                    ? scopingData?.will_assess_whole_paper
+                  store?.paperData?.will_assess_whole_paper
+                    ? store?.paperData?.will_assess_whole_paper
                     : ""
                 }
                 onChange={summerizePaperChangeHandler}
@@ -594,7 +631,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               label="Summary"
               name="summary"
               id="summary"
-              value={scopingData?.summary ? scopingData?.summary : ""}
+              value={store?.paperData?.summary ? store?.paperData?.summary : ""}
               onChange={summerizePaperChangeHandler}
               type={"text"}
               variant="outlined"

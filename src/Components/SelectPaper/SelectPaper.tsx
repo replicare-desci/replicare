@@ -74,8 +74,6 @@ const SelectPaper = () => {
 
   const [isError, setError] = useState<boolean>(false);
 
-  const [checkedState, setCheckedState] = useState<string[]>([]);
-
   const [originalPackages, setOriginalPackages] = useState<
     original_reproduction_packages[]
   >([
@@ -308,6 +306,7 @@ const SelectPaper = () => {
                 paperData: paperResponse,
               };
             });
+            setDoi(true);
           }
         })
         .catch((err) => {
@@ -385,6 +384,9 @@ const SelectPaper = () => {
               variant="standard"
               type={"text"}
               fullWidth
+              value={
+                store?.paperData?.paper?.doi ? store?.paperData?.paper?.doi : ""
+              }
               id="doi"
               name="doi"
               onChange={(e: any) => setDoiString(e.target.value)}

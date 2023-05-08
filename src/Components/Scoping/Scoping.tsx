@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { UserContext } from "../../context/ContextProvider";
 import SummarizePaperStepOne from "./SummarizePaperStepOne";
 
 import SaveIcon from "@mui/icons-material/Save";
@@ -15,8 +16,10 @@ import {
 } from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
 import { claims, paperData } from "../../types/index.d";
+import { ContextType } from "../../types/context";
 
 const Scoping = () => {
+  const { store, setStore } = UserContext();
   const { userPaperID, pageType } = useParams();
   const userID: string = sessionStorage.getItem("id") as string;
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -80,12 +83,7 @@ const Scoping = () => {
   function scopeStepRender(activeStep: number) {
     switch (activeStep) {
       case 0:
-        return (
-          <SummarizePaperStepOne
-            scopingData={scopingData}
-            setScopingData={setScopingData}
-          />
-        );
+        return <SummarizePaperStepOne />;
       case 1:
         return (
           <AddRevisedReproductionPackagesStepTwo
@@ -109,47 +107,45 @@ const Scoping = () => {
             setScopingData={setScopingData}
           />
         );
-      // default:
-      //   return <Typography>This component does not exists</Typography>;
     }
   }
 
   useEffect(() => {
-    if (userPaperID !== undefined) {
+    if (userPaperID !== undefined && pageType !== undefined) {
       getSelectUserPaperData(userPaperID)
-        .then((scopeResponse: paperData) => {
-          setScopingData(scopeResponse);
-
-          if (
-            scopeResponse?.claims !== null &&
-            scopeResponse?.claims !== undefined
-          ) {
-            setClaimState(scopeResponse?.claims);
+        .then((paperResponse: paperData) => {
+          if (paperResponse !== undefined) {
+            setStore((prev: ContextType) => {
+              return {
+                ...prev,
+                paperData: { ...paperResponse },
+              };
+            });
           }
         })
-        .catch((err: any) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          toast.error("something is wrong about this code");
+        });
     }
-  }, [pageType, userPaperID]);
-
+    return () => {
+      setStore((prev: ContextType) => {
+        return {
+          ...prev,
+          paperData: null,
+        };
+      });
+    };
+  }, [userPaperID, pageType, setStore]);
   // This function saves everything
   function saveScopingData() {
-    if (userID !== undefined && userPaperID !== undefined) {
-      console.log(scopingData);
-      console.log(claimState);
-
-      console.log(userPaperID);
-
-      if (claimState !== undefined && claimState !== null) {
-        setScopingData((prev: paperData) => {
-          return {
-            ...prev,
-            claims: claimState,
-          };
-        });
-      } else {
-        toast.error("error saving data ");
-      }
-      appendUserPaperData(userPaperID, scopingData)
+    if (
+      userID !== undefined &&
+      userPaperID !== undefined &&
+      userID !== "" &&
+      userPaperID !== ""
+    ) {
+      appendUserPaperData(userPaperID, store?.paperData)
         .then(() => {
           console.log("data saved");
           toast.success("Data Saved successfully");
@@ -157,6 +153,8 @@ const Scoping = () => {
         .catch((err) => {
           console.log("error saving data", err);
         });
+    } else {
+      toast.error("something is wrong about this code");
     }
   }
 
