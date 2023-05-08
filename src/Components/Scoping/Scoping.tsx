@@ -25,6 +25,8 @@ const Scoping = () => {
   const [scopingData, setScopingData] = useState<paperData>({
     // step 1 data start
     userID: userID,
+    paper_type: "",
+    workflow_stage: "",
     id: userPaperID as string,
     project_nickname: "",
     revised_reproduction_packages: [],
@@ -65,13 +67,13 @@ const Scoping = () => {
       estimate: "",
       inline_paragraph: "",
       name: "",
-      other_econometric_method: "",
       other_statistic: "",
       p_value: "",
       page: "",
       row: "",
       standard_error: "",
       units: "",
+      specify_method: "",
     },
   });
 
