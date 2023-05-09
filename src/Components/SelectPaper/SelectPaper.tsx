@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { UserContext } from "../../context/ContextProvider";
 import { fetchDoi } from "../../api/fetchDOI";
 import { camelizeKeys } from "../../utils/changeCase";
 import AdditionalInfo from "../AdditionalInfo";
@@ -9,11 +10,7 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  paperData,
-  DoiData,
-  original_reproduction_packages,
-} from "../../types/index.d";
+import { paperData, original_reproduction_packages } from "../../types/index.d";
 
 import {
   TextField,
@@ -32,6 +29,7 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
+import { ContextType } from "../../types/context";
 
 type checkBoxOption = {
   label: string;
@@ -40,6 +38,7 @@ type checkBoxOption = {
 const userID: string = sessionStorage.getItem("id") as string;
 
 const SelectPaper = () => {
+  const { store, setStore } = UserContext();
   const { pageType, userPaperID } = useParams();
 
   const navigate = useNavigate();
@@ -70,21 +69,10 @@ const SelectPaper = () => {
     //   label: "Did not respond. As of:",
     // },
   ];
-  const [doiString, setDoiString] = useState<string>();
+  const [doiString, setDoiString] = useState<string>(); // filling to the state
   const [getDoi, setDoi] = useState<boolean>(false);
 
   const [isError, setError] = useState<boolean>(false);
-
-  // DOI response state
-  const [doiResponse, setDoiResponse] = useState<DoiData>({
-    title: "",
-    author: "",
-    doi: "",
-    publication_name: "",
-    publication_year: "",
-    journal_name: "",
-  });
-  const [checkedState, setCheckedState] = useState<string[]>([]);
 
   const [originalPackages, setOriginalPackages] = useState<
     original_reproduction_packages[]
@@ -97,137 +85,42 @@ const SelectPaper = () => {
     },
   ]);
 
-  // TODO: add type
-  const [formData, setFormData] = useState<paperData>({
-    id: userPaperID as string,
-    userID: userID ?? "",
-    reproduction_package_available: "",
-    authors_contacted: "",
-    authors_available: false,
-    reproduction_package_from_scratch: "",
-    original_reproduction_packages: [
-      {
-        content_type: "code",
-        name: "",
-        stage: "original",
-        url: "",
-      },
-    ],
-    revised_reproduction_packages: [
-      {
-        content_type: "code",
-        name: "",
-        stage: "revised",
-        url: "",
-      },
-    ],
-    authors_response: [],
-    // userID: "",
-    paper: doiResponse ? doiResponse : null,
-    paper_type: "candidate",
-    workflow_stage: "select_paper",
-    start_date: "",
-    shareable_link: false,
-    is_author: true,
-    is_creator: true,
-    claim_type: "",
-    claim_type_other_description: "",
-    familiarity_level: "",
-    expected_total_hours: 1,
-    claims: null,
-  });
-
-  useEffect(() => {
-    if (userPaperID !== undefined && pageType !== undefined) {
-      getSelectUserPaperData(userPaperID)
-        .then((paperResponse: paperData) => {
-          if (paperResponse !== undefined) {
-            setFormData(paperResponse);
-            if (
-              paperResponse?.paper &&
-              Object.keys(paperResponse?.paper).length > 0
-            ) {
-              setDoiResponse(paperResponse?.paper);
-              setDoi(true);
-            }
-
-            if (
-              paperResponse?.authors_response !== undefined &&
-              paperResponse?.authors_response?.length > 0
-            ) {
-              setCheckedState(paperResponse?.authors_response);
-            }
-
-            if (
-              paperResponse?.original_reproduction_packages !== undefined &&
-              paperResponse?.original_reproduction_packages.length > 0
-            ) {
-              setOriginalPackages(
-                paperResponse?.original_reproduction_packages
-              );
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error("something is wrong about this code");
-          setDoi(false);
-        });
-    }
-  }, [userPaperID, pageType]);
-
+  // this function will fill all the fields except doi in ui
   const formDataHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    setFormData((prev) => {
+    setStore((prev: any) => {
       return {
         ...prev,
-        [name]: value,
+        paperData: {
+          ...prev.paperData,
+          [name]: value,
+        },
       };
     });
   };
-
+  //
   const submitSelectPaperData = (event: React.FormEvent<HTMLFormElement>) => {
     // send form data to fireStore database on button click
     event.preventDefault();
-
-    setFormData((prev: any) => {
+    setStore((prev: any) => {
       return {
         ...prev,
-        userID: userID,
-        paper: doiResponse,
-        start_date: new Date().toString(),
-        shareable_link: false,
-        is_author: true,
-        is_creator: true,
-        expected_total_hours: 1,
-        claim_type: "",
-        claim_type_other_description: "",
-        familiarity_level: "",
-        authors_response:
-          checkedState !== undefined && checkedState.length > 0
-            ? checkedState
-            : [],
-        project_nickname: "",
-        authors_response_other: "",
-        summary: "",
-        whole_population: "",
-        additional_population: "",
-        original_reproduction_packages: originalPackages,
+        paperData: {
+          ...prev.paperData,
+          userID: userID,
+          id: userPaperID,
+        },
       };
     });
-
     if (
-      (originalPackages && originalPackages.length > 0) ||
-      (checkedState.length > 0 &&
-        formData?.authors_response?.length === checkedState?.length)
+      store?.paperData?.original_reproduction_packages &&
+      store?.paperData?.original_reproduction_packages.length > 0
     ) {
       console.log("execute");
 
       if (userPaperID !== undefined && pageType !== undefined) {
-        console.log(formData);
-
-        appendUserPaperData(userPaperID, formData)
+        appendUserPaperData(userPaperID, store?.paperData)
           .then(() => {
             toast.success("Data Save successfully");
           })
@@ -256,38 +149,27 @@ const SelectPaper = () => {
         .then(function (response: any) {
           setError(false);
           const newResponse = camelizeKeys(response);
-          setDoiResponse((prev: any) => {
+
+          setStore((prev: any) => {
             return {
               ...prev,
-              publication_year: newResponse.message?.created?.dateTime,
-              publication_name: newResponse.message?.publisher,
-              title: newResponse.message?.title[0],
-              journal_name: newResponse.message?.shortContainerTitle[0],
-              author: `${newResponse.message?.author
-                .map((author: any) => `${author?.given} ${author?.family}`)
-                .join(", ")}`,
+              paperData: {
+                ...prev.paperData,
+                paper: {
+                  publication_year: newResponse.message?.created?.dateTime,
+                  publication_name: newResponse.message?.publisher,
+                  title: newResponse.message?.title[0],
+                  journal_name: newResponse.message?.shortContainerTitle[0],
+                  author: `${newResponse.message?.author
+                    .map((author: any) => `${author?.given} ${author?.family}`)
+                    .join(", ")}`,
 
-              doi: newResponse.message?.doi,
-            };
-          });
-
-          setFormData((prev) => {
-            return {
-              ...prev,
-              paper: {
-                ...prev.paper,
-                publication_year: newResponse.message?.created?.dateTime,
-                publication_name: newResponse.message?.publisher,
-                title: newResponse.message?.title[0],
-                journal_name: newResponse.message?.shortContainerTitle[0],
-                author: `${newResponse.message?.author
-                  .map((author: any) => `${author?.given} ${author?.family}`)
-                  .join(", ")}`,
-
-                doi: newResponse.message?.doi,
+                  doi: newResponse.message?.doi,
+                },
               },
             };
           });
+
           setDoi(true);
         })
 
@@ -298,22 +180,18 @@ const SelectPaper = () => {
     } else {
       setError(true);
     }
-
-    // message->indexed->date-time
-    // publisher
-    // short-container-title
-    // doi
-    // title [0]
-    // autour[0] -> given , family
   }
 
   function changePaperStage(userPaperID: string) {
     if (userPaperID && typeof userPaperID !== "undefined") {
-      setFormData((prev: any) => {
+      setStore((prev: any) => {
         return {
           ...prev,
-          workflow_stage: "abandoned",
-          paper_type: "abandoned_candidate",
+          paperData: {
+            ...prev.paperData,
+            workflow_stage: "abandoned",
+            paper_type: "abandoned_candidate",
+          },
         };
       });
       const response: boolean = window.confirm(
@@ -321,11 +199,11 @@ const SelectPaper = () => {
       );
 
       if (
-        formData?.paper_type === "abandoned_candidate" &&
-        formData?.workflow_stage === "abandoned" &&
+        store?.paperData?.paper_type === "abandoned_candidate" &&
+        store?.paperData?.workflow_stage === "abandoned" &&
         response
       ) {
-        appendUserPaperData(userPaperID, formData)
+        appendUserPaperData(userPaperID, store?.paperData)
           .then(() => {
             toast.success("Paper abandoned successfully");
 
@@ -341,47 +219,37 @@ const SelectPaper = () => {
   }
   function changeWorkFlowStage(userPaperID: string) {
     if (userPaperID && typeof userPaperID !== "undefined") {
-      setFormData((prev: any) => {
+      setStore((prev: any) => {
         return {
           ...prev,
-          workflow_stage: "scoping",
-          paper_type: "declared",
+          paperData: {
+            ...prev.paperData,
+            workflow_stage: "scoping",
+            paper_type: "declared",
+          },
         };
       });
-
       const response: boolean = window.confirm(
         "Are you sure you want to declare? Changes can't be allowed after this step"
       );
 
       if (
-        formData?.paper_type === "declared" &&
-        formData?.workflow_stage === "scoping" &&
+        store?.paperData?.paper_type === "declared" &&
+        store?.paperData?.workflow_stage === "scoping" &&
         response
       ) {
-        setFormData((prev: any) => {
+        setStore((prev: any) => {
           return {
             ...prev,
-            userID: userID,
-            paper: doiResponse,
-            start_date: new Date().toString(),
-            shareable_link: false,
-            is_author: true,
-            is_creator: true,
-            expected_total_hours: 1,
-            claim_type: "",
-            claim_type_other_description: "",
-            familiarity_level: "",
-            authors_response: checkedState,
-            project_nickname: "",
-            authors_response_other: "",
-            summary: "",
-            whole_population: "",
-            additional_population: "",
-            original_reproduction_packages: originalPackages,
+            paperData: {
+              ...prev.paperData,
+              userID: userID,
+              id: userPaperID,
+            },
           };
         });
 
-        appendUserPaperData(userPaperID, formData)
+        appendUserPaperData(userPaperID, store?.paperData)
           .then(() => {
             toast.success("Paper declared successfully");
 
@@ -398,7 +266,64 @@ const SelectPaper = () => {
       console.log("userPaperID not defined");
     }
   }
+  function checkedStateHandler(status: string, checkedValue: string) {
+    if (status === "checked") {
+      setStore((prev: any) => {
+        return {
+          ...prev,
+          paperData: {
+            ...prev.paperData,
+            authors_response: [
+              ...prev.paperData.authors_response,
+              checkedValue,
+            ],
+          },
+        };
+      });
+    } else if (status === "unchecked") {
+      setStore((prev: any) => {
+        return {
+          ...prev,
+          paperData: {
+            ...prev.paperData,
+            authors_response: prev.paperData.authors_response.filter(
+              (value: string) => value !== checkedValue
+            ),
+          },
+        };
+      });
+    }
+  }
 
+  useEffect(() => {
+    if (userPaperID !== undefined && pageType !== undefined) {
+      getSelectUserPaperData(userPaperID)
+        .then((paperResponse: paperData) => {
+          if (paperResponse !== undefined) {
+            setStore((prev: ContextType) => {
+              return {
+                ...prev,
+                paperData: paperResponse,
+              };
+            });
+            setDoi(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("something is wrong about this code");
+          setDoi(false);
+        });
+    }
+    return () => {
+      setStore((prev: ContextType) => {
+        return {
+          ...prev,
+          paperData: null,
+        };
+      });
+    };
+  }, [userPaperID, pageType, setStore]);
   return (
     <Container>
       <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
@@ -459,6 +384,9 @@ const SelectPaper = () => {
               variant="standard"
               type={"text"}
               fullWidth
+              value={
+                store?.paperData?.paper?.doi ? store?.paperData?.paper?.doi : ""
+              }
               id="doi"
               name="doi"
               onChange={(e: any) => setDoiString(e.target.value)}
@@ -479,13 +407,19 @@ const SelectPaper = () => {
           <p style={{ color: "red", textAlign: "center" }}>
             {isError ? "Please enter DOI " : null}
           </p>
-          {getDoi && doiResponse && Object.keys(doiResponse).length > 0 ? (
+          {getDoi &&
+          store?.paperData?.paper &&
+          Object.keys(store?.paperData?.paper).length > 0 ? (
             <>
               <ListItem>
                 <TextField
                   label="Title of the paper"
                   type={"text"}
-                  value={doiResponse?.title ? doiResponse?.title : ""}
+                  value={
+                    store?.paperData?.paper?.title
+                      ? store?.paperData?.paper?.title
+                      : ""
+                  }
                   variant="standard"
                   fullWidth
                 />
@@ -495,8 +429,8 @@ const SelectPaper = () => {
                   label="Name of the journal or publication"
                   type={"text"}
                   value={
-                    doiResponse?.publication_name
-                      ? doiResponse?.publication_name
+                    store?.paperData?.paper?.publication_name
+                      ? store?.paperData?.paper?.publication_name
                       : ""
                   }
                   variant="standard"
@@ -507,7 +441,11 @@ const SelectPaper = () => {
                 <TextField
                   label="Digital Object Identifier (or URL if no DOI available)"
                   type={"text"}
-                  value={doiResponse?.doi ? doiResponse?.doi : ""}
+                  value={
+                    store?.paperData?.paper?.doi
+                      ? store?.paperData?.paper?.doi
+                      : ""
+                  }
                   variant="standard"
                   fullWidth
                 />
@@ -517,8 +455,8 @@ const SelectPaper = () => {
                   label="Year of Publication"
                   type={"text"}
                   value={
-                    doiResponse?.publication_year
-                      ? new Date(doiResponse?.publication_year)
+                    store?.paperData?.paper?.publication_year
+                      ? new Date(store?.paperData?.paper?.publication_year)
                           .getFullYear()
                           .toString()
                       : "No year"
@@ -531,7 +469,11 @@ const SelectPaper = () => {
                 <TextField
                   label="Authors"
                   type={"text"}
-                  value={doiResponse?.author ? doiResponse?.author : ""}
+                  value={
+                    store?.paperData?.paper?.author
+                      ? store?.paperData?.paper?.author
+                      : ""
+                  }
                   variant="standard"
                   fullWidth
                 />
@@ -549,8 +491,8 @@ const SelectPaper = () => {
               <RadioGroup
                 aria-labelledby="is a reproduction package available for this paper?"
                 value={
-                  formData?.reproduction_package_available
-                    ? formData?.reproduction_package_available
+                  store?.paperData?.reproduction_package_available
+                    ? store?.paperData?.reproduction_package_available
                     : null
                 }
                 onChange={formDataHandler}
@@ -573,8 +515,8 @@ const SelectPaper = () => {
             <FormControl
               required
               disabled={
-                formData?.reproduction_package_available === "" ||
-                formData?.reproduction_package_available === "true"
+                store?.paperData?.reproduction_package_available === "" ||
+                store?.paperData?.reproduction_package_available === "true"
                   ? true
                   : false
               }
@@ -590,8 +532,8 @@ const SelectPaper = () => {
               <RadioGroup
                 aria-labelledby="authors_contacted"
                 value={
-                  formData?.authors_contacted
-                    ? formData?.authors_contacted
+                  store?.paperData?.authors_contacted
+                    ? store?.paperData?.authors_contacted
                     : null
                 }
                 name="authors_contacted"
@@ -600,8 +542,8 @@ const SelectPaper = () => {
                 <FormControlLabel
                   value="true"
                   disabled={
-                    formData?.reproduction_package_available === "" ||
-                    formData?.reproduction_package_available === "true"
+                    store?.paperData?.reproduction_package_available === "" ||
+                    store?.paperData?.reproduction_package_available === "true"
                       ? true
                       : false
                   }
@@ -611,8 +553,8 @@ const SelectPaper = () => {
                 <FormControlLabel
                   value="false"
                   disabled={
-                    formData?.reproduction_package_available === "" ||
-                    formData?.reproduction_package_available === "true"
+                    store?.paperData?.reproduction_package_available === "" ||
+                    store?.paperData?.reproduction_package_available === "true"
                       ? true
                       : false
                   }
@@ -630,8 +572,8 @@ const SelectPaper = () => {
             <FormControl
               required
               disabled={
-                formData?.authors_contacted === "" ||
-                formData?.authors_contacted === "false"
+                store?.paperData?.authors_contacted === "" ||
+                store?.paperData?.authors_contacted === "false"
                   ? true
                   : false
               }
@@ -645,8 +587,8 @@ const SelectPaper = () => {
                     <>
                       <FormControlLabel
                         disabled={
-                          formData?.authors_contacted === "" ||
-                          formData?.authors_contacted === "false"
+                          store?.paperData?.authors_contacted === "" ||
+                          store?.paperData?.authors_contacted === "false"
                             ? true
                             : false
                         }
@@ -655,24 +597,26 @@ const SelectPaper = () => {
                           <Checkbox
                             name={item.label}
                             checked={
-                              checkedState?.length > 0 &&
-                              typeof item?.label === "string"
-                                ? !!checkedState.includes(item?.label)
+                              store?.paperData?.authors_response &&
+                              store?.paperData?.authors_response.length > 0 &&
+                              store?.paperData?.authors_response.includes(
+                                item?.label
+                              )
+                                ? true
                                 : false
                             }
                             onChange={(
                               event: React.ChangeEvent<HTMLInputElement>
                             ) => {
                               if (event.target.checked) {
-                                setCheckedState((prevState: string[]) => [
-                                  ...prevState,
-                                  event.target.name,
-                                ]);
+                                checkedStateHandler(
+                                  "checked",
+                                  event.target.name
+                                );
                               } else {
-                                setCheckedState((prevState: string[]) =>
-                                  prevState.filter(
-                                    (item: string) => item !== event.target.name
-                                  )
+                                checkedStateHandler(
+                                  "unchecked",
+                                  event.target.name
                                 );
                               }
                             }}
@@ -690,8 +634,8 @@ const SelectPaper = () => {
             <FormControl
               required
               disabled={
-                formData?.reproduction_package_available === "" ||
-                formData?.reproduction_package_available === "true"
+                store?.paperData?.reproduction_package_available === "" ||
+                store?.paperData?.reproduction_package_available === "true"
                   ? true
                   : false
               }
@@ -703,8 +647,8 @@ const SelectPaper = () => {
               </FormLabel>
               <RadioGroup
                 value={
-                  formData?.reproduction_package_from_scratch
-                    ? formData?.reproduction_package_from_scratch
+                  store?.paperData?.reproduction_package_from_scratch
+                    ? store?.paperData?.reproduction_package_from_scratch
                     : null
                 }
                 onChange={formDataHandler}
@@ -715,8 +659,8 @@ const SelectPaper = () => {
                   control={<Radio />}
                   label="true"
                   disabled={
-                    formData?.reproduction_package_available === "" ||
-                    formData?.reproduction_package_available === "true"
+                    store?.paperData?.reproduction_package_available === "" ||
+                    store?.paperData?.reproduction_package_available === "true"
                       ? true
                       : false
                   }
@@ -727,14 +671,15 @@ const SelectPaper = () => {
                   control={<Radio />}
                   label="false"
                   disabled={
-                    formData?.reproduction_package_available === "" ||
-                    formData?.reproduction_package_available === "true"
+                    store?.paperData?.reproduction_package_available === "" ||
+                    store?.paperData?.reproduction_package_available === "true"
                       ? true
                       : false
                   }
                 />
               </RadioGroup>
-              {formData?.reproduction_package_from_scratch === "false" ? (
+              {store?.paperData?.reproduction_package_from_scratch ===
+              "false" ? (
                 <Box my={3}>
                   {" "}
                   <Typography>
@@ -756,16 +701,16 @@ const SelectPaper = () => {
             </FormControl>
           </ListItem>
 
-          {formData?.reproduction_package_available === "true" &&
-          formData?.original_reproduction_packages !== undefined ? (
+          {store?.paperData?.reproduction_package_available === "true" &&
+          store?.paperData?.original_reproduction_packages !== undefined ? (
             <AdditionalInfo
               originalPackages={originalPackages}
               setOriginalPackages={setOriginalPackages}
             />
           ) : null}
 
-          {formData?.reproduction_package_from_scratch === "true" ||
-          formData?.reproduction_package_available === "true" ? (
+          {store?.paperData?.reproduction_package_from_scratch === "true" ||
+          store?.paperData?.reproduction_package_available === "true" ? (
             <ListItem>
               <Button
                 variant="contained"
@@ -798,5 +743,3 @@ const SelectPaper = () => {
 };
 
 export default SelectPaper;
-
-// TODO: 1.3 and 1.4 mai by default false check lagana hai
