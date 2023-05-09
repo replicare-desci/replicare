@@ -130,11 +130,10 @@ export default function RainbowWallet() {
 
   const signOutWallet = useCallback(() => {
     sessionStorage.clear();
-    setStore((prev) => {
+    setStore((prev: any) => {
       return {
         ...prev,
         user: {
-          ...prev.user,
           firstName: "",
           lastName: "",
           walletAddress: "",
