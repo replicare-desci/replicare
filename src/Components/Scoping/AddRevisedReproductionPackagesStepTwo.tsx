@@ -6,6 +6,7 @@ import {
   FormLabel,
   ListItem,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { UserContext } from "../../context/ContextProvider";
@@ -131,16 +132,35 @@ const AddRevisedReproductionPackagesStepTwo = () => {
             );
           }
         )}
-      <Box boxShadow={4} my={4}>
+
+      <Box boxShadow={1} border={1} my={4} p={2}>
+        {" "}
+        <Typography variant="h5" fontWeight={600} m={2}>
+          Add revised reproduction packages
+        </Typography>
         <ListItem>
           <FormControl required fullWidth sx={{ py: 1 }}>
-            <FormLabel>
+            <FormLabel
+              sx={{
+                fontSize: "1rem",
+                fontWeight: 500,
+              }}
+            >
               Record the main repository that stores the code for the
               reproduction package provided by the authors.
             </FormLabel>
-            <FormHelperText>Contents of reproduction package</FormHelperText>
+            <FormHelperText
+              sx={{
+                fontSize: "0.8rem",
+              }}
+            >
+              Contents of reproduction package
+            </FormHelperText>
             <TextField
               variant="standard"
+              sx={{
+                my: 1,
+              }}
               type={"text"}
               // value={store?.paperData?.revised_reproduction_packages?.name}
               // value={revisedPackage.name}
@@ -155,6 +175,9 @@ const AddRevisedReproductionPackagesStepTwo = () => {
             ></TextField>
             <TextField
               type={"text"}
+              sx={{
+                my: 2,
+              }}
               value={revisedPackage.url}
               // value={revisedPackage.url}
               variant="standard"
@@ -167,17 +190,17 @@ const AddRevisedReproductionPackagesStepTwo = () => {
               name="url"
               placeholder="e.g. https://github.com/paper/paper"
             ></TextField>
-            <FormLabel>
+            {/* <FormLabel>
               Are there additional data in different repositories? Use the
               button below to add links to these as well.
-            </FormLabel>{" "}
+            </FormLabel>{" "} */}
             {/* {renderedComponents} */}
-            <Button
+            {/* <Button
               variant="contained"
               onClick={addRevisedPackageChangeHandler}
             >
               + Add additional reproduction packages for data
-            </Button>
+            </Button> */}
           </FormControl>
         </ListItem>
       </Box>

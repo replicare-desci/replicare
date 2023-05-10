@@ -385,7 +385,9 @@ const SelectPaper = () => {
               type={"text"}
               fullWidth
               value={
-                store?.paperData?.paper?.doi ? store?.paperData?.paper?.doi : ""
+                store?.paperData?.paper?.doi
+                  ? store?.paperData?.paper?.doi
+                  : doiString
               }
               id="doi"
               name="doi"

@@ -10,8 +10,9 @@ const ViewStepFour = ({
   setUserPaperData: any;
 }) => {
   return (
-    <Container>
-      <Typography variant="h6" my={2}>
+    <Box p={2} my={4} boxShadow={1} border={1}>
+      {" "}
+      <Typography variant="h5" my={2} fontWeight={600}>
         Declare possible robustness checks{" "}
       </Typography>
       <Box p={1}>
@@ -27,7 +28,7 @@ const ViewStepFour = ({
       <Box p={4} m={1} border={1} boxShadow={1} mb={4}>
         {userPaperData?.possible_robustness_checks}
       </Box>
-    </Container>
+    </Box>
   );
 };
 

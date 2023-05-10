@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   FormControl,
@@ -30,8 +31,10 @@ const DeclareRobustnessChecksStepFour = () => {
     }));
   };
   return (
-    <Container sx={{ my: 4 }}>
-      <Typography variant="h6">Declare possible robustness checks</Typography>
+    <Box boxShadow={1} border={1} my={4} p={4}>
+      <Typography variant="h5" fontWeight={600}>
+        Declare possible robustness checks
+      </Typography>
       <FormControl sx={{ my: 3 }}>
         <FormLabel>
           <b>4.1. </b>After reading the paper, you may wonder what the results
@@ -56,7 +59,7 @@ const DeclareRobustnessChecksStepFour = () => {
       </FormControl>
       {/* TODO: need to do this  */}
       <Button variant="contained">Save and move to assessment stage</Button>
-    </Container>
+    </Box>
   );
 };
 
