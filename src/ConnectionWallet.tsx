@@ -123,7 +123,7 @@ function ConnectionWallet(): JSX.Element {
           .then((resp) => console.log(resp))
           .catch((error) => console.log(error));
 
-        await getUserData(account, "", handleUserData);
+        await getUserData(account, "");
 
         let ethBalance = await web3.eth.getBalance(account);
         setEthereumAccount(account);

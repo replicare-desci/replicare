@@ -8,16 +8,11 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { UserContext } from "../../context/ContextProvider";
 import { paperData, revised_reproduction_packages } from "../../types";
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-}
 
-const AddRevisedReproductionPackagesStepTwo = ({
-  scopingData,
-  setScopingData,
-}: props) => {
+const AddRevisedReproductionPackagesStepTwo = () => {
+  const { store, setStore } = UserContext();
   // const [count, setCount] = React.useState(0);
   // const renderAdditional = () => {
   //   setCount(count + 1);
@@ -25,7 +20,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
   // handle change
   const addRevisedPackageChangeHandler = () => {
     if (revisedPackage.name.length > 0 && revisedPackage.url.length > 0) {
-      setScopingData((prev: paperData) => {
+      setStore((prev: any) => {
         if (
           prev.original_reproduction_packages &&
           typeof prev.original_reproduction_packages !== "undefined" &&
@@ -38,7 +33,7 @@ const AddRevisedReproductionPackagesStepTwo = ({
             ],
           };
         }
-        console.log(scopingData);
+        console.log(store?.paperData);
       });
       setRevisedPackage({
         name: "",
@@ -63,25 +58,26 @@ const AddRevisedReproductionPackagesStepTwo = ({
   // ));
 
   useEffect(() => {
-    setScopingData((prev: paperData) => {
-      if (
-        prev?.original_reproduction_packages !== undefined &&
-        prev?.original_reproduction_packages?.length > 0
-      ) {
-        return {
-          ...prev,
-          revised_reproduction_packages: [
-            ...prev?.original_reproduction_packages,
-          ],
-        };
-      }
-    });
-  }, [setScopingData]);
+    // setStore((prev: any) => {
+    //   if (
+    //     prev?.original_reproduction_packages !== undefined &&
+    //     prev?.original_reproduction_packages?.length > 0
+    //   ) {
+    //     return {
+    //       ...prev,
+    //       revised_reproduction_packages: [
+    //         ...prev?.original_reproduction_packages,
+    //       ],
+    //     };
+    //   }
+    // });
+    console.log(store?.paperData?.original_reproduction_packages);
+  }, [setStore, store]);
   return (
     <div>
-      {scopingData?.original_reproduction_packages !== undefined &&
-        scopingData?.original_reproduction_packages?.length > 0 &&
-        scopingData?.original_reproduction_packages?.map(
+      {store?.paperData?.original_reproduction_packages !== undefined &&
+        store?.paperData?.original_reproduction_packages?.length > 0 &&
+        store?.paperData?.original_reproduction_packages?.map(
           (item: any, index: number) => {
             return (
               <div key={index}>
@@ -146,14 +142,14 @@ const AddRevisedReproductionPackagesStepTwo = ({
             <TextField
               variant="standard"
               type={"text"}
-              value={revisedPackage.name}
+              // value={store?.paperData?.revised_reproduction_packages?.name}
               // value={revisedPackage.name}
-              onChange={(event: any) => {
-                setRevisedPackage({
-                  ...revisedPackage,
-                  name: event.target.value,
-                });
-              }}
+              // onChange={(event: any) => {
+              //   setStore({
+              //     ...revisedPackage,
+              //     name: event.target.value,
+              //   });
+              // }}
               name="name"
               placeholder="e.g. Main code repository with data"
             ></TextField>

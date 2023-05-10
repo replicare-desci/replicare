@@ -65,7 +65,7 @@ export type paperData = {
   authors_response?: string[];
   authors_response_not_ready_date?: string;
   authors_response_other?: string;
-  claims: claims | null;
+  claims: claims;
   claim_type?: string;
   claim_type_other_description?: string;
   created_at?: any;
@@ -79,7 +79,8 @@ export type paperData = {
   authors_response_not_ready_date?: string;
   expected_total_hours?: number;
   num_claims?: number;
-  num_claims_will_assess?: string;
+
+  // num_claims_will_assess?: string;
   paper_type: string;
   workflow_stage: string;
   author_did_not_respond_as_of_date?: string;
