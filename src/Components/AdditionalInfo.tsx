@@ -173,13 +173,13 @@ function AdditionalInfo({
           placeholder="e.g. https://github.com/paper/paper"
           onChange={fillIntoDefaultFields}
         />
-        <FormLabel>
+        {/* <FormLabel>
           Are there additional data in different repositories? Use the button
           below to add links to these as well.
         </FormLabel>{" "}
         <Button variant="contained" onClick={addIntoSystem}>
           + Add additional reproduction packages for data
-        </Button>
+        </Button> */}
       </FormControl>
     </>
   );

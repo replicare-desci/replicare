@@ -10,9 +10,9 @@ function ViewStepThree({
   setUserPaperData: any;
 }) {
   return (
-    <Container>
-      {/* <Button>claims2</Button> */}
-      <Typography variant="h6" my={2}>
+    <Box p={2} my={4} boxShadow={1} border={1}>
+      {" "}
+      <Typography variant="h5" my={2} fontWeight={600}>
         Outline claims
       </Typography>
       <Box>
@@ -127,7 +127,7 @@ function ViewStepThree({
           </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 }
 
