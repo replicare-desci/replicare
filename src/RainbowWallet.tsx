@@ -77,7 +77,7 @@ const wagmiClient = createClient({
 });
 
 export default function RainbowWallet() {
-  const { setStore } = UserContext();
+  const { store, setStore } = UserContext();
 
   const { address, isConnecting, isDisconnected } = useAccount();
   const { chain } = useNetwork();
@@ -91,33 +91,33 @@ export default function RainbowWallet() {
           ...prev,
           user: {
             ...prev.user,
-            firstName: userData.firstName ? userData.firstName : "",
-            lastName: userData.lastName ? userData.lastName : "",
+            // firstName: userData.firstName ? userData.firstName : "",
+            // lastName: userData.lastName ? userData.lastName : "",
+            // emailID: userData.emailID ? userData.emailID : "",
             walletAddress: userData.walletAddress ? userData.walletAddress : "",
             chain: userData.chain ? userData.chain : "",
-            emailID: userData.emailID ? userData.emailID : "",
             id: userData.id ? userData.id : "",
             isVerified: userData.isVerified ? "true" : "false",
           },
         };
       });
-      sessionStorage.setItem(
-        "firstName",
-        userData.firstName ? userData.firstName : ""
-      );
-      sessionStorage.setItem(
-        "lastName",
-        userData.lastName ? userData.lastName : ""
-      );
+      // sessionStorage.setItem(
+      //   "firstName",
+      //   userData.firstName ? userData.firstName : ""
+      // );
+      // sessionStorage.setItem(
+      //   "lastName",
+      //   userData.lastName ? userData.lastName : ""
+      // );
+      // sessionStorage.setItem(
+      //   "emailID",
+      //   userData.emailID ? userData.emailID : ""
+      // );
       sessionStorage.setItem(
         "walletAddress",
         userData.walletAddress ? userData.walletAddress : ""
       );
       sessionStorage.setItem("chain", userData.chain ? userData.chain : "");
-      sessionStorage.setItem(
-        "emailID",
-        userData.emailID ? userData.emailID : ""
-      );
       sessionStorage.setItem("id", userData.id ? userData.id : "");
 
       sessionStorage.setItem(
@@ -134,6 +134,7 @@ export default function RainbowWallet() {
       return {
         ...prev,
         user: {
+          // ...prev.user,
           firstName: "",
           lastName: "",
           walletAddress: "",
@@ -145,41 +146,63 @@ export default function RainbowWallet() {
     });
   }, [setStore]);
 
-  const connectMetamaskWallet = useCallback(() => {
-    try {
-      // const currentProvider = detectCurrentProvider();
-      // if (currentProvider) {
-      //   await currentProvider.request({ method: "eth_requestAccounts" });
-      //   const web3 = new Web3(currentProvider);
-      //   const userAccount = await web3.eth.getAccounts();
+  const connectMetamaskWallet = useCallback(
+    (address: string) => {
+      try {
+        if (address !== undefined && chain?.unsupported !== undefined) {
+          getUserData(address, chain?.name)
+            .then((resp: authUserType) => {
+              console.log(resp);
 
-      //   const account = userAccount[0];
-      //   await web3.eth.personal
-      //     .sign("Authentication", account, "test password")
-      //     .then((resp) => console.log(resp))
-      //     .catch((error) => console.log(error));
+              setStore((prev: any) => {
+                return {
+                  ...prev,
+                  user: {
+                    walletAddress: resp?.walletAddress
+                      ? resp?.walletAddress
+                      : "",
+                    chain: resp?.chain ? resp?.chain : "",
+                    id: resp?.id ? resp?.id : "",
+                    isVerified: resp?.isVerified,
+                  },
+                };
+              });
 
-      //   await web3.eth.getBalance(account);
-      // }
-      if (address !== undefined && chain?.unsupported !== undefined) {
-        console.log("Chain name 185", chain?.name);
+              sessionStorage.setItem(
+                "walletAddress",
+                resp?.walletAddress ? resp?.walletAddress : ""
+              );
+              sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
+              sessionStorage.setItem("id", resp?.id ? resp?.id : "");
 
-        getUserData(address, chain?.name, handleUserData)
-          .then((resp) => console.log(resp))
-          .catch((error) => console.log(error));
+              sessionStorage.setItem(
+                "isVerified",
+                resp?.isVerified ? "true" : "false"
+              );
+            })
+            .catch((error) => console.log(error));
+
+          console.log("execution");
+        }
+      } catch (err) {
+        console.log(err);
+        alert(`Something went wrong: ${err}`);
       }
-    } catch (err) {
-      console.log(err);
-      alert(`Something went wrong: ${err}`);
-    }
-  }, [address, chain?.name, chain?.unsupported, handleUserData]);
+    },
+    [chain?.name, chain?.unsupported, setStore]
+  );
 
   useEffect(() => {
-    if (address !== undefined) {
-      connectMetamaskWallet();
+    if (
+      address !== undefined &&
+      store?.user?.walletAddress === ""
+      // !store?.user?.walletAddress
+    ) {
+      console.log("line 166, useEffect");
+      connectMetamaskWallet(address);
     }
 
-    if (isDisconnected) {
+    if (isDisconnected && store?.user?.walletAddress !== "") {
       signOutWallet();
     }
   }, [
@@ -188,6 +211,7 @@ export default function RainbowWallet() {
     isDisconnected,
     connectMetamaskWallet,
     signOutWallet,
+    store?.user?.walletAddress,
   ]);
 
   return (
@@ -256,9 +280,7 @@ export default function RainbowWallet() {
                             },
                           }}
                           variant="contained"
-                          onClick={(event: any) => {
-                            openConnectModal();
-                          }}
+                          onClick={openConnectModal}
                         >
                           👤 Sign in
                         </Button>
@@ -341,7 +363,7 @@ export default function RainbowWallet() {
                         <Button
                           onClick={() => {
                             openAccountModal();
-                            signOutWallet();
+                            // signOutWallet();
                           }}
                           sx={{
                             color: "primary.main",

@@ -316,10 +316,10 @@ const SelectPaper = () => {
         });
     }
     return () => {
-      setStore((prev: ContextType) => {
+      setStore((prev: any) => {
         return {
           ...prev,
-          paperData: null,
+          paperData: {},
         };
       });
     };

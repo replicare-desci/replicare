@@ -15,6 +15,23 @@ import {
 } from "firebase/firestore";
 import { authUserType } from "../types/context.d";
 // import { formDataType } from "../types/context.d";
+/**
+ * @work existsWalletAddress is a async function which checks that a wallet address is already in the database or not.
+ * @param {any} db
+ * @param {string} walletAddress
+ * @returns {boolean}
+ */
+async function existsWalletAddress(walletAddress: string) {
+  const usersRef = collection(db, "user");
+  const q = query(usersRef, where("walletAddress", "==", walletAddress));
+  const querySnapshot = await getDocs(q);
+  console.log(querySnapshot);
+  querySnapshot.forEach(
+    (doc) => console.log(doc.data()) // doc.data() is never undefined for query doc snapshots
+  );
+
+  return !querySnapshot.empty as boolean;
+}
 
 /**
  * @work getUserData function is getting the user data from the firebase
@@ -24,85 +41,166 @@ import { authUserType } from "../types/context.d";
  */
 async function getUserData(
   walletAddress: string,
-  chain: string,
-  handleUserData: (userData: authUserType) => void
-) {
+  chain: string
+  // handleUserData: (userData: authUserType) => void
+): Promise<authUserType> {
   console.log("walletAddress", walletAddress);
 
+  let getDataReturnObj: any = {
+    walletAddress: "",
+    chain: "",
+    id: "",
+    isVerified: false,
+  };
   try {
-    let getDataReturnObj: authUserType = {
-      firstName: "",
-      lastName: "",
-      emailID: "",
-      walletAddress: "",
-      chain: "",
-      id: "",
-      isVerified: false,
-    };
+    // const docRef = collection(db, "user");
+    // if (await existsWalletAddress(walletAddress)) {
+    //   onSnapshot(docRef, (snapshots: any) => {
+    //     snapshots.docs.forEach((doc: any) => {
+    //       // console.log(doc.data());
+    //       console.log("logged in");
+
+    //       if (
+    //         doc.data().walletAddress.toLowerCase() ===
+    //         walletAddress.toLowerCase()
+    //       ) {
+    //         getDataReturnObj = {
+    //           firstName: doc.data().firstName,
+    //           lastName: doc.data().lastName,
+    //           emailID: doc.data().emailID,
+    //           walletAddress: doc.data().walletAddress,
+    //           chain: doc.data().chain,
+    //           id: doc.data().id,
+    //           isVerified: doc.data().isVerified,
+    //         };
+    //       }
+    //     });
+    //   });
+    // } else {
+    //   const walletAddressRef = collection(db, "user");
+    //   addDoc(walletAddressRef, {
+    //     walletAddress: walletAddress,
+    //     chain: chain,
+    //     isVerified: true,
+    //     createdAt: Timestamp.now(),
+    //   })
+    //     .then((docRef) => {
+    //       if (docRef.id !== null) {
+    //         onSnapshot(walletAddressRef, (snapshots: any) => {
+    //           snapshots.docs.forEach((doc: any) => {
+    //             console.log("registered");
+    //             if (
+    //               doc.data().walletAddress.toLowerCase() ===
+    //               walletAddress.toLowerCase()
+    //             ) {
+    //               getDataReturnObj = {
+    //                 firstName: doc.data().firstName,
+    //                 lastName: doc.data().lastName,
+    //                 emailID: doc.data().emailID,
+    //                 walletAddress: doc.data().walletAddress,
+    //                 chain: doc.data().chain,
+    //                 id: doc.id,
+    //                 isVerified: doc.data().isVerified,
+    //               };
+    //             }
+    //           });
+    //         });
+    //       } else {
+    //         return false;
+    //       }
+    //     })
+    //     .catch((e) => {
+    //       console.error("Error adding document: ", e);
+    //     });
+    // }
+    // handleUserData(getDataReturnObj);
+
     const docRef = collection(db, "user");
 
-    if (await existsWalletAddress(walletAddress)) {
-      onSnapshot(docRef, (snapshots: any) => {
-        snapshots.docs.forEach((doc: any) => {
-          // console.log(doc.data());
-          if (
-            doc.data().walletAddress.toLowerCase() ===
-            walletAddress.toLowerCase()
-          ) {
-            getDataReturnObj = {
-              firstName: doc.data().firstName,
-              lastName: doc.data().lastName,
-              emailID: doc.data().emailID,
-              walletAddress: doc.data().walletAddress,
-              chain: doc.data().chain,
-              id: doc.data().id,
-              isVerified: doc.data().isVerified,
-            };
-            handleUserData(getDataReturnObj);
-          }
-        });
-      });
-    } else {
-      const walletAddressRef = collection(db, "user");
-      addDoc(walletAddressRef, {
+    const userSnapshot = await getDocs(docRef);
+
+    userSnapshot.forEach((shot) => {
+      if (
+        shot &&
+        shot.id &&
+        shot.data().walletAddress.toLowerCase() === walletAddress.toLowerCase()
+      ) {
+        getDataReturnObj = {
+          walletAddress: shot.data()?.walletAddress
+            ? shot.data()?.walletAddress
+            : "",
+          chain: shot.data()?.chain ? shot.data()?.chain : "",
+          id: shot.id ? shot.id : "",
+          isVerified: shot.data()?.isVerified ? shot.data()?.isVerified : false,
+        };
+        console.log(getDataReturnObj);
+      }
+    });
+
+    /*
+
+else {
+      const addUserCollection = collection(db, "user");
+
+      const addUserSnapshot = await addDoc(addUserCollection, {
         walletAddress: walletAddress,
         chain: chain,
         isVerified: true,
         createdAt: Timestamp.now(),
-      })
-        .then((docRef) => {
-          if (docRef.id !== null) {
-            onSnapshot(walletAddressRef, (snapshots: any) => {
-              snapshots.docs.forEach((doc: any) => {
-                // console.log(doc.data());
-                if (
-                  doc.data().walletAddress.toLowerCase() ===
-                  walletAddress.toLowerCase()
-                ) {
-                  getDataReturnObj = {
-                    firstName: doc.data().firstName,
-                    lastName: doc.data().lastName,
-                    emailID: doc.data().emailID,
-                    walletAddress: doc.data().walletAddress,
-                    chain: doc.data().chain,
-                    id: doc.id,
-                    isVerified: doc.data().isVerified,
-                  };
-                  handleUserData(getDataReturnObj);
-                }
-              });
-            });
-          } else {
-            return false;
-          }
-        })
-        .catch((e) => {
-          console.error("Error adding document: ", e);
-        });
+      });
+
+      if (addUserSnapshot && addUserSnapshot.id) {
+        const newDocRef = doc(db, "userPaper", addUserSnapshot.id);
+
+        const getUserSnapshot = await getDoc(newDocRef);
+        console.log("line 149: registered in");
+
+        if (getUserSnapshot && getUserSnapshot.id) {
+          getDataReturnObj = {
+            walletAddress: userSnapshot.data()?.walletAddress
+              ? userSnapshot.data()?.walletAddress
+              : "",
+            chain: userSnapshot.data()?.chain ? userSnapshot.data()?.chain : "",
+            id: userSnapshot.id ? userSnapshot.id : "",
+            isVerified: userSnapshot.data()?.isVerified
+              ? userSnapshot.data()?.isVerified
+              : false,
+          };
+        } else {
+          console.log("no response is coming");
+        }
+      } else {
+        console.log("no data is saved");
+      }
+    }
+*/
+
+    if (!getDataReturnObj.id) {
+      const addUserCollection = collection(db, "user");
+
+      const addUserSnapshot = await addDoc(addUserCollection, {
+        walletAddress: walletAddress,
+        chain: chain,
+        isVerified: true,
+        createdAt: Timestamp.now(),
+      });
+
+      if (addUserSnapshot && addUserSnapshot.id) {
+        getDataReturnObj = {
+          walletAddress: walletAddress,
+          chain: chain,
+          id: addUserSnapshot.id,
+          isVerified: true,
+        };
+      } else {
+        console.log("no data is saved");
+      }
     }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+
+  return getDataReturnObj;
 }
 
 /**
@@ -159,19 +257,6 @@ async function existsEmail(emailID: string) {
   const q = query(usersRef, where("emailID", "==", emailID));
   const querySnapshot = await getDocs(q);
   return !querySnapshot.empty;
-}
-
-/**
- * @work existsWalletAddress is a async function which checks that a wallet address is already in the database or not.
- * @param {any} db
- * @param {string} walletAddress
- * @returns {boolean}
- */
-async function existsWalletAddress(walletAddress: string) {
-  const usersRef = collection(db, "user");
-  const q = query(usersRef, where("walletAddress", "==", walletAddress));
-  const querySnapshot = await getDocs(q);
-  return !querySnapshot.empty as boolean;
 }
 
 /**
@@ -449,7 +534,7 @@ userID => userID
     titleOfPaper:'string',
     createdOn: 'timestamp'
     paperStatus: 'string',
-    
-  
-    
+    
+  
+    
 */

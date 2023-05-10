@@ -50,7 +50,9 @@ function ViewStepThree({
             <b>3.1.3. </b>For this claim: describe the population for which the
             estimates apply.
           </Typography>
-          <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}></Box>
+          <Box p={1} boxShadow={1} py={3} mb={3} mt={1} border={1}>
+            {userPaperData?.claims?.focused_population}
+          </Box>
         </Box>
         <Box>
           <Typography>

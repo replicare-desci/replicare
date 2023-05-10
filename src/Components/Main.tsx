@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import "../styles/App.css";
 import { Box, Container, Grid, Stack, Typography, Button } from "@mui/material";
 import Search from "./Search";
-import ConnectWalletPopUp from "./ConnectWalletPopUp";
-import ConnectionWallet from "../ConnectionWallet";
 import AddIcon from "@mui/icons-material/Add";
 import RainbowWallet from "../RainbowWallet";
+
 const Main = () => {
   const walletAddress: string = sessionStorage.getItem(
     "walletAddress"
@@ -55,17 +54,13 @@ const Main = () => {
             >
               <Box display={"flex"} justifyContent={"center"}>
                 <Button variant="contained">
-                  {" "}
                   <AddIcon sx={{ fontSize: 18, mr: 1 }} /> Start a reproduction
                 </Button>
               </Box>
             </Link>
           ) : (
             <Box justifyContent={"center"} display={"flex"}>
-              {/* <ConnectWalletPopUp /> */}
               <RainbowWallet />
-
-              {/* <Box>To start</Box> */}
             </Box>
           )}
         </Grid>

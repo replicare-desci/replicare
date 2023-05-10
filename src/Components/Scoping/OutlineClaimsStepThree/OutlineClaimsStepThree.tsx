@@ -13,21 +13,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { UserContext } from "../../../context/ContextProvider";
 import React, { useState } from "react";
 import TableData from "./TableData";
-import { claims, paperData } from "../../../types";
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-  claimState: claims;
-  setClaimState: any;
-}
-const OutlineClaimsStepThree = ({
-  scopingData,
-  setScopingData,
-  claimState,
-  setClaimState,
-}: props) => {
+
+const OutlineClaimsStepThree = () => {
+  const { store, setStore } = UserContext();
   const [isClaims, setClaims] = useState(2);
 
   // handle change
@@ -50,19 +41,25 @@ const OutlineClaimsStepThree = ({
     //   });
     // }
 
-    setClaimState((prevState: claims) => {
-      console.log("claimsatte", claimState);
-
+    setStore((prevState: any) => {
       return {
         ...prevState,
 
-        [name]: value,
+        paperData: {
+          ...prevState?.paperData,
+          claims: {
+            ...prevState?.paperData?.claims,
+            [name]: value,
+          },
+        },
       };
+      // return {
+      //   ...prevState,
+
+      //   [name]: value,
+      // };
     });
   };
-
-  console.log("Line 47:", scopingData?.claims);
-  console.log("Line 48:", claimState);
 
   return (
     <Container sx={{ my: 4 }}>
@@ -125,7 +122,9 @@ const OutlineClaimsStepThree = ({
                   id="claimSummary"
                   required
                   value={
-                    claimState?.claimSummary ? claimState?.claimSummary : ""
+                    store?.paperData?.claims?.claimSummary
+                      ? store?.paperData?.claims?.claimSummary
+                      : ""
                   }
                   type="text"
                   onChange={OutlineClaimsChangeHandler}
@@ -144,8 +143,8 @@ const OutlineClaimsStepThree = ({
                   label="Short title of the claim"
                   onChange={OutlineClaimsChangeHandler}
                   value={
-                    claimState?.short_description
-                      ? claimState?.short_description
+                    store?.paperData?.claims?.short_description
+                      ? store?.paperData?.claims?.short_description
                       : ""
                   }
                   sx={{ my: 1 }}
@@ -163,8 +162,8 @@ const OutlineClaimsStepThree = ({
                   onChange={OutlineClaimsChangeHandler}
                   name="focused_population"
                   value={
-                    claimState?.focused_population
-                      ? claimState?.focused_population
+                    store?.paperData?.claims?.focused_population
+                      ? store?.paperData?.claims?.focused_population
                       : ""
                   }
                   sx={{ my: 1 }}
@@ -181,8 +180,9 @@ const OutlineClaimsStepThree = ({
                   id="identified_preferred_specification"
                   onChange={OutlineClaimsChangeHandler}
                   value={
-                    claimState?.identified_preferred_specification
-                      ? claimState?.identified_preferred_specification
+                    store?.paperData?.claims?.identified_preferred_specification
+                      ? store?.paperData?.claims
+                          ?.identified_preferred_specification
                       : ""
                   }
                 >
@@ -249,11 +249,21 @@ const OutlineClaimsStepThree = ({
                     name="econometric_categorization_confidence"
                     id="econometric_categorization_confidence"
                     // FIXME: not working
-                    defaultValue={
-                      claimState?.econometric_categorization_confidence
-                        ? claimState?.econometric_categorization_confidence
+                    value={
+                      store?.paperData?.claims
+                        ?.econometric_categorization_confidence
+                        ? store?.paperData?.claims
+                            ?.econometric_categorization_confidence
                         : 3
                     }
+                    // defaultValue={econometric_categorization_confidence}
+                    // defaultValue={
+                    //   store?.paperData?.claims
+                    //     ?.econometric_categorization_confidence
+                    //     ? store?.paperData?.claims
+                    //         ?.econometric_categorization_confidence
+                    //     : 3
+                    // }
                     onChange={() => OutlineClaimsChangeHandler}
                     valueLabelDisplay="on"
                     step={1}

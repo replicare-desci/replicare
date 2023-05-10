@@ -3,9 +3,9 @@ import { paperData } from "../types";
 
 export type authUserType = {
   id: string;
-  firstName: string;
-  lastName: string;
-  emailID: string;
+  // firstName?: string;
+  // lastName: string;
+  // emailID: string;
   walletAddress: string;
   chain: string;
   isVerified: boolean;
@@ -21,7 +21,7 @@ export type ContextType = {
     chain: string;
     isVerified: boolean;
   };
-  paperData: paperData | null;
+  paperData: paperData;
 };
 export interface ContextInterface {
   store: ContextType;

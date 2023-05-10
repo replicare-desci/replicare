@@ -6,26 +6,28 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { paperData, revised_reproduction_packages } from "../../types";
+import { UserContext } from "../../context/ContextProvider";
 import React from "react";
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-}
-const DeclareRobustnessChecksStepFour = ({
-  scopingData,
-  setScopingData,
-}: props) => {
+
+const DeclareRobustnessChecksStepFour = () => {
+  const { store, setStore } = UserContext();
+
   const DeclareRobustnessChecksHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
 
-    setScopingData((prev: any) => ({
+    setStore((prev: any) => ({
       ...prev,
-      [name]: value,
+      paperData: {
+        ...prev.paperData,
+        [name]: value,
+      },
+      // {
+      //   ...prev,
+      //   [name]: value,
+      // }
     }));
-    console.log(scopingData);
   };
   return (
     <Container sx={{ my: 4 }}>
@@ -44,6 +46,7 @@ const DeclareRobustnessChecksStepFour = ({
           sx={{ my: 1 }}
           required
           onChange={DeclareRobustnessChecksHandler}
+          value={store?.paperData?.possible_robustness_checks}
           name="possible_robustness_checks"
           multiline
           rows={5}
@@ -52,7 +55,7 @@ const DeclareRobustnessChecksStepFour = ({
         />
       </FormControl>
       {/* TODO: need to do this  */}
-      {/* <Button variant="contained">Save and move to assessment stage</Button> */}
+      <Button variant="contained">Save and move to assessment stage</Button>
     </Container>
   );
 };
