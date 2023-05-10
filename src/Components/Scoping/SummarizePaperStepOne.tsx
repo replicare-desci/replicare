@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { UserContext } from "../../context/ContextProvider";
 import {
   Typography,
   Grid,
@@ -13,15 +14,12 @@ import {
   Box,
   Stepper,
 } from "@mui/material";
-import { paperData } from "../../types";
 
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-}
-
-const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
+const SummarizePaperStepOne = () => {
+  const { store, setStore } = UserContext();
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
+  const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
+
   // const inputRef = React.useRef<HTMLInputElement>();
   // handle change
   const summerizePaperChangeHandler = (
@@ -29,10 +27,15 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
   ) => {
     const { name, value } = event.target;
 
-    setScopingData((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setStore((prev: any) => {
+      return {
+        ...prev,
+        paperData: {
+          ...prev.paperData,
+          [name]: value,
+        },
+      };
+    });
   };
 
   return (
@@ -42,7 +45,6 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
       </Typography>
       <Grid container component="form" noValidate>
         <List component="ol">
-          {" "}
           <ListItem component="li">
             <FormControl>
               <FormLabel sx={{ my: 1 }}>
@@ -59,7 +61,12 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 fullWidth
                 required
                 name="project_nickname"
-                // id=""
+                value={
+                  store?.paperData?.project_nickname
+                    ? store?.paperData?.project_nickname
+                    : ""
+                }
+                id="project_nickname"
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -73,12 +80,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               <TextField
                 type="date"
                 variant="standard"
-                // inputRef={inputRef}
-                // onClick={() => {
-                //   inputRef.current.showPicker();
-                // }}
+                id="start_date"
                 name="start_date"
-                // id=""
+                value={
+                  store?.paperData?.start_date
+                    ? store?.paperData?.start_date
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -94,7 +102,10 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 type="date"
                 variant="standard"
                 name="end_date"
-                // id=""
+                id="end_date"
+                value={
+                  store?.paperData?.end_date ? store?.paperData?.end_date : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -109,7 +120,12 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 type="number"
                 variant="standard"
                 name="expected_total_hours"
-                // id=""
+                id="expected_total_hours"
+                value={
+                  store?.paperData?.expected_total_hours
+                    ? store?.paperData?.expected_total_hours
+                    : 0
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -120,9 +136,14 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.5</b> How would you rate your familiarity with this paper?
               </FormLabel>
               <RadioGroup
-                // defaultValue=""
                 onChange={summerizePaperChangeHandler}
                 name="familiarity_level"
+                id="familiarity_level"
+                value={
+                  store?.paperData?.familiarity_level
+                    ? store?.paperData?.familiarity_level
+                    : ""
+                }
               >
                 <FormControlLabel
                   value="I have never read the paper, nor attempted to reproduce any of the analyses."
@@ -153,15 +174,26 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 type={"number"}
                 required
                 name="num_tables_body"
+                id="num_tables_body"
                 label="# of tables included in the main body"
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                value={
+                  store?.paperData?.outputs?.num_tables_body
+                    ? store?.paperData?.outputs?.num_tables_body
+                    : 0
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 variant="standard"
                 sx={{ py: 2 }}
@@ -170,32 +202,54 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 fullWidth
                 required
                 type={"number"}
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 name="num_figures_body"
+                id="num_figures_body"
                 label="# of figures included in the main body"
                 variant="standard"
+                value={
+                  store?.paperData?.outputs?.num_figures_body
+                    ? store?.paperData?.outputs?.num_figures_body
+                    : 0
+                }
                 sx={{ py: 2 }}
               />
               <TextField
                 fullWidth
                 name="num_inline_results_body"
+                id="num_inline_results_body"
                 type={"number"}
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                value={
+                  store?.paperData?.outputs?.num_inline_results_body
+                    ? store?.paperData?.outputs?.num_inline_results_body
+                    : 0
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 required
                 label="# of inline results are included in the main body"
@@ -214,16 +268,27 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 fullWidth
                 required
                 name="num_tables_appendix"
+                id="num_tables_appendix"
                 label="# of tables included in appendix"
                 variant="standard"
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                value={
+                  store?.paperData?.outputs?.num_tables_appendix
+                    ? store?.paperData?.outputs?.num_tables_appendix
+                    : ""
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 sx={{ py: 2 }}
               />
@@ -231,16 +296,27 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 fullWidth
                 required
                 name="num_figures_appendix"
+                id="num_figures_appendix"
                 label="# of figures included in appendix"
                 variant="standard"
-                onChange={(e) =>
-                  setScopingData((prev: any) => ({
-                    ...prev,
-                    outputs: {
-                      ...prev.outputs,
-                      [e.target.name]: e.target.value,
-                    },
-                  }))
+                value={
+                  store?.paperData?.outputs?.num_figures_appendix
+                    ? store?.paperData?.outputs?.num_figures_appendix
+                    : ""
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStore((prev: any) => {
+                    return {
+                      ...prev,
+                      paperData: {
+                        ...prev.paperData,
+                        outputs: {
+                          ...prev.paperData.outputs,
+                          [e.target.name]: e.target.value,
+                        },
+                      },
+                    };
+                  })
                 }
                 sx={{ py: 2 }}
               />
@@ -261,7 +337,12 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 variant="standard"
                 sx={{ py: 2 }}
                 name="whole_population"
-                // id=""
+                id="whole_population"
+                value={
+                  store?.paperData?.whole_population
+                    ? store?.paperData?.whole_population
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -280,7 +361,12 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 variant="outlined"
                 sx={{ py: 2 }}
                 name="additional_population"
-                id=""
+                id="additional_population"
+                value={
+                  store?.paperData?.additional_population
+                    ? store?.paperData?.additional_population
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               />
             </FormControl>
@@ -316,10 +402,13 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 required
                 variant="standard"
                 name="num_claims"
+                id="num_claims"
                 type="number"
-                // defaultValue={1}
-                value={scopingData?.num_claims ? scopingData?.num_claims : 1}
-                // id=""
+                value={
+                  store?.paperData?.num_claims
+                    ? store?.paperData?.num_claims
+                    : 1
+                }
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   if (
                     parseInt(event.target.value) < 5 &&
@@ -340,15 +429,20 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 or something else?
               </FormLabel>
               <RadioGroup
-                // defaultValue=""
-                // onChange={formDataHandler}
                 name="claim_type_other_description"
-                // id=""
+                id="claim_type_other_description"
+                value={
+                  store?.paperData?.claim_type_other_description
+                    ? store?.paperData?.claim_type_other_description
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               >
                 <FormControlLabel
                   value="This paper estimates the effect of X on Y for population P, using method M. Example: This paper investigates the impact of bicycle provision (X) on secondary school enrollment (Y) among young women in Bihar/India (P), using a Difference in Difference approach (M)."
-                  control={<Radio />}
+                  control={
+                    <Radio onChange={() => otherTypeSetChecked(false)} />
+                  }
                   label={
                     <Box>
                       <Typography
@@ -371,7 +465,9 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <FormControlLabel
                   value="This paper estimates the value of Y (estimated or predicted) for population P under conditions X (optional) using method M. Example: Drawing on a unique Swiss data set (P) and exploiting systematic anomalies in countries portfolio investment positions (M), I find that around 8% of the global financial wealth of households is held in tax havens (Y) 
                     "
-                  control={<Radio />}
+                  control={
+                    <Radio onChange={() => otherTypeSetChecked(false)} />
+                  }
                   label={
                     <Box>
                       <Typography
@@ -386,27 +482,42 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                         predicted) for population P under conditions X
                         (optional) using method M. Example: "Drawing on a unique
                         Swiss data set (P) and exploiting systematic anomalies
-                        in countries’ portfolio investment positions (M), I find
+                        in countries' portfolio investment positions (M), I find
                         that around 8% of the global financial wealth of
                         households is held in tax havens (Y) "
                       </Typography>
                     </Box>
                   }
                 />{" "}
-                {/* TODO: This field is not working
+                {/* TODO: This field is not working if clicking both then its working otherwise not
                  */}
                 <FormControlLabel
                   sx={{ my: 1 }}
-                  value={claimTypeOther}
-                  control={<Radio />}
-                  label={
-                    <TextField
-                      fullWidth
-                      // name="claim_type_other_description"
-                      onChange={(e) => setClaimTypeOther(e.target.value)}
-                      label="Other"
-                      variant="outlined"
+                  value={claimTypeOther ? claimTypeOther : ""}
+                  control={
+                    <Radio
+                      checked={otherTypeChecked}
+                      onChange={() => otherTypeSetChecked(true)}
                     />
+                  }
+                  label={
+                    otherTypeChecked ? (
+                      <TextField
+                        fullWidth
+                        name="claim_type_other_description"
+                        // value={
+                        //   scopingData?.claim_type_other_description
+                        //     ? scopingData?.claim_type_other_description
+                        //     : ""
+                        // }
+
+                        onChange={(e) => setClaimTypeOther(e.target.value)}
+                        label="Other"
+                        variant="outlined"
+                      />
+                    ) : (
+                      "Others"
+                    )
                   }
                 />{" "}
               </RadioGroup>
@@ -418,16 +529,17 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
                 <b>1.12</b> Do you plan to investigate the entire paper?
               </FormLabel>
               <RadioGroup
-                // defaultValue=""
-                name="will_access_whole_paper"
+                name="will_assess_whole_paper"
+                id="will_assess_whole_paper"
+                value={
+                  store?.paperData?.will_assess_whole_paper
+                    ? store?.paperData?.will_assess_whole_paper
+                    : ""
+                }
                 onChange={summerizePaperChangeHandler}
               >
                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label="No"
-                />{" "}
+                <FormControlLabel value="No" control={<Radio />} label="No" />
               </RadioGroup>
             </FormControl>
           </ListItem>{" "}
@@ -483,7 +595,7 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               </ListItem>{" "}
               <ListItem component="li">
                 <Typography sx={{ display: "list-item" }}>
-                  What is the author’s preferred specification (or yours, if the
+                  What is the author's preferred specification (or yours, if the
                   authors are not clear)?
                 </Typography>
               </ListItem>{" "}
@@ -518,6 +630,8 @@ const SummarizePaperStepOne = ({ scopingData, setScopingData }: props) => {
               sx={{ my: 1 }}
               label="Summary"
               name="summary"
+              id="summary"
+              value={store?.paperData?.summary ? store?.paperData?.summary : ""}
               onChange={summerizePaperChangeHandler}
               type={"text"}
               variant="outlined"

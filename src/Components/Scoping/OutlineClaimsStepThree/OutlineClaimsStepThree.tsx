@@ -13,54 +13,56 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { UserContext } from "../../../context/ContextProvider";
 import React, { useState } from "react";
 import TableData from "./TableData";
-import { paperData } from "../../../types";
-interface props {
-  scopingData: paperData;
-  setScopingData: any;
-}
-const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
-  const [isClaims, setClaims] = useState(2);
 
-  const setTotalClaims = () => {
-    setClaims(2);
-  };
-  const [claim, setClaim] = React.useState("");
+const OutlineClaimsStepThree = () => {
+  const { store, setStore } = UserContext();
+  const [isClaims, setClaims] = useState(2);
 
   // handle change
   const OutlineClaimsChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = event.target;
+    console.log(name, value);
 
-    if (
-      scopingData &&
-      scopingData !== null &&
-      scopingData?.claims !== undefined
-    ) {
-      console.log(scopingData && scopingData?.claims);
-      setScopingData((prev: paperData) => ({
-        ...prev,
-        claims: {
-          ...prev.claims,
-          [name]: value,
+    // if (scopingData && scopingData?.claims !== undefined) {
+    //   console.log(scopingData && scopingData?.claims);
+    //   setScopingData((prev: paperData) => {
+    //     return {
+    //       ...prev,
+    //       claims: {
+    //         ...prev.claims,
+    //         [name]: value,
+    //       },
+    //     };
+    //   });
+    // }
+
+    setStore((prevState: any) => {
+      return {
+        ...prevState,
+
+        paperData: {
+          ...prevState?.paperData,
+          claims: {
+            ...prevState?.paperData?.claims,
+            [name]: value,
+          },
         },
-      }));
-    }
+      };
+      // return {
+      //   ...prevState,
+
+      //   [name]: value,
+      // };
+    });
   };
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   // setClaim(event.target.value);
-  //   // setScopingData({
-  //   //   ...scopingData,
-  //   //   [event.target.name]: event.target.value,
-  //   // });
-  //   // console.log(event.target.name, "+", event.target.value);
-  // };
 
   return (
     <Container sx={{ my: 4 }}>
-      {/* <Button onClick={setTotalClaims}>claims2</Button> */}
       <Typography variant="h6">Outline claims</Typography>
       <Box my={1}>
         <Typography>
@@ -88,13 +90,11 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
               <Select
                 labelId="claim-select-dropdown"
                 id="claim-select-dropdown"
-                // name="claim"
-                // type="text"
-                // value={claim}
                 label="Claims"
+                value={1}
                 // onChange={OutlineClaimsChangeHandler}
               >
-                <MenuItem value={10}>Claim 1:</MenuItem>
+                <MenuItem value={1}>Claim 1:</MenuItem>
                 {/* <MenuItem value={20}>Claim 2:</MenuItem> */}
                 {/* <MenuItem value={30}>Claim 3:</MenuItem> */}
               </Select>
@@ -122,7 +122,9 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   id="claimSummary"
                   required
                   value={
-                    scopingData?.claims && scopingData?.claims?.claimSummary
+                    store?.paperData?.claims?.claimSummary
+                      ? store?.paperData?.claims?.claimSummary
+                      : ""
                   }
                   type="text"
                   onChange={OutlineClaimsChangeHandler}
@@ -141,8 +143,9 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   label="Short title of the claim"
                   onChange={OutlineClaimsChangeHandler}
                   value={
-                    scopingData?.claims &&
-                    scopingData?.claims?.short_description
+                    store?.paperData?.claims?.short_description
+                      ? store?.paperData?.claims?.short_description
+                      : ""
                   }
                   sx={{ my: 1 }}
                 />
@@ -159,8 +162,9 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   onChange={OutlineClaimsChangeHandler}
                   name="focused_population"
                   value={
-                    scopingData?.claims &&
-                    scopingData?.claims?.focused_population
+                    store?.paperData?.claims?.focused_population
+                      ? store?.paperData?.claims?.focused_population
+                      : ""
                   }
                   sx={{ my: 1 }}
                 />
@@ -176,8 +180,9 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   id="identified_preferred_specification"
                   onChange={OutlineClaimsChangeHandler}
                   value={
-                    scopingData?.claims?.identified_preferred_specification
-                      ? scopingData?.claims?.identified_preferred_specification
+                    store?.paperData?.claims?.identified_preferred_specification
+                      ? store?.paperData?.claims
+                          ?.identified_preferred_specification
                       : ""
                   }
                 >
@@ -185,8 +190,8 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                     value="yes"
                     control={<Radio />}
                     label="Yes"
-                  />{" "}
-                  <FormControlLabel value="No" control={<Radio />} label="No" />{" "}
+                  />
+                  <FormControlLabel value="No" control={<Radio />} label="No" />
                   <FormControlLabel
                     value="I'm not sure"
                     control={<Radio />}
@@ -241,20 +246,32 @@ const OutlineClaimsStepThree = ({ scopingData, setScopingData }: props) => {
                   <Typography>Low Confidence</Typography>
                   <Slider
                     aria-label="Confidence level"
-                    defaultValue={3}
                     name="econometric_categorization_confidence"
+                    id="econometric_categorization_confidence"
+                    // FIXME: not working
+                    value={
+                      store?.paperData?.claims
+                        ?.econometric_categorization_confidence
+                        ? store?.paperData?.claims
+                            ?.econometric_categorization_confidence
+                        : 3
+                    }
+                    // defaultValue={econometric_categorization_confidence}
+                    // defaultValue={
+                    //   store?.paperData?.claims
+                    //     ?.econometric_categorization_confidence
+                    //     ? store?.paperData?.claims
+                    //         ?.econometric_categorization_confidence
+                    //     : 3
+                    // }
                     onChange={() => OutlineClaimsChangeHandler}
-                    // onChange={OutlineClaimsChangeHandler}
                     valueLabelDisplay="on"
                     step={1}
-                    // value={
-                    //   scopingData?.claims?.econometric_categorization_confidence
-                    // }
                     sx={{ width: "70%", mx: 5 }}
                     marks
                     min={1}
                     max={5}
-                  />{" "}
+                  />
                   <Typography>High Confidence</Typography>
                 </Box>
               </FormControl>

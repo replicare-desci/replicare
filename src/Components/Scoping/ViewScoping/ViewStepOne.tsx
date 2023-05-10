@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Typography, Grid, List, Box, Stepper, Button } from "@mui/material";
+import React from "react";
+import { Typography, Grid, List, Box, Stepper } from "@mui/material";
 
 import { paperData } from "../../../types/index.d";
 
@@ -263,9 +263,9 @@ const ViewStepOne = ({
                 <b>1.12</b> Do you plan to investigate the entire paper?
               </Typography>
               <Box p={1} boxShadow={1} py={2} border={1}>
-                {userPaperData?.num_claims_will_assess ? (
+                {userPaperData?.will_assess_whole_paper ? (
                   <Typography variant="body1" sx={{ mb: 1 }}>
-                    {userPaperData?.num_claims_will_assess}
+                    {userPaperData?.will_assess_whole_paper}
                   </Typography>
                 ) : (
                   <Typography variant="body1" sx={{ mb: 1 }}>

@@ -23,7 +23,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function App() {
   const { store } = UserContext();
-  console.log(store);
+  console.log("store", store);
   // useBeforeUnload((event: BeforeUnloadEvent) => sessionStorage.clear());
   return (
     <BrowserRouter>

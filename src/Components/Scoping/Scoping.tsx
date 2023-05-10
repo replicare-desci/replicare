@@ -1,117 +1,134 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import SummarizePaperStepOne from "./SummarizePaperStepOne";
-// import {
-//   DeclareRobustnessChecks,
-//   AddRevisedReproductionPackage,
-//   SummarizePaper,
-// } from "../../types/context.d";
-import SaveIcon from "@mui/icons-material/Save";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-// import { paperData } from "../../types/index.d";
+import { UserContext } from "../../context/ContextProvider";
+import SummarizePaperStepOne from "./SummarizePaperStepOne";
+
+import SaveIcon from "@mui/icons-material/Save";
 
 import Stepper from "./Stepper";
 import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPackagesStepTwo";
 import OutlineClaimsStepThree from "./OutlineClaimsStepThree/OutlineClaimsStepThree";
 import DeclareRobustnessChecksStepFour from "./DeclareRobustnessChecksStepFour";
-import { appendUserPaperData } from "../../firebase/firebaseFunctions";
+import {
+  appendUserPaperData,
+  getSelectUserPaperData,
+} from "../../firebase/firebaseFunctions";
 import { toast } from "react-toastify";
+import { claims, paperData } from "../../types/index.d";
+import { ContextType } from "../../types/context";
 
 const Scoping = () => {
-  const { userPaperID } = useParams();
+  const { store, setStore } = UserContext();
+  const { userPaperID, pageType } = useParams();
   const userID: string = sessionStorage.getItem("id") as string;
-  // const [scopingDataStep1, setScopingDataStep1] = useState<SummarizePaper>();
-  // const [scopingDataStep2, setScopingDataStep2] =
-  // useState<AddRevisedReproductionPackage>();
-  // const [scopingDataStep4, setScopingDataStep4] =
-  // useState<DeclareRobustnessChecks>();
-  //TODO: const [scopingDataStep3, setScopingDataStep3] =
-  // useState<>();
-  // const [oneTen, setOneTen] = useState<number>(-1);
-  // const [oneTwelve, setOneTwelve] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
 
   // global state for scoping
-  const [scopingData, setScopingData] = useState({
-    // step 1 data start
-    userID: userID,
-    id: userPaperID as string,
-    project_nickname: "",
-    revised_reproduction_packages: [],
-    start_date: "",
-    end_date: "",
-    expected_total_hours: 1,
-    familiarity_level: "",
-    outputs: {
-      num_tables_body: 0,
-      num_figures_body: 0,
-      num_inline_results_body: 0,
-      num_tables_appendix: "",
-      num_figures_appendix: "",
-    },
-    whole_population: "",
-    additional_population: "",
-    num_claims: 1,
-    claim_type_other_description: "",
-    will_access_whole_paper: false, //wil investigate
-    num_claims_will_assess: "",
-    summary: "",
+  // const [scopingData, setScopingData] = useState<paperData>({
+  //   // step 1 data start
+  //   userID: userID,
+  //   paper_type: "",
+  //   workflow_stage: "",
+  //   id: userPaperID as string,
+  //   project_nickname: "",
+  //   revised_reproduction_packages: [],
+  //   start_date: "",
+  //   end_date: "",
+  //   expected_total_hours: 1,
+  //   familiarity_level: "",
+  //   outputs: {
+  //     num_tables_body: 0,
+  //     num_figures_body: 0,
+  //     num_inline_results_body: 0,
+  //     num_tables_appendix: "",
+  //     num_figures_appendix: "",
+  //   },
+  //   whole_population: "",
+  //   additional_population: "",
+  //   num_claims: 1,
+  //   claim_type_other_description: "",
+  //   will_assess_whole_paper: "", //wil investigate
+  //   num_claims_will_assess: "",
+  //   summary: "",
+  //   // step 4:
+  //   possible_robustness_checks: "",
+  //   // step 3 :
+  //   claims: null,
+  // });
+  // step 3:
+  // const [claimState, setClaimState] = useState<claims>({
+  //   claimSummary: "",
+  //   econometric_categorization_confidence: 0,
+  //   focused_population: "",
+  //   identified_preferred_specification: "",
+  //   short_description: "",
+  //   estimates: {
+  //     column: "",
+  //     confidence_interval: "",
+  //     econometric_method: "",
+  //     estimate: "",
+  //     inline_paragraph: "",
+  //     name: "",
+  //     other_statistic: "",
+  //     p_value: "",
+  //     page: "",
+  //     row: "",
+  //     standard_error: "",
+  //     units: "",
+  //     specify_method: "",
+  //   },
+  // });
 
-    // step 1 data end
+  function scopeStepRender(activeStep: number) {
+    switch (activeStep) {
+      case 0:
+        return <SummarizePaperStepOne />;
+      case 1:
+        return <AddRevisedReproductionPackagesStepTwo />;
+      case 2:
+        return <OutlineClaimsStepThree />;
+      case 3:
+        return <DeclareRobustnessChecksStepFour />;
+    }
+  }
 
-    // step 2 data start
-    // revised_reproduction_packages: {
-    //   id: 1,
-    //   stage: "",
-    //   content_type: "",
-    //   name: "",
-    //   url: "",
-    // },
-
-    // step 2 data end
-
-    // step 3 data start
-    claims: {
-      claimSummary: "",
-      econometric_categorization_confidence: "",
-      estimates: {
-        column: "",
-        confidence_interval: "",
-        econometric_method: "",
-        estimate: "",
-        // id: 1,
-        inline_paragraph: "",
-        name: "",
-        other_econometric_method: "",
-        other_statistic: "",
-        p_value: "",
-        page: "",
-        row: "",
-        standard_error: "",
-        units: "",
-      },
-      focused_population: "",
-      identified_preferred_specification: "",
-      short_description: "",
-    },
-    econometric_categorization_confidence: "",
-    // step 3 data end
-
-    // step 4 data starts
-    possible_robustness_checks: "",
-  });
-
+  useEffect(() => {
+    if (userPaperID !== undefined && pageType !== undefined) {
+      getSelectUserPaperData(userPaperID)
+        .then((paperResponse: paperData) => {
+          if (paperResponse !== undefined) {
+            setStore((prev: ContextType) => {
+              return {
+                ...prev,
+                paperData: { ...paperResponse },
+              };
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("something is wrong about this code");
+        });
+    }
+    return () => {
+      setStore((prev: any) => {
+        return {
+          ...prev,
+          paperData: {},
+        };
+      });
+    };
+  }, [userPaperID, pageType, setStore]);
+  // This function saves everything
   function saveScopingData() {
     if (
-      typeof userPaperID != "undefined" &&
       userID !== undefined &&
-      userPaperID !== undefined
+      userPaperID !== undefined &&
+      userID !== "" &&
+      userPaperID !== ""
     ) {
-      console.log(scopingData);
-
-      console.log(userPaperID);
-
-      appendUserPaperData(userPaperID, scopingData)
+      appendUserPaperData(userPaperID, store?.paperData)
         .then(() => {
           console.log("data saved");
           toast.success("Data Saved successfully");
@@ -119,42 +136,11 @@ const Scoping = () => {
         .catch((err) => {
           console.log("error saving data", err);
         });
+    } else {
+      toast.error("something is wrong about this code..");
     }
   }
-  function scopeStepRender(activeStep: number) {
-    switch (activeStep) {
-      case 0:
-        return (
-          <SummarizePaperStepOne
-            scopingData={scopingData}
-            setScopingData={setScopingData}
-          />
-        );
-      case 1:
-        return (
-          <AddRevisedReproductionPackagesStepTwo
-            scopingData={scopingData}
-            setScopingData={setScopingData}
-          />
-        );
-      case 2:
-        return (
-          <OutlineClaimsStepThree
-            scopingData={scopingData}
-            setScopingData={setScopingData}
-          />
-        );
-      case 3:
-        return (
-          <DeclareRobustnessChecksStepFour
-            scopingData={scopingData}
-            setScopingData={setScopingData}
-          />
-        );
-      // default:
-      //   return <Typography>This component does not exists</Typography>;
-    }
-  }
+
   return (
     <>
       <Container>
