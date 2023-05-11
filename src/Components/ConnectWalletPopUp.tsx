@@ -14,8 +14,6 @@ import {
   DialogContentText,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link } from "react-router-dom";
-// import { saveUserWalletAddress } from "../firebase/firebaseFunctions";
 
 export default function ConnectWalletPopUp() {
   const { store, setStore } = UserContext();

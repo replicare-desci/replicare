@@ -63,21 +63,7 @@ const Footer = () => {
                 </Typography>
               </Link>
             </Box>
-            {/* <Box>
-              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    color: "primary.light",
-                    ":hover": {
-                      color: "background.paper",
-                    },
-                  }}
-                >
-                  Privacy Policy
-                </Typography>
-              </Link>
-            </Box> */}
+
             <Box>
               <Link
                 to="https://docs.replicare.dev/"
@@ -98,21 +84,6 @@ const Footer = () => {
             </Box>
           </Grid>
           <Grid item xs={6} xl={3} sm={3} md={3}>
-            {/* <Box>
-              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    color: "primary.light",
-                    ":hover": {
-                      color: "background.paper",
-                    },
-                  }}
-                >
-                  Terms of use
-                </Typography>
-              </Link>
-            </Box> */}
             <Box>
               <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
                 <Typography
@@ -150,21 +121,6 @@ const Footer = () => {
           </Grid>
 
           <Grid item xs={6} xl={3} sm={3} md={3}>
-            {/* <Box>
-              <Link to="/" style={{ textDecoration: "none", color: "#222629" }}>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    color: "primary.light",
-                    ":hover": {
-                      color: "background.paper",
-                    },
-                  }}
-                >
-                  Team
-                </Typography>
-              </Link>
-            </Box> */}
             <Box>
               <Box>
                 <Link

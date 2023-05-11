@@ -20,7 +20,6 @@ const SummarizePaperStepOne = () => {
   const [claimTypeOther, setClaimTypeOther] = useState<string>("");
   const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
 
-  // const inputRef = React.useRef<HTMLInputElement>();
   // handle change
   const summerizePaperChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>

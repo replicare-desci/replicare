@@ -106,21 +106,6 @@ export default function Sidebar() {
             Documentation
           </Typography>
         </Link>{" "}
-        {/* <Typography
-          className="hover-underline-animation"
-          variant="h4"
-          component={"p"}
-        >
-          Forum
-        </Typography>
-
-        <Typography
-          className="hover-underline-animation"
-          variant="h4"
-          component={"p"}
-        >
-          Metrics
-        </Typography> */}
         <Divider />{" "}
         <Link
           to="https://twitter.com/replicare_desci"
@@ -151,47 +136,6 @@ export default function Sidebar() {
             />
           </Box>
         </Link>{" "}
-        {/* <ListItem sx={{ padding: 0, marginY: 1 }}>
-          <Link to="/update" style={{ textDecoration: "none" }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "primary.main",
-                color: "primary.light",
-
-                // borderRadius: 0,
-                fontSize: 18,
-
-                ":hover": {
-                  backgroundColor: "background.dark",
-                  color: "primary.light",
-                  // fontSize: 18.1,
-                },
-              }}
-            >
-              Sign Up
-            </Button>
-          </Link>
-        </ListItem> */}
-        {/* <ListItem sx={{ padding: 0, margin: 0 }}>
-          <Link to={"/sign-in"} style={{ textDecoration: "none" }}>
-            <Button
-              sx={{
-                backgroundColor: "background.dark",
-                color: "primary.light",
-                borderRadius: 0,
-                fontSize: 18,
-                ":hover": {
-                  backgroundColor: "background.dark",
-                  color: "primary.light",
-                  fontSize: 18.1,
-                },
-              }}
-            >
-              Sign&nbsp; In
-            </Button>
-          </Link>
-        </ListItem> */}
       </List>
     </Box>
   );

@@ -2,7 +2,6 @@ import { db } from "./firebase";
 
 import {
   collection,
-  onSnapshot,
   query,
   where,
   getDocs,
@@ -475,66 +474,3 @@ export {
   appendUserPaperData,
   checkPaperExecutionState,
 };
-
-/*
-
-id => userPaperID
-userID => userID
-
-  
-  table name : user
-    firstName : "String",
-    lastName : "String", 
-    email : "string",
-    walletAddress : 'string',
-    isVerified : 'boolean',
-    
-  table name : paper
-    titleOfThePaper : "string",
-    nameOfTheJournal: "string",
-    yearOfPublication: "int",
-    authors:"string",
-    doi:"string",
-    availableReproductionPackage: "boolean",
-    availableReproductionPackageLink: "string",
-    
-   
-  table name : userPaper
-    userID: "int",
-    paperID: "int",
-    createdAt: "dateTime",
-    isReproductionPackageAvailable: "boolean",
-    isReproductionPackageVerified: "boolean",
-    authorContacted: "boolean",
-    authorInteraction : 
-        {
-          providedReproductionPackage: 'checkBox',
-          declinedToShareReproductionPackageWithReason : 'checkbox',
-          declinedToShareReproductionPackageWithoutReason : 'checkbox',
-          noLongerHasAccess: 'checkbox',
-          sharedDetailedInstructionOnHowToAccessDataButRestricted: 'checkbox',
-          didNotRespond : 'dateYear',
-          otherReason : 'textField,
-         }
-    
-     isAuthorAvailableForFurtherQuestion: 'boolean',
-     isThereAreNoReproductionPackagesAreYouWillingToBuildPackageFromScratch: 'boolean',
-  
-    
-    
-  table name : doiData
-    doi:"string",
-    titleOfThePaper : "string",
-    nameOfTheJournal: "string",
-    yearOfPublication: "int",
-    authors:"string",
-  table name : availableReproductionPackage
-   
-  table name : userWork 
-    titleOfPaper:'string',
-    createdOn: 'timestamp'
-    paperStatus: 'string',
-    
-  
-    
-*/

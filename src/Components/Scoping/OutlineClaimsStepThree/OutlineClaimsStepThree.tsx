@@ -1,14 +1,10 @@
 import {
   Box,
-  Container,
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Slider,
   TextField,
   Typography,
@@ -19,7 +15,6 @@ import TableData from "./TableData";
 
 const OutlineClaimsStepThree = () => {
   const { store, setStore } = UserContext();
-  // const [isClaims, setClaims] = useState(2);
 
   // handle change
   const OutlineClaimsChangeHandler = (
@@ -27,19 +22,6 @@ const OutlineClaimsStepThree = () => {
   ) => {
     const { name, value } = event.target;
     console.log(name, value);
-
-    // if (scopingData && scopingData?.claims !== undefined) {
-    //   console.log(scopingData && scopingData?.claims);
-    //   setScopingData((prev: paperData) => {
-    //     return {
-    //       ...prev,
-    //       claims: {
-    //         ...prev.claims,
-    //         [name]: value,
-    //       },
-    //     };
-    //   });
-    // }
 
     setStore((prevState: any) => {
       return {
@@ -53,11 +35,6 @@ const OutlineClaimsStepThree = () => {
           },
         },
       };
-      // return {
-      //   ...prevState,
-
-      //   [name]: value,
-      // };
     });
   };
 
@@ -216,13 +193,7 @@ const OutlineClaimsStepThree = () => {
               name="econometric_categorization_confidence"
               id="econometric_categorization_confidence"
               // FIXME: not working
-              // value={
-              //   store?.paperData?.claims
-              //     ?.econometric_categorization_confidence
-              //     ? store?.paperData?.claims
-              //         ?.econometric_categorization_confidence
-              //     : 3
-              // }
+
               defaultValue={
                 store?.paperData?.claims?.econometric_categorization_confidence
                   ? store?.paperData?.claims
@@ -230,7 +201,6 @@ const OutlineClaimsStepThree = () => {
                   : 3
               }
               onClick={() => OutlineClaimsChangeHandler}
-              // onChangeCommitted={() => OutlineClaimsChangeHandler}
               valueLabelDisplay="on"
               step={1}
               sx={{ width: "70%", mx: 5 }}

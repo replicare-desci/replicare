@@ -65,9 +65,6 @@ const SelectPaper = () => {
       label:
         "Shared detailed instructions on how to access the data (for restricted access only).",
     },
-    // {
-    //   label: "Did not respond. As of:",
-    // },
   ];
   const [doiString, setDoiString] = useState<string>(); // filling to the state
   const [getDoi, setDoi] = useState<boolean>(false);

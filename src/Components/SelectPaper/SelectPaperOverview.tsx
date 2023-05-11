@@ -17,32 +17,7 @@ import { checkPaperExecutionState } from "../../firebase/firebaseFunctions";
 const SelectPaperOverview = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
-  // const handleNext = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  // };
-
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
-
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
   const { pageType, userPaperID } = useParams();
-
-  // const [activeStep, setActiveStep] = React.useState(0);
-
-  // const handleNext = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  // };
-
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
-
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
 
   const [paperExecutionState, setPaperExecutionState] = useState("");
 
@@ -75,7 +50,6 @@ const SelectPaperOverview = () => {
 
   return (
     <div>
-      {/* <div>SelectPaperOverview</div> */}
       <Container sx={{ py: 12 }}>
         <Typography variant="h5" component="h1" mb={3} fontWeight={500}>
           Create a reproduction attempt

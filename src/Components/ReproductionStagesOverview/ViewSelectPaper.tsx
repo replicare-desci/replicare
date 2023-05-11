@@ -223,27 +223,6 @@ const ViewSelectPaper = () => {
               </ul>
             </Box>
           </Grid>{" "}
-          {/* <Grid item xl={12} xs={12} my={2}>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 600 }}
-              component={"h6"}
-            >
-              1.5 Are the authors available for further questions for ACRe
-              reproductions?
-            </Typography>
-            <Box
-              p={1}
-              py={2}
-              boxShadow={1}
-              border={1}
-              //   sx={{ backgroundColor: "#222629" }}
-            >
-              {userPaperData?.authorAvailableForFurtherQuestion
-                ? userPaperData?.authorAvailableForFurtherQuestion
-                : "N/A"}
-            </Box>
-          </Grid>{" "} */}
           <Grid item xl={12} xs={12} my={2}>
             <Typography
               variant="subtitle1"
@@ -253,13 +232,7 @@ const ViewSelectPaper = () => {
               1.5 If there are no reproduction packages, are you willing to
               build a reproduction package from scratch?
             </Typography>
-            <Box
-              p={1}
-              py={2}
-              boxShadow={1}
-              border={1}
-              //   sx={{ backgroundColor: "#222629" }}
-            >
+            <Box p={1} py={2} boxShadow={1} border={1}>
               {userPaperData?.reproduction_package_from_scratch
                 ? userPaperData?.reproduction_package_from_scratch
                 : "N/A"}

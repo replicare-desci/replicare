@@ -1,6 +1,5 @@
 import {
   TextField,
-  Button,
   FormControl,
   FormLabel,
   FormHelperText,
@@ -21,15 +20,6 @@ function AdditionalInfo({
   setOriginalPackages,
 }: Props): JSX.Element {
   const { store, setStore } = UserContext();
-  const addIntoSystem = () => {
-    // setOriginalPackages((prevState: original_reproduction_packages[]) => [
-    //   ...prevState,
-    //   {
-    //     name: "",
-    //     url: "",
-    //   },
-    // ]);
-  };
 
   function fillIntoDefaultFields(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -73,62 +63,6 @@ function AdditionalInfo({
 
   return (
     <>
-      {/* {formData.original_reproduction_packages.length > 1 &&
-        formData.original_reproduction_packages.map(
-          (item: any, index: number) => {
-            return (
-              <div key={index}>
-                <Box py={2} boxShadow={1} my={1} px={3} mx={2}>
-                  <FormHelperText>
-                    Contents of reproduction package
-                  </FormHelperText>
-                  <div>
-                    {" "}
-                    <TextField
-                      required
-                      fullWidth
-                      variant="standard"
-                      name="name"
-                      type={"text"}
-                      defaultValue={item.name}
-                      placeholder="e.g. Main code repository with data"
-                      onChange={(event: any) => {
-                        if (event.target.value.length > 0) {
-                          setOriginalPackage({
-                            ...originalPackage,
-                            name: event.target.value,
-                          });
-                        }
-                      }}
-                    ></TextField>
-                  </div>
-                  <div>
-                    {" "}
-                    <TextField
-                      required
-                      type={"text"}
-                      fullWidth
-                      variant="standard"
-                      name="url"
-                      defaultValue={item.url}
-                      placeholder="e.g. https://github.com/paper/paper"
-                      onChange={(event: any) => {
-                        // required validation
-                        if (event.target.value.length > 0) {
-                          setOriginalPackage({
-                            ...originalPackage,
-                            url: event.target.value,
-                          });
-                        }
-                      }}
-                    ></TextField>
-                  </div>
-                </Box>
-              </div>
-            );
-          }
-        )} */}
-
       <FormControl
         sx={{
           p: 2,
@@ -173,13 +107,6 @@ function AdditionalInfo({
           placeholder="e.g. https://github.com/paper/paper"
           onChange={fillIntoDefaultFields}
         />
-        {/* <FormLabel>
-          Are there additional data in different repositories? Use the button
-          below to add links to these as well.
-        </FormLabel>{" "}
-        <Button variant="contained" onClick={addIntoSystem}>
-          + Add additional reproduction packages for data
-        </Button> */}
       </FormControl>
     </>
   );
