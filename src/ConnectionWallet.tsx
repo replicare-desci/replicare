@@ -134,33 +134,6 @@ function ConnectionWallet(): JSX.Element {
     }
   }
 
-  //Does the User have an Ethereum wallet/account?
-  // async function connectMetamaskWallet(): Promise<void> {
-  //   //to get around type checking
-  //   (window as any).ethereum
-  //     .request({
-  //       method: "eth_requestAccounts",
-  //     })
-  //     .then((accounts: string[]) => {
-  //       setEthereumAccount(accounts[0]);
-
-  //       // const getUserDataVar = getUserData(accounts[0]);
-  //       // getUserDataVar.then((value) => {
-  //       //   if (value === null) {
-  //       //     console.log("User does not exist");
-  //       //   } else {
-  //       //     console.log("User exists", value);
-  //       //   }
-  //       // });
-
-  //       // getuser data
-  //     })
-
-  //     .catch((error: any) => {
-  //       alert(`Something went wrong: ${error}`);
-  //     });
-  // }
-
   return (
     <div>
       {ethereumAccount !== null &&

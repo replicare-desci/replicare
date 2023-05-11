@@ -96,7 +96,7 @@ export type paperData = {
   reproduction_package_from_scratch?: string;
   outputs?: outputs;
   original_reproduction_packages?: original_reproduction_packages[];
-  revised_reproduction_packages?: revised_reproduction_packages[];
+  revised_reproduction_packages?: revised_reproduction_packages;
   project_nickname?: string;
   will_assess_whole_paper?: string;
 };

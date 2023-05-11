@@ -26,7 +26,9 @@ const ViewStepFour = ({
         like to conduct as part of this project.
       </Box>
       <Box p={4} m={1} border={1} boxShadow={1} mb={4}>
-        {userPaperData?.possible_robustness_checks}
+        {userPaperData?.possible_robustness_checks
+          ? userPaperData?.possible_robustness_checks
+          : "N/A"}
       </Box>
     </Box>
   );

@@ -33,7 +33,7 @@ const ViewStepTwo = ({
       </Typography>
       {/* <FormHelperText>Contents of reproduction package</FormHelperText> */}
       <Box p={1} boxShadow={1} py={3} my={3} border={1}>
-        {typeof userPaperData !== "undefined" &&
+        {/* {typeof userPaperData !== "undefined" &&
         userPaperData?.revised_reproduction_packages &&
         userPaperData?.revised_reproduction_packages.length > 0 ? (
           userPaperData?.revised_reproduction_packages.map(
@@ -53,7 +53,22 @@ const ViewStepTwo = ({
           )
         ) : (
           <Typography sx={{ fontWeight: 500 }}>N/A</Typography>
-        )}
+        )} */}
+        <>
+          {" "}
+          <Typography sx={{ fontWeight: 500 }}>
+            Package Name :{" "}
+            {userPaperData?.revised_reproduction_packages?.name
+              ? userPaperData?.revised_reproduction_packages?.name
+              : "N/A"}
+          </Typography>
+          <Typography sx={{ fontWeight: 500 }}>
+            Package URL :{" "}
+            {userPaperData?.revised_reproduction_packages?.url
+              ? userPaperData?.revised_reproduction_packages?.url
+              : "N/A"}
+          </Typography>
+        </>
       </Box>
       {/* <Typography>
       Are there additional data in different repositories? Use the button

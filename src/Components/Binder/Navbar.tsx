@@ -1,9 +1,7 @@
 import Sidebar from "../Sidebar";
-// import ConnectionWallet from "../ConnectionWallet";
+
 import { Link } from "react-router-dom";
-import ConnectWalletPopUp from "../ConnectWalletPopUp";
 import { AppBar, Box, Button, Toolbar } from "@mui/material";
-import ArticleIcon from "@mui/icons-material/Article";
 import logo from "../../assets/images/logo.png";
 import RainbowWallet from "../../RainbowWallet";
 
@@ -12,7 +10,6 @@ const Navbar = () => {
     <div>
       <AppBar position="relative" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
-          {/* <Button sx={{ color: "#ffffff" }}>Signup</Button> */}{" "}
           <Link to="/">
             <Box
               component="img"
@@ -23,7 +20,7 @@ const Navbar = () => {
               src={logo}
             />
           </Link>
-          {/* <ConnectionWallet /> */}
+
           <Box
             display={"flex"}
             justifyContent={"flex-end"}
@@ -37,20 +34,10 @@ const Navbar = () => {
               {" "}
               <Button
                 sx={{
-                  // color: "primary.main",
-                  // backgroundColor: "background.default",
-
-                  // mx: 2,
-                  // ":hover": {
-                  //   backgroundColor: "background.paper",
-
-                  //   color: "primary.light",
-                  // },
-
                   color: "primary.main",
                   marginX: 1,
                   backgroundColor: "background.default",
-                  // paddingX: 3,
+
                   textTransform: "unset",
                   fontSize: 15,
                   fontWeight: "800",
@@ -69,7 +56,6 @@ const Navbar = () => {
                 Docs
               </Button>
             </Link>
-            {/* <ConnectWalletPopUp /> */}
             <RainbowWallet />
 
             <Sidebar />

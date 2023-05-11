@@ -70,14 +70,13 @@ const defaultState: ContextInterface = {
       // scoping summarize paper data step1 end
 
       // scoping data step 2 start
-      revised_reproduction_packages: [
-        {
-          content_type: "code",
-          name: "",
-          stage: "revised",
-          url: "",
-        },
-      ],
+      revised_reproduction_packages: {
+        content_type: "code",
+        name: "",
+        stage: "revised",
+        url: "",
+      },
+
       // scoping data step 2 end
 
       // scoping data step 3 start
@@ -192,14 +191,12 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
       // scoping summarize paper data step1 end
 
       // scoping data step 2 start
-      revised_reproduction_packages: [
-        {
-          content_type: "code",
-          name: "",
-          stage: "revised",
-          url: "",
-        },
-      ],
+      revised_reproduction_packages: {
+        content_type: "code",
+        name: "",
+        stage: "revised",
+        url: "",
+      },
       // scoping data step 2 end
 
       // scoping data step 3 start
