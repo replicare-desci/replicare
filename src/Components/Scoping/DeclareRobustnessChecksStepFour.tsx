@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   FormControl,
   FormLabel,
   TextField,
@@ -24,10 +23,6 @@ const DeclareRobustnessChecksStepFour = () => {
         ...prev.paperData,
         [name]: value,
       },
-      // {
-      //   ...prev,
-      //   [name]: value,
-      // }
     }));
   };
   return (

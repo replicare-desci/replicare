@@ -13,7 +13,6 @@ import {
   Radio,
   Box,
   Stepper,
-  Container,
 } from "@mui/material";
 
 const SummarizePaperStepOne = () => {
@@ -38,6 +37,7 @@ const SummarizePaperStepOne = () => {
       };
     });
   };
+  console.log(store.paperData);
 
   return (
     <>
@@ -499,12 +499,6 @@ const SummarizePaperStepOne = () => {
                         <TextField
                           fullWidth
                           name="claim_type_other_description"
-                          // value={
-                          //   scopingData?.claim_type_other_description
-                          //     ? scopingData?.claim_type_other_description
-                          //     : ""
-                          // }
-
                           onChange={(e) => setClaimTypeOther(e.target.value)}
                           label="Other"
                           variant="outlined"
