@@ -227,6 +227,8 @@ export default function RainbowWallet() {
     connectMetamaskWallet,
     signOutWallet,
     store?.user?.walletAddress,
+    setStore,
+    signInWithEthereum,
   ]);
 
   return (
