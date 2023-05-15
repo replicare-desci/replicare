@@ -5,7 +5,7 @@ import {
   connectorsForWallets,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
-
+import { providers } from "ethers";
 import {
   metaMaskWallet,
   rainbowWallet,
@@ -34,6 +34,8 @@ import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
 import { authUserType } from "./types/context.d";
+
+import { SiweMessage } from "siwe";
 
 const { chains, provider } = configureChains(
   [optimism, polygon],
@@ -75,58 +77,64 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
+const domain = window.location.host;
+const origin = window.location.origin;
 
 export default function RainbowWallet() {
+  const provider = new providers.Web3Provider(window.ethereum as any);
+
+  async function createSiweMessage(address: string, statement: string) {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
+      // credentials: "include",
+      method: "get",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      },
+    });
+    const message = new SiweMessage({
+      domain,
+      address,
+      statement,
+      uri: origin,
+      version: "1",
+      chainId: 10,
+      nonce: await res.text(),
+    });
+    return message.prepareMessage();
+  }
+  async function signInWithEthereum() {
+    const signer = await provider.getSigner();
+
+    const message = await createSiweMessage(
+      await signer.getAddress(),
+      "Sign in with Ethereum to the app."
+    );
+    const signature = await signer.signMessage(message);
+
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/verify`, {
+      method: "POST",
+
+      mode: "cors",
+
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      },
+      body: JSON.stringify({ message, signature }),
+      credentials: "include",
+    });
+    console.log(await res.text());
+  }
+
   const { store, setStore } = UserContext();
 
   const { address, isConnecting, isDisconnected } = useAccount();
+
   const { chain } = useNetwork();
-
-  const handleUserData = useCallback(
-    (userData: authUserType) => {
-      // console.log("userData", userData);
-
-      setStore((prev: any) => {
-        return {
-          ...prev,
-          user: {
-            ...prev.user,
-            // firstName: userData.firstName ? userData.firstName : "",
-            // lastName: userData.lastName ? userData.lastName : "",
-            // emailID: userData.emailID ? userData.emailID : "",
-            walletAddress: userData.walletAddress ? userData.walletAddress : "",
-            chain: userData.chain ? userData.chain : "",
-            id: userData.id ? userData.id : "",
-            isVerified: userData.isVerified ? "true" : "false",
-          },
-        };
-      });
-      // sessionStorage.setItem(
-      //   "firstName",
-      //   userData.firstName ? userData.firstName : ""
-      // );
-      // sessionStorage.setItem(
-      //   "lastName",
-      //   userData.lastName ? userData.lastName : ""
-      // );
-      // sessionStorage.setItem(
-      //   "emailID",
-      //   userData.emailID ? userData.emailID : ""
-      // );
-      sessionStorage.setItem(
-        "walletAddress",
-        userData.walletAddress ? userData.walletAddress : ""
-      );
-      sessionStorage.setItem("chain", userData.chain ? userData.chain : "");
-      sessionStorage.setItem("id", userData.id ? userData.id : "");
-
-      sessionStorage.setItem(
-        "isVerified",
-        userData.isVerified ? "true" : "false"
-      );
-    },
-    [setStore]
-  );
 
   const signOutWallet = useCallback(() => {
     sessionStorage.clear();
@@ -147,49 +155,22 @@ export default function RainbowWallet() {
   }, [setStore]);
 
   const connectMetamaskWallet = useCallback(
-    (address: string) => {
+    async (address: string) => {
       try {
         if (address !== undefined && chain?.unsupported !== undefined) {
-          getUserData(address, chain?.name)
-            .then((resp: authUserType) => {
-              console.log(resp);
-
-              setStore((prev: any) => {
-                return {
-                  ...prev,
-                  user: {
-                    walletAddress: resp?.walletAddress
-                      ? resp?.walletAddress
-                      : "",
-                    chain: resp?.chain ? resp?.chain : "",
-                    id: resp?.id ? resp?.id : "",
-                    isVerified: resp?.isVerified,
-                  },
-                };
-              });
-
-              sessionStorage.setItem(
-                "walletAddress",
-                resp?.walletAddress ? resp?.walletAddress : ""
-              );
-              sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
-              sessionStorage.setItem("id", resp?.id ? resp?.id : "");
-
-              sessionStorage.setItem(
-                "isVerified",
-                resp?.isVerified ? "true" : "false"
-              );
-            })
-            .catch((error) => console.log(error));
-
           console.log("execution");
+
+          const firebaseResponse = await getUserData(address, chain?.name);
+          if (firebaseResponse.id) {
+            return firebaseResponse;
+          }
         }
       } catch (err) {
         console.log(err);
         alert(`Something went wrong: ${err}`);
       }
     },
-    [chain?.name, chain?.unsupported, setStore]
+    [chain?.name, chain?.unsupported]
   );
 
   useEffect(() => {
@@ -199,7 +180,41 @@ export default function RainbowWallet() {
       // !store?.user?.walletAddress
     ) {
       console.log("line 166, useEffect");
-      connectMetamaskWallet(address);
+      connectMetamaskWallet(address).then((resp) => {
+        console.log("firebase: ", resp);
+
+        if (resp?.walletAddress) {
+          signInWithEthereum();
+        }
+
+        setStore((prev: any) => {
+          return {
+            ...prev,
+            user: {
+              walletAddress: resp?.walletAddress ? resp?.walletAddress : "",
+              chain: resp?.chain ? resp?.chain : "",
+              id: resp?.id ? resp?.id : "",
+              isVerified: resp?.isVerified,
+            },
+          };
+        });
+
+        sessionStorage.setItem(
+          "walletAddress",
+          resp?.walletAddress ? resp?.walletAddress : ""
+        );
+        sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
+        sessionStorage.setItem("id", resp?.id ? resp?.id : "");
+
+        sessionStorage.setItem(
+          "isVerified",
+          resp?.isVerified ? "true" : "false"
+        );
+      });
+
+      if (isConnecting) {
+        alert("connected");
+      }
     }
 
     if (isDisconnected && store?.user?.walletAddress !== "") {
@@ -228,6 +243,14 @@ export default function RainbowWallet() {
         })}
       >
         <div>
+          {/* <div>
+            <button disabled={isLoading} onClick={() => signMessage()}>
+              Sign message
+            </button>
+            {isSuccess && <div>Signature: {data}</div>}
+            {isError && <div>Error signing message</div>}
+          </div> */}
+
           <ConnectButton.Custom>
             {({
               account,
