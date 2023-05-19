@@ -27,15 +27,15 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { UserContext } from "./context/ContextProvider";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
-import { authUserType } from "./types/context.d";
+// import { SiweMessage } from "siwe";
 
-import { SiweMessage } from "siwe";
+// import { Buffer } from "buffer"; // Import the Buffer object
 
 const { chains, provider } = configureChains(
   [optimism, polygon],
@@ -77,64 +77,92 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
-const domain = window.location.host;
-const origin = window.location.origin;
 
 export default function RainbowWallet() {
   const provider = new providers.Web3Provider(window.ethereum as any);
 
-  async function createSiweMessage(address: string, statement: string) {
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
-      // credentials: "include",
-      method: "get",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      },
-    });
-    const message = new SiweMessage({
-      domain,
-      address,
-      statement,
-      uri: origin,
-      version: "1",
-      chainId: 10,
-      nonce: await res.text(),
-    });
-    return message.prepareMessage();
-  }
-  async function signInWithEthereum() {
-    const signer = await provider.getSigner();
-
-    const message = await createSiweMessage(
-      await signer.getAddress(),
-      "Sign in with Ethereum to the app."
-    );
-    const signature = await signer.signMessage(message);
-
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/verify`, {
-      method: "POST",
-
-      mode: "cors",
-
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      },
-      body: JSON.stringify({ message, signature }),
-      credentials: "include",
-    });
-    console.log(await res.text());
-  }
-
   const { store, setStore } = UserContext();
-
   const { address, isConnecting, isDisconnected } = useAccount();
-
   const { chain } = useNetwork();
+
+  const [authState, setAuthState] = useState<boolean>(false);
+
+  // async function createSiweMessage(wallAddress: string, statement: string) {
+  //   try {
+  //     let message;
+  //     const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Access-Control-Allow-Origin": "*",
+  //       },
+  //     });
+
+  //     const newResponse: { status: boolean; data: string } = await res.json();
+  //   } catch (error: any) {
+  //     if (error) {
+  //       console.log(error.message);
+  //       alert("SIWE: " + error.message);
+  //     }
+  //   }
+
+  //   return null;
+  // }
+
+  const signInWithEthereum = useCallback(async () => {
+    try {
+      const signer = provider.getSigner();
+
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
+        body: JSON.stringify({
+          walletAddress: await signer.getAddress(),
+          statement:
+            "You are signing up your account with replicare, This will not trigger any transactions",
+          domain: process.env.REACT_APP_FRONTEND_DOMAIN,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      const resJson: { status: boolean; data: string } = await res.json();
+
+      // const inputMessage = await createSiweMessage(
+      //   await signer.getAddress(),
+      //   "Sign in with Ethereum to the app."
+      // );
+
+      if (resJson?.status && resJson?.data !== null) {
+        const signature = await signer.signMessage(resJson?.data);
+        console.log("message signature hash: ", signature);
+
+        const verifyRes = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/verify`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ message: resJson?.data, signature }),
+            // credentials: "include",
+          }
+        );
+
+        const newVerifyRes = await verifyRes.json();
+
+        if (newVerifyRes) {
+          return newVerifyRes;
+        }
+      }
+    } catch (error: any) {
+      if (error) {
+        console.log(error);
+        alert("ETH: " + error.message);
+      }
+    }
+  }, [provider]);
 
   const signOutWallet = useCallback(() => {
     sessionStorage.clear();
@@ -142,7 +170,6 @@ export default function RainbowWallet() {
       return {
         ...prev,
         user: {
-          // ...prev.user,
           firstName: "",
           lastName: "",
           walletAddress: "",
@@ -162,6 +189,7 @@ export default function RainbowWallet() {
 
           const firebaseResponse = await getUserData(address, chain?.name);
           if (firebaseResponse.id) {
+            setAuthState(true);
             return firebaseResponse;
           }
         }
@@ -177,39 +205,45 @@ export default function RainbowWallet() {
     if (
       address !== undefined &&
       store?.user?.walletAddress === ""
-      // !store?.user?.walletAddress
+      // authState
     ) {
       console.log("line 166, useEffect");
-      connectMetamaskWallet(address).then((resp) => {
+      connectMetamaskWallet(address).then((resp: any) => {
         console.log("firebase: ", resp);
 
         if (resp?.walletAddress) {
-          signInWithEthereum();
+          signInWithEthereum()
+            .then((resEth) => {
+              console.log(resEth);
+
+              setStore((prev: any) => {
+                return {
+                  ...prev,
+                  user: {
+                    walletAddress: resp?.walletAddress
+                      ? resp?.walletAddress
+                      : "",
+                    chain: resp?.chain ? resp?.chain : "",
+                    id: resp?.id ? resp?.id : "",
+                    isVerified: resp?.isVerified,
+                  },
+                };
+              });
+
+              sessionStorage.setItem(
+                "walletAddress",
+                resp?.walletAddress ? resp?.walletAddress : ""
+              );
+              sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
+              sessionStorage.setItem("id", resp?.id ? resp?.id : "");
+
+              sessionStorage.setItem(
+                "isVerified",
+                resp?.isVerified ? "true" : "false"
+              );
+            })
+            .catch((err) => console.log(err));
         }
-
-        setStore((prev: any) => {
-          return {
-            ...prev,
-            user: {
-              walletAddress: resp?.walletAddress ? resp?.walletAddress : "",
-              chain: resp?.chain ? resp?.chain : "",
-              id: resp?.id ? resp?.id : "",
-              isVerified: resp?.isVerified,
-            },
-          };
-        });
-
-        sessionStorage.setItem(
-          "walletAddress",
-          resp?.walletAddress ? resp?.walletAddress : ""
-        );
-        sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
-        sessionStorage.setItem("id", resp?.id ? resp?.id : "");
-
-        sessionStorage.setItem(
-          "isVerified",
-          resp?.isVerified ? "true" : "false"
-        );
       });
 
       if (isConnecting) {
@@ -229,6 +263,7 @@ export default function RainbowWallet() {
     store?.user?.walletAddress,
     setStore,
     signInWithEthereum,
+    authState,
   ]);
 
   return (
