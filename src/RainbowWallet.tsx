@@ -32,6 +32,7 @@ import { UserContext } from "./context/ContextProvider";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 // import { SiweMessage } from "siwe";
 
@@ -118,7 +119,7 @@ export default function RainbowWallet() {
           walletAddress: await signer.getAddress(),
           statement:
             "You are signing up your account with replicare, This will not trigger any transactions",
-          domain: process.env.REACT_APP_FRONTEND_DOMAIN,
+          domain: process.env.REACT_APP_FRONTEND_URL,
         }),
         method: "POST",
         headers: {
@@ -158,8 +159,9 @@ export default function RainbowWallet() {
       }
     } catch (error: any) {
       if (error) {
-        console.log(error);
-        alert("ETH: " + error.message);
+        console.log(error.message);
+        // alert("ETH: " + error.message);
+        toast.error("User rejected signing");
       }
     }
   }, [provider]);
