@@ -114,59 +114,56 @@ export default function RainbowWallet() {
   const signInWithEthereum = useCallback(async () => {
     try {
       const signer = provider.getSigner();
+      if ((await signer.getAddress()).length === 42) {
+        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
+          body: JSON.stringify({
+            walletAddress: await signer.getAddress(),
+            statement:
+              "You are signing up your account with replicare, This will not trigger any transactions",
+            domain: process.env.REACT_APP_FRONTEND_URL,
+          }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+        const resJson: { status: boolean; data: string } = await res.json();
 
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
-        body: JSON.stringify({
-          walletAddress: await signer.getAddress(),
-          statement:
-            "You are signing up your account with replicare, This will not trigger any transactions",
-          domain: process.env.REACT_APP_FRONTEND_URL,
-        }),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-      const resJson: { status: boolean; data: string } = await res.json();
+        if (resJson?.status && resJson?.data !== null) {
+          const signature: string = await signer.signMessage(resJson?.data);
+          console.log("message signature hash: ", signature);
+          if (signature.length > 0) {
+            const verifyRes = await fetch(
+              `${process.env.REACT_APP_BACKEND_URL}/verify`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                },
+                body: JSON.stringify({ message: resJson?.data, signature }),
+                // credentials: "include",
+              }
+            );
 
-      // const inputMessage = await createSiweMessage(
-      //   await signer.getAddress(),
-      //   "Sign in with Ethereum to the app."
-      // );
+            const newVerifyRes: {
+              status: boolean;
+              data: string;
+            } = await verifyRes.json();
 
-      if (resJson?.status && resJson?.data !== null) {
-        const signature = await signer.signMessage(resJson?.data);
-        console.log("message signature hash: ", signature);
-
-        const verifyRes = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/verify`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-            body: JSON.stringify({ message: resJson?.data, signature }),
-            // credentials: "include",
+            if (newVerifyRes.status) {
+              return newVerifyRes;
+            }
           }
-        );
-
-        const newVerifyRes = await verifyRes.json();
-
-        if (newVerifyRes) {
-          return newVerifyRes;
         }
       }
     } catch (error: any) {
-      if (error) {
-        // Clear session storage if sign-in is rejected
-        sessionStorage.clear();
-
-        // alert("ETH: " + error.message);
-        toast.error("User rejected signing");
-      }
+      toast.error("User rejected signing");
     }
+    // return {
+    //   status: false,
+    // };
   }, [provider]);
 
   const signOutWallet = useCallback(() => {
