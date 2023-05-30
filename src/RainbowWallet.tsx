@@ -27,7 +27,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useMemo } from "react";
 import { UserContext } from "./context/ContextProvider";
 import { getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
@@ -46,31 +46,28 @@ const { chains, provider } = configureChains(
   ]
 );
 
-const connectors = connectorsForWallets([
-  {
-    groupName: "Popular",
-    wallets: [
-      metaMaskWallet({ chains }),
-      coinbaseWallet({ appName: "Replicare", chains }),
-      rainbowWallet({
-        projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
-        chains,
-      }),
-      zerionWallet({ chains }),
+const popularWallets = [
+  metaMaskWallet({ chains }),
+  coinbaseWallet({ appName: "Replicare", chains }),
+  rainbowWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
+    chains,
+  }),
+  zerionWallet({ chains }),
+  trustWallet({ chains }),
+];
 
-      trustWallet({ chains }),
-    ],
-  },
-  {
-    groupName: "Others",
-    wallets: [
-      walletConnectWallet({
-        projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
-        chains,
-      }),
-      ledgerWallet({ chains }),
-    ],
-  },
+const otherWallets = [
+  walletConnectWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
+    chains,
+  }),
+  ledgerWallet({ chains }),
+];
+
+const connectors = connectorsForWallets([
+  { groupName: "Popular", wallets: popularWallets },
+  { groupName: "Others", wallets: otherWallets },
 ]);
 
 const wagmiClient = createClient({
@@ -80,10 +77,14 @@ const wagmiClient = createClient({
 });
 
 export default function RainbowWallet() {
-  const provider = new providers.Web3Provider(window.ethereum as any);
+  const provider = useMemo(
+    () => new providers.Web3Provider(window.ethereum as any),
+    []
+  );
 
   const { store, setStore } = UserContext();
   const { address, isConnecting, isDisconnected } = useAccount();
+  // const { data: ensName } = useEnsName({ address });
   const { chain } = useNetwork();
 
   const [authState, setAuthState] = useState<boolean>(false);
@@ -159,7 +160,9 @@ export default function RainbowWallet() {
       }
     } catch (error: any) {
       if (error) {
-        console.log(error.message);
+        // Clear session storage if sign-in is rejected
+        sessionStorage.clear();
+
         // alert("ETH: " + error.message);
         toast.error("User rejected signing");
       }
@@ -258,14 +261,13 @@ export default function RainbowWallet() {
     }
   }, [
     address,
+    connectMetamaskWallet,
     isConnecting,
     isDisconnected,
-    connectMetamaskWallet,
-    signOutWallet,
-    store?.user?.walletAddress,
     setStore,
     signInWithEthereum,
-    authState,
+    signOutWallet,
+    store?.user?.walletAddress,
   ]);
 
   return (

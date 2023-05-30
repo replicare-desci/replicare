@@ -15,14 +15,16 @@ const ViewSelectPaper = () => {
   const [userPaperData, setUserPaperData] = useState<paperData>();
   const { userPaperID } = useParams();
   useEffect(() => {
-    getSelectUserPaperData(userPaperID as string)
-      .then((data) => {
-        setUserPaperData(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (userPaperID) {
+      getSelectUserPaperData(userPaperID)
+        .then((data) => {
+          setUserPaperData(data);
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, [userPaperID]);
   return (
     <div>

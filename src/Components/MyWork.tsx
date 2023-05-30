@@ -16,7 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { paperData } from "../types/index.d";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import React from "react";
 import dayjs from "dayjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -51,18 +51,22 @@ const MyWork = () => {
     setOpen(false);
   };
 
-  const handleUserPaperData = (userPaperData: any) => {
+  const handleUserPaperData = useCallback((userPaperData: any) => {
     console.log(userPaperData);
-  };
-
+  }, []);
   useEffect(() => {
-    getUserPaperData(userID, handleUserPaperData)
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        const res = await getUserPaperData(userID, handleUserPaperData);
         console.log("my work user data", res);
         setData(res);
-      })
-      .catch((err) => console.log("error", err));
-  }, [userID]);
+      } catch (err) {
+        console.log("error", err);
+      }
+    };
+
+    fetchData();
+  }, [userID, handleUserPaperData]);
 
   return (
     <>

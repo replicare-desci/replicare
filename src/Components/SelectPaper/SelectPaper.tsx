@@ -35,7 +35,7 @@ type checkBoxOption = {
   label: string;
 };
 
-const userID: string = sessionStorage.getItem("id") as string;
+const userID: string = sessionStorage.getItem("id") ?? "";
 
 const SelectPaper = () => {
   const { store, setStore } = UserContext();
@@ -86,45 +86,33 @@ const SelectPaper = () => {
   const formDataHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    setStore((prev: any) => {
-      return {
-        ...prev,
-        paperData: {
-          ...prev.paperData,
-          [name]: value,
-        },
-      };
-    });
+    setStore((prev: any) => ({
+      ...prev,
+      paperData: {
+        ...prev.paperData,
+        [name]: value,
+      },
+    }));
   };
+
   //
-  const submitSelectPaperData = (event: React.FormEvent<HTMLFormElement>) => {
-    // send form data to fireStore database on button click
+  const submitSelectPaperData = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-    setStore((prev: any) => {
-      return {
-        ...prev,
-        paperData: {
-          ...prev.paperData,
-          userID: userID,
-          id: userPaperID,
-        },
-      };
-    });
+
     if (
       store?.paperData?.original_reproduction_packages &&
       store?.paperData?.original_reproduction_packages.length > 0
     ) {
-      console.log("execute");
-
       if (userPaperID !== undefined && pageType !== undefined) {
-        appendUserPaperData(userPaperID, store?.paperData)
-          .then(() => {
-            toast.success("Data Save successfully");
-          })
-          .catch((err) => {
-            console.log("err", err);
-            toast.error("Error submitting data");
-          });
+        try {
+          await appendUserPaperData(userPaperID, store?.paperData);
+          toast.success("Data saved successfully");
+        } catch (err: any) {
+          console.log("Error:", err.message);
+          toast.error("Error submitting data");
+        }
       } else {
         toast.error("Edit mode undefined");
       }
@@ -134,46 +122,38 @@ const SelectPaper = () => {
   };
 
   // This function will fetch the DOI data from the DOI API
-  function submitHandler(event: any) {
+  async function submitHandler(event: any) {
     event.preventDefault();
 
-    if (
-      typeof doiString !== "undefined" &&
-      doiString !== null &&
-      doiString.length > 0
-    ) {
-      fetchDoi(doiString)
-        .then(function (response: any) {
-          setError(false);
-          const newResponse = camelizeKeys(response);
+    if (doiString && doiString.length > 0) {
+      try {
+        const response = await fetchDoi(doiString);
+        setError(false);
 
-          setStore((prev: any) => {
-            return {
-              ...prev,
-              paperData: {
-                ...prev.paperData,
-                paper: {
-                  publication_year: newResponse.message?.created?.dateTime,
-                  publication_name: newResponse.message?.publisher,
-                  title: newResponse.message?.title[0],
-                  journal_name: newResponse.message?.shortContainerTitle[0],
-                  author: `${newResponse.message?.author
-                    .map((author: any) => `${author?.given} ${author?.family}`)
-                    .join(", ")}`,
+        const newResponse = camelizeKeys(response);
 
-                  doi: newResponse.message?.doi,
-                },
-              },
-            };
-          });
+        setStore((prev: any) => ({
+          ...prev,
+          paperData: {
+            ...prev.paperData,
+            paper: {
+              publication_year: newResponse.message?.created?.dateTime,
+              publication_name: newResponse.message?.publisher,
+              title: newResponse.message?.title[0],
+              journal_name: newResponse.message?.shortContainerTitle[0],
+              author: newResponse.message?.author
+                .map((author: any) => `${author?.given} ${author?.family}`)
+                .join(", "),
+              doi: newResponse.message?.doi,
+            },
+          },
+        }));
 
-          setDoi(true);
-        })
-
-        .catch(function (error: any) {
-          setError(true);
-          console.log("fetchDoi error", error);
-        });
+        setDoi(true);
+      } catch (error) {
+        setError(true);
+        console.log("fetchDoi error", error);
+      }
     } else {
       setError(true);
     }
@@ -297,28 +277,24 @@ const SelectPaper = () => {
       getSelectUserPaperData(userPaperID)
         .then((paperResponse: paperData) => {
           if (paperResponse !== undefined) {
-            setStore((prev: ContextType) => {
-              return {
-                ...prev,
-                paperData: paperResponse,
-              };
-            });
+            setStore((prev: ContextType) => ({
+              ...prev,
+              paperData: paperResponse,
+            }));
             setDoi(true);
           }
         })
         .catch((err) => {
           console.log(err);
-          toast.error("something is wrong about this code");
+          toast.error("Something is wrong with this code");
           setDoi(false);
         });
     }
     return () => {
-      setStore((prev: any) => {
-        return {
-          ...prev,
-          paperData: {},
-        };
-      });
+      setStore((prev: any) => ({
+        ...prev,
+        paperData: {},
+      }));
     };
   }, [userPaperID, pageType, setStore]);
   return (

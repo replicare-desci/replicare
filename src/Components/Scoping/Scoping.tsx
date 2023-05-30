@@ -21,7 +21,8 @@ import { ContextType } from "../../types/context";
 const Scoping = () => {
   const { store, setStore } = UserContext();
   const { userPaperID } = useParams();
-  const userID: string = sessionStorage.getItem("id") as string;
+  const userID = sessionStorage.getItem("id") || "";
+
   const [activeStep, setActiveStep] = useState<number>(0);
 
   function scopeStepRender(activeStep: number) {
@@ -52,7 +53,7 @@ const Scoping = () => {
         })
         .catch((err) => {
           console.log(err);
-          toast.error("something is wrong about this code");
+          toast.error("Something went wrong with this code");
         });
     }
   }, [userPaperID, setStore]);

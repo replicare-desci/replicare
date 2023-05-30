@@ -11,19 +11,22 @@ const Reproductions = () => {
 
   // const userID = sessionStorage.getItem("id") as string; // we can also fetch userId from session/local storage if stored.
 
-  const userID: string = store?.user?.id;
+  const userID: string = store?.user?.id ?? "";
 
   async function newReproductionHandler() {
-    const reproductionResponse: any = await createDefaultUserPaperData(userID);
+    try {
+      const reproductionResponse = await createDefaultUserPaperData(userID);
 
-    if (
-      reproductionResponse.success &&
-      reproductionResponse.userPaperID !== ""
-    ) {
-      console.log("reproduction created successfully");
-      navigate(`/reproductions/new/${reproductionResponse.userPaperID}`);
-    } else {
-      alert("some thing wrong");
+      if (reproductionResponse.success) {
+        console.log("reproduction created successfully");
+        navigate(`/reproductions/new/${reproductionResponse.userPaperID}`);
+      } else {
+        alert("something went wrong");
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: Reproductions.tsx ~ line 78 ~ newReproductionHandler ~ error"
+      );
     }
   }
   return (

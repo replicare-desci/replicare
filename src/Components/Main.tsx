@@ -6,6 +6,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RainbowWallet from "../RainbowWallet";
 
 const Main = () => {
+  const userID: string = sessionStorage.getItem("id") ?? "";
+
   const walletAddress: string = sessionStorage.getItem(
     "walletAddress"
   ) as string;
@@ -42,7 +44,7 @@ const Main = () => {
           <Search />
         </Grid>
         <Grid item xs={8} justifyContent={"center"}>
-          {walletAddress ? (
+          {walletAddress && userID ? (
             <Link
               to="/reproductions"
               style={{
@@ -60,7 +62,16 @@ const Main = () => {
             </Link>
           ) : (
             <Box justifyContent={"center"} display={"flex"}>
-              <RainbowWallet />
+              {/* <RainbowWallet /> */}
+
+              <Button
+                variant="contained"
+                sx={{
+                  textTransform: "unset",
+                }}
+              >
+                Sign in to start using
+              </Button>
             </Box>
           )}
         </Grid>
