@@ -138,7 +138,7 @@ export default function Sidebar() {
           </Box>
         </Link>{" "} */}
         <Link
-          to="https://explorer.gitcoin.co/#/round/1/0x6e8dc2e623204d61b0e59e668702654ae336c9f7/0x6e8dc2e623204d61b0e59e668702654ae336c9f7-4"
+          to="https://github.com/replicare-desci/replicare"
           style={{ textDecoration: "none" }}
           target={"_blank"}
         >
