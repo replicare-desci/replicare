@@ -11,8 +11,9 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
-import gitcoinLogo from "../assets/images/gitcoin.png";
+// import gitcoinLogo from "../assets/images/gitcoin.png";
 import twitterLogo from "../assets/images/twitter.png";
+import githubLogo from "../assets/images/Github-Logo-PNG-Photo.png";
 type Anchor = "right";
 
 export default function Sidebar() {
@@ -121,7 +122,7 @@ export default function Sidebar() {
             />
           </Box>
         </Link>{" "}
-        <Link
+        {/* <Link
           to="https://explorer.gitcoin.co/#/round/1/0x6e8dc2e623204d61b0e59e668702654ae336c9f7/0x6e8dc2e623204d61b0e59e668702654ae336c9f7-4"
           style={{ textDecoration: "none" }}
           target={"_blank"}
@@ -131,6 +132,21 @@ export default function Sidebar() {
             <img
               src={gitcoinLogo}
               alt="gitcoin-grant-logo"
+              width={"35%"}
+              // height={"50px"}
+            />
+          </Box>
+        </Link>{" "} */}
+        <Link
+          to="https://explorer.gitcoin.co/#/round/1/0x6e8dc2e623204d61b0e59e668702654ae336c9f7/0x6e8dc2e623204d61b0e59e668702654ae336c9f7-4"
+          style={{ textDecoration: "none" }}
+          target={"_blank"}
+        >
+          <Box>
+            {" "}
+            <img
+              src={githubLogo}
+              alt="github-logo"
               width={"35%"}
               // height={"50px"}
             />
