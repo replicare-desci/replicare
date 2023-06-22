@@ -1,8 +1,5 @@
 # Replicare:Decentralized Research Paper Reproduction Platform
-[🔗Replicare](https://replicare.dev/")
-
-
-
+[🔗Replicare](https://replicare.dev/)
 
 Welcome to the Decentralized Research Paper Reproduction Platform! This project aims to provide a decentralized platform for reproducing research papers using Digital Object Identifiers (DOI). The platform facilitates a six-stage process for research paper reproduction, leveraging various technologies such as TypeScript, CSS, Material-UI, IPFS, MetaMask, Web3.js, Ether.js, React, Express.js, Node.js, and Rainbowkit.
 
@@ -48,6 +45,6 @@ Once the server is running, you can access the platform by visiting the provided
 
 Contributions to the Decentralized Research Paper Reproduction Platform are welcome! If you want to contribute, please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-## License
+<!--## License
 
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute the codebase in accordance with the terms of the license.
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute the codebase in accordance with the terms of the license.-->
