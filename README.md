@@ -1,5 +1,5 @@
 # Replicare:Decentralized Research Paper Reproduction Platform
-[🔗Replicare](https://replicare.dev/:target="_blank")
+[🔗Replicare](https://replicare.dev/")
 
 
 
