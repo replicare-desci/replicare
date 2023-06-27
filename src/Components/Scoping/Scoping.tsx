@@ -6,7 +6,7 @@ import SummarizePaperStepOne from "./SummarizePaperStepOne";
 
 import SaveIcon from "@mui/icons-material/Save";
 
-import Stepper from "./Stepper";
+import ScopingStepper from "./ScopingStepper";
 import AddRevisedReproductionPackagesStepTwo from "./AddRevisedReproductionPackagesStepTwo";
 import OutlineClaimsStepThree from "./OutlineClaimsStepThree/OutlineClaimsStepThree";
 import DeclareRobustnessChecksStepFour from "./DeclareRobustnessChecksStepFour";
@@ -91,9 +91,9 @@ const Scoping = () => {
           scope of your exercise by identifying the display items and claims on
           which you will focus in the later stages. See detailed guidance here.
         </Typography>{" "}
-        <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
+        <ScopingStepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {scopeStepRender(activeStep)}
-        <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
+        <ScopingStepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {<strong>*Please save before going to next step* </strong>}
         {/* <SummarizePaperStepOne /> */}
         <Grid justifyContent={"flex-end"} display={"flex"} mb={10}>
