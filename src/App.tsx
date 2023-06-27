@@ -17,6 +17,12 @@ import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
 import ViewScoping from "./Components/Scoping/ViewScoping/ViewScoping";
 import Scoping from "./Components/Scoping/Scoping";
+import DescribeInputStepOne from "./Components/Assessment/DescribeInputStepOne";
+import DescribeCodeStepTwo from "./Components/Assessment/DescribeCodeStepTwo";
+import DiagramBuilderStepThree from "./Components/Assessment/DiagramBuilderStepThree";
+import MasterScriptStepFour from "./Components/Assessment/MasterScriptStepFour";
+import AccessDisplayItemStepFive from "./Components/Assessment/AccessDisplayItemStepFive";
+import PaperLevelReproducbilityStepSix from "./Components/Assessment/PaperLevelReproducbilityStepSix";
 
 import { ToastContainer } from "react-toastify";
 
@@ -54,6 +60,73 @@ export default function App() {
           />
           {store?.user?.isVerified && store?.user?.walletAddress && (
             <>
+              {/* TODO: remove these  */}
+              <Route
+                path="/step6"
+                element={
+                  <>
+                    <Navbar />
+                    <PaperLevelReproducbilityStepSix />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/step5"
+                element={
+                  <>
+                    <Navbar />
+                    <AccessDisplayItemStepFive />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/step4"
+                element={
+                  <>
+                    <Navbar />
+                    <MasterScriptStepFour />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/step3"
+                element={
+                  <>
+                    <Navbar />
+                    <DiagramBuilderStepThree />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
+                path="/step2"
+                element={
+                  <>
+                    <Navbar />
+                    <DescribeCodeStepTwo />
+
+                    <Footer />
+                  </>
+                }
+              />
+              <Route
+                path="/step1"
+                element={
+                  <>
+                    <Navbar />
+                    <DescribeInputStepOne />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
               <Route
                 path="/update"
                 element={

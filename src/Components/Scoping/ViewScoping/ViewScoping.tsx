@@ -1,7 +1,7 @@
 import { Container, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-import Stepper from "../Stepper";
+import ScopingStepper from "../ScopingStepper";
 import ViewStepOne from "./ViewStepOne";
 import ViewStepFour from "./ViewStepFour";
 import ViewStepThree from "./ViewStepThree";
@@ -73,7 +73,7 @@ const ViewScoping = () => {
           scope of your exercise by identifying the display items and claims on
           which you will focus in the later stages. See detailed guidance here.
         </Typography>{" "}
-        <Stepper activeStep={activeStep} setActiveStep={setActiveStep} />
+        <ScopingStepper activeStep={activeStep} setActiveStep={setActiveStep} />
         {scopeStepRender(activeStep)}
       </Container>
     </>
