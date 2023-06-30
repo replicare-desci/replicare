@@ -9,7 +9,7 @@ import Main from "./Components/Main";
 import SignUp from "./Components/Auth/SignUp";
 import SignIn from "./Components/Auth/SignIn";
 import Reproductions from "./Components/Reproductions";
-import SelectPaperOverview from "./Components/SelectPaper/SelectPaperOverview";
+import MyWorkOverview from "./Components/MyWorkOverview";
 import SelectPaper from "./Components/SelectPaper/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
 
@@ -27,6 +27,7 @@ import PaperLevelReproducbilityStepSix from "./Components/Assessment/PaperLevelR
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import Assessment from "./Components/Assessment/Assessment";
 export default function App() {
   const { store } = UserContext();
   console.log("store", store);
@@ -61,6 +62,17 @@ export default function App() {
           {store?.user?.isVerified && store?.user?.walletAddress && (
             <>
               {/* TODO: remove these  */}
+              <Route
+                path="/assessment"
+                element={
+                  <>
+                    <Navbar />
+                    <Assessment />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
               <Route
                 path="/step6"
                 element={
@@ -153,7 +165,7 @@ export default function App() {
                 element={
                   <>
                     <Navbar />
-                    <SelectPaperOverview />
+                    <MyWorkOverview />
                     <Footer />
                   </>
                 }

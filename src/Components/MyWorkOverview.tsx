@@ -12,9 +12,9 @@ import React, { useState, useEffect } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link, useParams } from "react-router-dom";
 
-import { checkPaperExecutionState } from "../../firebase/firebaseFunctions";
+import { checkPaperExecutionState } from "../firebase/firebaseFunctions";
 
-const SelectPaperOverview = () => {
+const MyWorkOverview = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const { pageType, userPaperID } = useParams();
@@ -44,6 +44,9 @@ const SelectPaperOverview = () => {
         break;
       case "scoping":
         setActiveStep(2);
+        break;
+      case "assessment":
+        setActiveStep(3);
         break;
     }
   }
@@ -240,4 +243,4 @@ const SelectPaperOverview = () => {
   );
 };
 
-export default SelectPaperOverview;
+export default MyWorkOverview;
