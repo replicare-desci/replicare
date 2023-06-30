@@ -48,6 +48,12 @@ const MyWorkOverview = () => {
       case "assessment":
         setActiveStep(3);
         break;
+      case "improvement":
+        setActiveStep(3);
+        break;
+      case "Robustness":
+        setActiveStep(3);
+        break;
     }
   }
 
@@ -181,6 +187,30 @@ const MyWorkOverview = () => {
                   reviewed in the previous stage, as well as the overall paper.
                   See detailed guidance here.
                 </Typography>
+                {pageType === "new" ? (
+                  <Link
+                    to={`/reproductions/select-paper/new/${userPaperID}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button variant="contained">Create this section</Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to={`/reproductions/assessment/edit/${userPaperID}`}
+                      style={{ textDecoration: "none", marginRight: 10 }}
+                    >
+                      <Button variant="contained">Edit this section</Button>
+                    </Link>
+
+                    <Link
+                      to={`/reproductions/assessment/view/${userPaperID}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button variant="contained">View this section</Button>
+                    </Link>
+                  </>
+                )}
                 {/* <>
                   <Link
                     to="/reproductions/index/edit/scoping"

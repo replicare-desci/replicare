@@ -63,7 +63,7 @@ export default function App() {
             <>
               {/* TODO: remove these  */}
               <Route
-                path="/assessment"
+                path="/reproductions/assessment/:pageType/:userPaperID"
                 element={
                   <>
                     <Navbar />
@@ -90,50 +90,6 @@ export default function App() {
                   <>
                     <Navbar />
                     <AccessDisplayItemStepFive />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step4"
-                element={
-                  <>
-                    <Navbar />
-                    <MasterScriptStepFour />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step3"
-                element={
-                  <>
-                    <Navbar />
-                    <DiagramBuilderStepThree />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step2"
-                element={
-                  <>
-                    <Navbar />
-                    <DescribeCodeStepTwo />
-
-                    <Footer />
-                  </>
-                }
-              />
-              <Route
-                path="/step1"
-                element={
-                  <>
-                    <Navbar />
-                    <DescribeInputStepOne />
 
                     <Footer />
                   </>
