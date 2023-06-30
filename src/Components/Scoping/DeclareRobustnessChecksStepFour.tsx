@@ -8,8 +8,14 @@ import {
 } from "@mui/material";
 import { UserContext } from "../../context/ContextProvider";
 import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { appendUserPaperData } from "../../firebase/firebaseFunctions";
+import { toast } from "react-toastify";
+const userID: string = sessionStorage.getItem("id") ?? "";
 
 const DeclareRobustnessChecksStepFour = () => {
+  const navigate = useNavigate();
+  const { pageType, userPaperID } = useParams();
   const { store, setStore } = UserContext();
 
   const DeclareRobustnessChecksHandler = (
@@ -25,6 +31,55 @@ const DeclareRobustnessChecksStepFour = () => {
       },
     }));
   };
+  function changeWorkFlowStage(userPaperID: string) {
+    if (userPaperID && typeof userPaperID !== "undefined") {
+      setStore((prev: any) => {
+        return {
+          ...prev,
+          paperData: {
+            ...prev.paperData,
+            workflow_stage: "assessment",
+            paper_type: "scoping",
+          },
+        };
+      });
+      const response: boolean = window.confirm(
+        "Are you sure you want to move to next stage? Changes can't be allowed after this step"
+      );
+
+      if (
+        store?.paperData?.paper_type === "scoping" &&
+        store?.paperData?.workflow_stage === "assessment" &&
+        response
+      ) {
+        setStore((prev: any) => {
+          return {
+            ...prev,
+            paperData: {
+              ...prev.paperData,
+              userID: userID,
+              id: userPaperID,
+            },
+          };
+        });
+
+        appendUserPaperData(userPaperID, store?.paperData)
+          .then(() => {
+            toast.success("Scoping submitted successfully");
+
+            navigate(`/reproductions/edit/${userPaperID}`);
+          })
+          .catch((err) => {
+            console.log("Error submitting data", err);
+          });
+      } else {
+        toast.error("Save before submitting");
+      }
+    } else {
+      toast.error("ID not defined");
+      console.log("userPaperID not defined");
+    }
+  }
   return (
     <Box boxShadow={1} border={1} my={4} p={4}>
       <Typography variant="h5" fontWeight={600}>
@@ -53,7 +108,12 @@ const DeclareRobustnessChecksStepFour = () => {
         />
       </FormControl>
       {/* TODO: need to do this  */}
-      <Button variant="contained">Save and move to assessment stage</Button>
+      <Button
+        variant="contained"
+        onClick={() => (userPaperID ? changeWorkFlowStage(userPaperID) : null)}
+      >
+        Save and move to assessment stage
+      </Button>
     </Box>
   );
 };

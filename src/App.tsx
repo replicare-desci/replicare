@@ -9,7 +9,7 @@ import Main from "./Components/Main";
 import SignUp from "./Components/Auth/SignUp";
 import SignIn from "./Components/Auth/SignIn";
 import Reproductions from "./Components/Reproductions";
-import SelectPaperOverview from "./Components/SelectPaper/SelectPaperOverview";
+import MyWorkOverview from "./Components/MyWorkOverview";
 import SelectPaper from "./Components/SelectPaper/SelectPaper";
 import { UserContext } from "./context/ContextProvider";
 
@@ -27,6 +27,7 @@ import PaperLevelReproducbilityStepSix from "./Components/Assessment/PaperLevelR
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import Assessment from "./Components/Assessment/Assessment";
 export default function App() {
   const { store } = UserContext();
   console.log("store", store);
@@ -62,6 +63,17 @@ export default function App() {
             <>
               {/* TODO: remove these  */}
               <Route
+                path="/reproductions/assessment/:pageType/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <Assessment />
+
+                    <Footer />
+                  </>
+                }
+              />{" "}
+              <Route
                 path="/step6"
                 element={
                   <>
@@ -78,50 +90,6 @@ export default function App() {
                   <>
                     <Navbar />
                     <AccessDisplayItemStepFive />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step4"
-                element={
-                  <>
-                    <Navbar />
-                    <MasterScriptStepFour />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step3"
-                element={
-                  <>
-                    <Navbar />
-                    <DiagramBuilderStepThree />
-
-                    <Footer />
-                  </>
-                }
-              />{" "}
-              <Route
-                path="/step2"
-                element={
-                  <>
-                    <Navbar />
-                    <DescribeCodeStepTwo />
-
-                    <Footer />
-                  </>
-                }
-              />
-              <Route
-                path="/step1"
-                element={
-                  <>
-                    <Navbar />
-                    <DescribeInputStepOne />
 
                     <Footer />
                   </>
@@ -153,7 +121,7 @@ export default function App() {
                 element={
                   <>
                     <Navbar />
-                    <SelectPaperOverview />
+                    <MyWorkOverview />
                     <Footer />
                   </>
                 }

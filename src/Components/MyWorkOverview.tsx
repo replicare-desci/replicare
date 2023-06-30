@@ -12,9 +12,9 @@ import React, { useState, useEffect } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link, useParams } from "react-router-dom";
 
-import { checkPaperExecutionState } from "../../firebase/firebaseFunctions";
+import { checkPaperExecutionState } from "../firebase/firebaseFunctions";
 
-const SelectPaperOverview = () => {
+const MyWorkOverview = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const { pageType, userPaperID } = useParams();
@@ -44,6 +44,15 @@ const SelectPaperOverview = () => {
         break;
       case "scoping":
         setActiveStep(2);
+        break;
+      case "assessment":
+        setActiveStep(3);
+        break;
+      case "improvement":
+        setActiveStep(3);
+        break;
+      case "Robustness":
+        setActiveStep(3);
         break;
     }
   }
@@ -178,6 +187,30 @@ const SelectPaperOverview = () => {
                   reviewed in the previous stage, as well as the overall paper.
                   See detailed guidance here.
                 </Typography>
+                {pageType === "new" ? (
+                  <Link
+                    to={`/reproductions/select-paper/new/${userPaperID}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button variant="contained">Create this section</Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to={`/reproductions/assessment/edit/${userPaperID}`}
+                      style={{ textDecoration: "none", marginRight: 10 }}
+                    >
+                      <Button variant="contained">Edit this section</Button>
+                    </Link>
+
+                    <Link
+                      to={`/reproductions/assessment/view/${userPaperID}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button variant="contained">View this section</Button>
+                    </Link>
+                  </>
+                )}
                 {/* <>
                   <Link
                     to="/reproductions/index/edit/scoping"
@@ -240,4 +273,4 @@ const SelectPaperOverview = () => {
   );
 };
 
-export default SelectPaperOverview;
+export default MyWorkOverview;
