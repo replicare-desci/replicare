@@ -40,7 +40,7 @@ export default function AssessmentStepper({
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
-    if (activeStep === 3) {
+    if (activeStep === 5) {
       navigate(`/reproductions/edit/${userPaperID}`);
       // console.log("s");
     }

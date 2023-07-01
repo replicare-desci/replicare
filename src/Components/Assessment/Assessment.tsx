@@ -89,12 +89,16 @@ const Assessment = () => {
     <>
       <Container>
         <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
-          Step 2 : Assessment
+          Step 3 : Assessment
         </Typography>
         <Typography variant={"subtitle2"} p={2}>
-          Focusing on the declared paper from the previous stage, define the
-          scope of your exercise by identifying the display items and claims on
-          which you will focus in the later stages. See detailed guidance here.
+          Describe the available reproduction materials and assign a
+          reproducibility score to your selected display items and the overall
+          paper. See detailed guidance{" "}
+          <a href="https://docs.replicare.dev" target="_blank" rel="noreferrer">
+            here
+          </a>
+          .
         </Typography>{" "}
         <AssessmentStepper
           activeStep={activeStep}
@@ -105,7 +109,12 @@ const Assessment = () => {
           activeStep={activeStep}
           setActiveStep={setActiveStep}
         />
-        {<strong>*Please save before going to next step* </strong>}
+        {
+          <Typography variant="body1" sx={{ fontWeight: 700, my: 4, mx: 1 }}>
+            {" "}
+            *Please save before going to next step{" "}
+          </Typography>
+        }
         {/* <SummarizePaperStepOne /> */}
         <Grid justifyContent={"flex-end"} display={"flex"} mb={10}>
           {" "}
