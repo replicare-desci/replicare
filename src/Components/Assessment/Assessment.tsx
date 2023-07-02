@@ -91,7 +91,7 @@ const Assessment = () => {
         <Typography variant="h4" component={"h1"} textAlign={"center"} py={2}>
           Step 3 : Assessment
         </Typography>
-        <Typography variant={"subtitle2"} p={2}>
+        <Typography variant={"subtitle2"} p={1}>
           Describe the available reproduction materials and assign a
           reproducibility score to your selected display items and the overall
           paper. See detailed guidance{" "}
@@ -100,6 +100,19 @@ const Assessment = () => {
           </a>
           .
         </Typography>{" "}
+        <Typography variant="body1" sx={{ fontWeight: 500, p: 1 }}>
+          Note that the data inputted doesn't save automatically. Please
+          remember to save your work often or download the template .csv files,
+          populate them locally on your computer, and then upload them
+          accordingly.
+        </Typography>
+        <Typography variant="body1" sx={{ p: 1, mb: 3 }}>
+          In this section, you will first provide a detailed description of the
+          reproduction package. You will then connect display items with their
+          corresponding inputs, such as data and code files. With these elements
+          in place, you can score each display item's reproducibility level and
+          record various paper-level dimensions of reproducibility.
+        </Typography>
         <AssessmentStepper
           activeStep={activeStep}
           setActiveStep={setActiveStep}

@@ -11,6 +11,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Button,
   Box,
   Stepper,
 } from "@mui/material";
@@ -65,23 +66,18 @@ const AccessDisplayItemStepFive = () => {
                   will distinguish between those display items that were
                   pre-specify and those that were not.
                 </Typography>
-                <TextField
-                  label="e.g. Railroads of the Rah Attempt #1- Jan 2021"
-                  type={"text"}
-                  variant="standard"
-                  fullWidth
-                  required
-                  name="project_nickname"
-                  id="project_nickname"
-                  // onChange={summerizePaperChangeHandler}
-                />
               </FormControl>
             </ListItem>
           </List>
 
+          <Box>
+            {" "}
+            <Button variant="contained" sx={{ m: 2 }}>
+              Add additional display item
+            </Button>
+          </Box>
           <Stepper />
         </Grid>
-        ``
       </Box>
     </>
   );

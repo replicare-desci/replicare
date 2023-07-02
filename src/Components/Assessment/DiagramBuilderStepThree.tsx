@@ -46,7 +46,7 @@ const DiagramBuilderStepThree = () => {
           <List component="ol">
             {" "}
             <Typography variant={"h5"} component="h6" p={2} fontWeight={600}>
-              ACRe Diagram Builder
+              Replicare Diagram Builder
             </Typography>
             <ListItem component="li">
               <FormControl>

@@ -108,7 +108,15 @@ const PaperLevelReproducbilityStepSix = () => {
             control software, literal programming, open source software, among
             others. In this section, you will detect whether the reproduction
             materials contain any of these tools and practices. See more in the
-            ACRe Guide.
+            Replicare{" "}
+            <a
+              href="https://docs.replicare.dev"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Guide
+            </a>
+            .
           </Typography>
           <List component="ol">
             <ListItem component="li">
