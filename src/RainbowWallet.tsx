@@ -29,7 +29,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import { useEffect, useCallback, useState, useMemo } from "react";
 import { UserContext } from "./context/ContextProvider";
-import { getUserData } from "./firebase/firebaseFunctions";
+import { addUserData, getUserData } from "./firebase/firebaseFunctions";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import { toast } from "react-toastify";
@@ -153,17 +153,19 @@ export default function RainbowWallet() {
             } = await verifyRes.json();
 
             if (newVerifyRes.status) {
-              return newVerifyRes;
+              return {
+                type: "success",
+                status: newVerifyRes.status,
+                data: newVerifyRes.data,
+              };
             }
           }
         }
       }
     } catch (error: any) {
       toast.error("User rejected signing");
+      return { type: "error", userRejected: true };
     }
-    // return {
-    //   status: false,
-    // };
   }, [provider]);
 
   const signOutWallet = useCallback(() => {
@@ -182,69 +184,76 @@ export default function RainbowWallet() {
       };
     });
   }, [setStore]);
-
   const connectMetamaskWallet = useCallback(
-    async (address: string) => {
+    async (address: string, chain: string) => {
       try {
-        if (address !== undefined && chain?.unsupported !== undefined) {
+        if (address !== undefined && chain !== undefined) {
           console.log("execution");
 
-          const firebaseResponse = await getUserData(address, chain?.name);
-          if (firebaseResponse.id) {
-            setAuthState(true);
+          // Check if the user data already exists in Firestore.
+          const firebaseResponse = await getUserData(address);
+
+          // If the user exists and has an id, return the user data.
+          if (firebaseResponse?.id) {
             return firebaseResponse;
+          } else {
+            // If the user doesn't exist and the sign in is confirmed, add the user to Firestore.
+            const signInResponse = await signInWithEthereum();
+
+            // Only if sign-in is successful and not rejected by the user, add user to database
+            if (!signInResponse?.userRejected && signInResponse?.status) {
+              const newUserResponse = await addUserData(address, chain);
+              if (newUserResponse?.id) {
+                setAuthState(true);
+                return newUserResponse;
+              }
+            }
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
         alert(`Something went wrong: ${err}`);
       }
     },
-    [chain?.name, chain?.unsupported]
+    [signInWithEthereum]
   );
 
   useEffect(() => {
     if (
       address !== undefined &&
-      store?.user?.walletAddress === ""
+      store?.user?.walletAddress === "" &&
+      chain?.name !== undefined // Check if chain?.name is not undefined
       // authState
     ) {
       console.log("line 166, useEffect");
-      connectMetamaskWallet(address).then((resp: any) => {
+      connectMetamaskWallet(address, chain.name).then((resp: any) => {
+        // chain.name will be string here
         console.log("firebase: ", resp);
 
         if (resp?.walletAddress) {
-          signInWithEthereum()
-            .then((resEth) => {
-              console.log(resEth);
+          setStore((prev: any) => {
+            return {
+              ...prev,
+              user: {
+                walletAddress: resp?.walletAddress || "",
+                chain: resp?.chain || "",
+                id: resp?.id || "",
+                isVerified: resp?.isVerified || false,
+              },
+            };
+          });
 
-              setStore((prev: any) => {
-                return {
-                  ...prev,
-                  user: {
-                    walletAddress: resp?.walletAddress
-                      ? resp?.walletAddress
-                      : "",
-                    chain: resp?.chain ? resp?.chain : "",
-                    id: resp?.id ? resp?.id : "",
-                    isVerified: resp?.isVerified,
-                  },
-                };
-              });
+          sessionStorage.setItem(
+            "walletAddress",
+            resp?.walletAddress ? resp?.walletAddress : ""
+          );
+          sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
+          sessionStorage.setItem("id", resp?.id ? resp?.id : "");
 
-              sessionStorage.setItem(
-                "walletAddress",
-                resp?.walletAddress ? resp?.walletAddress : ""
-              );
-              sessionStorage.setItem("chain", resp?.chain ? resp?.chain : "");
-              sessionStorage.setItem("id", resp?.id ? resp?.id : "");
-
-              sessionStorage.setItem(
-                "isVerified",
-                resp?.isVerified ? "true" : "false"
-              );
-            })
-            .catch((err) => console.log(err));
+          sessionStorage.setItem(
+            "isVerified",
+            resp?.isVerified ? "true" : "false"
+          );
         }
       });
 
@@ -265,6 +274,7 @@ export default function RainbowWallet() {
     signInWithEthereum,
     signOutWallet,
     store?.user?.walletAddress,
+    chain?.name,
   ]);
 
   return (
