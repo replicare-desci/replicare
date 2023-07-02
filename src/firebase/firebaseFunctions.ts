@@ -36,19 +36,13 @@ async function existsWalletAddress(walletAddress: string) {
  * @param {function} handleUserData
  */
 async function getUserData(
-  walletAddress: string,
-  chain: string
-): Promise<authUserType> {
-  let getDataReturnObj: authUserType = {
-    walletAddress: "",
-    chain: "",
-    id: "",
-    isVerified: false,
-  };
-
+  walletAddress: string
+): Promise<authUserType | null> {
   try {
     const docRef = collection(db, "user");
     const userSnapshot = await getDocs(docRef);
+
+    let getDataReturnObj: authUserType | null = null;
 
     userSnapshot.forEach((shot) => {
       if (
@@ -66,32 +60,42 @@ async function getUserData(
       }
     });
 
-    if (!getDataReturnObj.id) {
-      const addUserCollection = collection(db, "user");
-
-      const addUserSnapshot = await addDoc(addUserCollection, {
-        walletAddress: walletAddress,
-        chain: chain,
-        isVerified: true,
-        createdAt: Timestamp.now(),
-      });
-
-      if (addUserSnapshot && addUserSnapshot.id) {
-        getDataReturnObj = {
-          walletAddress: walletAddress,
-          chain: chain,
-          id: addUserSnapshot.id,
-          isVerified: true,
-        };
-      } else {
-        console.log("No data is saved");
-      }
-    }
+    return getDataReturnObj;
   } catch (error) {
     console.error("Error fetching user data: ", error);
+    return null;
   }
+}
 
-  return getDataReturnObj;
+async function addUserData(
+  walletAddress: string,
+  chain: string
+): Promise<authUserType | null> {
+  try {
+    const addUserCollection = collection(db, "user");
+
+    const addUserSnapshot = await addDoc(addUserCollection, {
+      walletAddress: walletAddress,
+      chain: chain,
+      isVerified: true,
+      createdAt: Timestamp.now(),
+    });
+
+    if (addUserSnapshot && addUserSnapshot.id) {
+      return {
+        walletAddress: walletAddress,
+        chain: chain,
+        id: addUserSnapshot.id,
+        isVerified: true,
+      };
+    } else {
+      console.log("No data is saved");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error adding user data: ", error);
+    return null;
+  }
 }
 
 /**
@@ -357,6 +361,7 @@ async function checkPaperExecutionState(id: string) {
 export {
   existsEmail,
   getSelectUserPaperData,
+  addUserData,
   deleteUserPaperData,
   getUserPaperData,
   addUserPaperData,
