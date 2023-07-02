@@ -40,7 +40,7 @@ export default function AssessmentStepper({
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
-    if (activeStep === 3) {
+    if (activeStep === 5) {
       navigate(`/reproductions/edit/${userPaperID}`);
       // console.log("s");
     }
@@ -52,7 +52,7 @@ export default function AssessmentStepper({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep} sx={{ mb: 2 }}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {

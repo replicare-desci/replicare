@@ -1,6 +1,11 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridToolbar,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "", width: 150 },
@@ -111,6 +116,7 @@ export default function TableData() {
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
         rows={rows}
+        slots={{ toolbar: GridToolbar }}
         columns={columns}
         initialState={{
           pagination: {

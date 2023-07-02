@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { UserContext } from "../../context/ContextProvider";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridToolbar,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 import {
   Typography,
   Grid,
@@ -20,47 +25,159 @@ const DescribeCodeStepTwo = () => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
-      field: "firstName",
-      headerName: "First name",
+      field: "fileName",
+      headerName: "File Name",
       width: 150,
       editable: true,
     },
     {
-      field: "lastName",
-      headerName: "Last name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
+      field: "location",
+      headerName: "Location",
+      // type: "number",
       width: 110,
       editable: true,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      field: "inputs",
+      headerName: "Inputs",
+      width: 150,
+      editable: true,
     },
+    {
+      field: "outputs",
+      headerName: "Outputs",
+      // type: "number",
+      width: 110,
+      editable: true,
+    },
+
+    {
+      field: "description",
+      headerName: "Description",
+      // type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "primaryType",
+      headerName: "Primary Type",
+      width: 110,
+      editable: true,
+    },
+
+    { field: "delete", headerName: "Delete", width: 110, editable: true },
+    // {
+    //   field: "fullName",
+    //   headerName: "Full name",
+    //   description: "This column has a value getter and is not sortable.",
+    //   sortable: false,
+    //   width: 160,
+    //   valueGetter: (params: GridValueGetterParams) =>
+    //     `${params.row.fileName || ""} ${params.row.inputs || ""}`,
+    // },
   ];
 
   const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
 
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+    {
+      id: "",
+      inputs: "",
+      fileName: "",
+      outputs: "",
+      location: "",
+      description: "",
+      primaryType: "",
+
+      delete: "",
+    },
+  ];
   // const { store, setStore } = UserContext();
   // const [claimTypeOther, setClaimTypeOther] = useState<string>("");
   // const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
@@ -101,25 +218,25 @@ const DescribeCodeStepTwo = () => {
                   <Typography variant="body1" component={"p"} my={1}>
                     You will enter data about code in the reproduction package
                     and their inputs and outputs. In combination with the
-                    diagram builder in the next section, this will help you
-                    judge the reproducibility as well as identify missing files
-                    which can help you when following up with authors.
+                    <b> diagram builder</b> in the next section, this will help
+                    you judge the reproducibility as well as identify missing
+                    files which can help you when following up with authors.
                   </Typography>
                   <Typography variant="body1" component={"p"} my={1}>
-                    First, identify all code files in the reproduction package
-                    and record their names in the file_name column in the
-                    mapping tool.
+                    First, identify all <b>code files</b> in the reproduction
+                    package and record their names in the file_name column in
+                    the mapping tool.
                   </Typography>
                   <Typography variant="body1" component={"p"} my={1}>
-                    Second, record the location of each code file relative to
-                    the main folder of the reproduction package in the location
-                    column.
+                    Second, record the <b>location</b> of each code file
+                    relative to the main folder of the reproduction package in
+                    the location column.
                   </Typography>
                   <Typography variant="body1" component={"p"} my={1}>
                     Third, review the beginning and end of each code file to
-                    identify the inputs required to successfully run the file
-                    and the outputs produced. Examples of inputs are data sets
-                    or other code scripts that are typically found at the
+                    identify the <b>inputs</b> required to successfully run the
+                    file and the outputs produced. Examples of inputs are data
+                    sets or other code scripts that are typically found at the
                     beginning of the script (e.g., load, read, source, run, do
                     ). Examples of outputs are other data sets, or plain text
                     files that are typically at the end of a script (e.g., save,
@@ -127,13 +244,14 @@ const DescribeCodeStepTwo = () => {
                     columns
                   </Typography>{" "}
                   <Typography variant="body1" component={"p"} my={1}>
-                    Fourth, provide a brief description of the function produced
-                    by the code file (e.g., "produces table 1") in the
+                    Fourth, provide a <b>brief description of the function</b>{" "}
+                    produced by the code file (e.g., "produces table 1") in the
                     description column.
                   </Typography>{" "}
                   <Typography variant="body1" component={"p"} my={1}>
-                    Finally, classify each data file as analysis or cleaning
-                    and/or construction code based on its primary function.
+                    Finally, <b>classify</b> each data file as analysis or
+                    cleaning and/or construction code based on its primary
+                    function.
                   </Typography>{" "}
                   <Typography variant="body1" component={"p"} my={1}>
                     Sometimes the reproduction package will not produce display
@@ -160,6 +278,7 @@ const DescribeCodeStepTwo = () => {
                 <Box sx={{ height: 400, width: "100%" }}>
                   <DataGrid
                     rows={rows}
+                    slots={{ toolbar: GridToolbar }}
                     columns={columns}
                     initialState={{
                       pagination: {
@@ -169,7 +288,7 @@ const DescribeCodeStepTwo = () => {
                       },
                     }}
                     pageSizeOptions={[5]}
-                    checkboxSelection
+                    // checkboxSelection
                     disableRowSelectionOnClick
                   />
                 </Box>
