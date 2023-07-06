@@ -17,10 +17,7 @@ import NotFound from "./Components/NotFound";
 import ViewSelectPaper from "./Components/ReproductionStagesOverview/ViewSelectPaper";
 import ViewScoping from "./Components/Scoping/ViewScoping/ViewScoping";
 import Scoping from "./Components/Scoping/Scoping";
-import DescribeInputStepOne from "./Components/Assessment/DescribeInputStepOne";
-import DescribeCodeStepTwo from "./Components/Assessment/DescribeCodeStepTwo";
-import DiagramBuilderStepThree from "./Components/Assessment/DiagramBuilderStepThree";
-import MasterScriptStepFour from "./Components/Assessment/MasterScriptStepFour";
+
 import AccessDisplayItemStepFive from "./Components/Assessment/AccessDisplayItemStepFive";
 import PaperLevelReproducbilityStepSix from "./Components/Assessment/PaperLevelReproducbilityStepSix";
 
@@ -28,6 +25,7 @@ import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import Assessment from "./Components/Assessment/Assessment";
+import ViewAssessment from "./Components/Assessment/ViewAssessment/ViewAssessment";
 export default function App() {
   const { store } = UserContext();
   console.log("store", store);
@@ -73,6 +71,16 @@ export default function App() {
                   </>
                 }
               />{" "}
+              <Route
+                path="/reproductions/assessment/view/:userPaperID"
+                element={
+                  <>
+                    <Navbar />
+                    <ViewAssessment />
+                    <Footer />
+                  </>
+                }
+              />
               <Route
                 path="/step6"
                 element={
