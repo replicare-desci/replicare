@@ -56,6 +56,30 @@ export type claims = {
   short_description?: string;
   estimates: estimates;
 };
+export type data_source_rows = {
+  cited?: boolean;
+  data_files?: string;
+  data_source?: string;
+  id?: number;
+  location?: string;
+  notes?: string;
+  page_provided?: string;
+};
+export type analytic_data_rows = {
+  analytic_data?: string;
+  description?: string;
+  id?: number;
+  location?: string;
+};
+export type code_scripts_rows = {
+  id: number;
+  description: string;
+  file_name: string;
+  inputs: ?string;
+  location: string;
+  outputs: ?string;
+  primary_types?: string;
+};
 
 export type paperData = {
   id: string;
@@ -99,4 +123,26 @@ export type paperData = {
   revised_reproduction_packages?: revised_reproduction_packages;
   project_nickname?: string;
   will_assess_whole_paper?: string;
+
+  data_source_rows?: data_source_rows[];
+  analytic_data_rows?: analytic_data_rows[];
+  code_scripts_rows?: code_scripts_rows[];
+
+  master_file_exists?: string;
+
+  master_file_one_click?: string;
+
+  master_file_no_one_click_reasons?: string[];
+
+  // 4.4.1
+  num_minutes_installing_additional_package?: string;
+  // 4.4.2
+  num_minutes_changing_directory_paths?: string;
+  // 4.4.3
+  num_minutes_other_improvements?: string;
+
+  master_file_run_after_corrections?: string;
+
+  // 6.1
+  reproduction_package_tool?: string[];
 };

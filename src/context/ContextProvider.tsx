@@ -108,6 +108,60 @@ const defaultState: ContextInterface = {
       // scoping data step 4 start
       possible_robustness_checks: "",
       // scoping data step 4 end
+
+      // assessment
+
+      // assessment data step 1 start
+
+      data_source_rows: [
+        {
+          cited: false,
+          data_files: "",
+          data_source: "",
+          id: 0,
+          location: "",
+          notes: "",
+          page_provided: "",
+        },
+      ],
+      analytic_data_rows: [
+        {
+          analytic_data: "",
+          description: "",
+          id: 0,
+          location: "",
+        },
+      ],
+
+      code_scripts_rows: [
+        {
+          id: 0,
+          description: "",
+          file_name: "",
+          inputs: "",
+          location: "",
+          outputs: "",
+          primary_types: "",
+        },
+      ],
+
+      master_file_exists: "",
+
+      master_file_one_click: "",
+
+      master_file_no_one_click_reasons: [],
+
+      // 4.4.1
+      num_minutes_installing_additional_package: "",
+      // 4.4.2
+      num_minutes_changing_directory_paths: "",
+      // 4.4.3
+      num_minutes_other_improvements: "",
+
+      master_file_run_after_corrections: "",
+
+      // 6.1
+      reproduction_package_tool: [],
     },
   },
 
