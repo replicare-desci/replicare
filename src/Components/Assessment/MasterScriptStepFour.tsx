@@ -18,6 +18,10 @@ import {
 
 const MasterScriptStepFour = () => {
   const { store, setStore } = UserContext();
+
+  // const [disabled, setDisabled] = useState<boolean>(true);
+  // const [disabledSecond, setDisabledSecond] = useState<boolean>(true);
+
   type checkBoxOption = {
     label: string;
   };
@@ -39,6 +43,18 @@ const MasterScriptStepFour = () => {
       label: "Other errors. Explain.",
     },
   ];
+  const formDataHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setStore((prev: any) => ({
+      ...prev,
+      paperData: {
+        ...prev.paperData,
+        [name]: value,
+      },
+    }));
+  };
+
   function checkedStateHandler(status: string, checkedValue: string) {
     if (status === "checked") {
       setStore((prev: any) => {
@@ -109,50 +125,92 @@ const MasterScriptStepFour = () => {
                   the reproduction package in their required order?
                 </FormLabel>
                 <RadioGroup
-                  // onChange={summerizePaperChangeHandler}
-                  name="familiarity_level"
-                  id="familiarity_level"
-                  // value={
-                  //   store?.paperData?.familiarity_level
-                  //     ? store?.paperData?.familiarity_level
-                  //     : ""
-                  // }
+                  onChange={formDataHandler}
+                  name="master_file_exists"
+                  id="master_file_exists"
+                  value={
+                    store?.paperData?.master_file_exists
+                      ? store?.paperData?.master_file_exists
+                      : ""
+                  }
                 >
                   <FormControlLabel
-                    value="Yes"
+                    value="true"
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
                   />
-                  <FormControlLabel value="No" control={<Radio />} label="No" />{" "}
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="false"
+                  />{" "}
                 </RadioGroup>
               </FormControl>
             </ListItem>{" "}
             <ListItem component="li">
-              <FormControl required>
+              <FormControl
+                required
+                disabled={
+                  store?.paperData?.master_file_exists === "" ||
+                  store?.paperData?.master_file_exists === "false"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel sx={{ my: 1 }}>
                   <b>4.2</b> Did the master file run with one click?
                 </FormLabel>
                 <RadioGroup
-                  // onChange={summerizePaperChangeHandler}
-                  name="familiarity_level"
-                  id="familiarity_level"
-                  // value={
-                  //   store?.paperData?.familiarity_level
-                  //     ? store?.paperData?.familiarity_level
-                  //     : ""
-                  // }
+                  onChange={formDataHandler}
+                  name="master_file_one_click"
+                  id="master_file_one_click"
+                  value={
+                    store?.paperData?.master_file_one_click
+                      ? store?.paperData?.master_file_one_click
+                      : ""
+                  }
                 >
                   <FormControlLabel
-                    value="Yes"
+                    // disabled={
+                    //   store?.paperData?.master_file_one_click === "" ||
+                    //   store?.paperData?.master_file_one_click === "false"
+                    //     ? true
+                    //     : false
+                    // }
+                    disabled={
+                      store?.paperData?.master_file_exists === "" ||
+                      store?.paperData?.master_file_exists === "false"
+                        ? true
+                        : false
+                    }
+                    value="true"
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
                   />
-                  <FormControlLabel value="No" control={<Radio />} label="No" />{" "}
+                  <FormControlLabel
+                    disabled={
+                      store?.paperData?.master_file_exists === "" ||
+                      store?.paperData?.master_file_exists === "false"
+                        ? true
+                        : false
+                    }
+                    value="false"
+                    control={<Radio />}
+                    label="false"
+                  />{" "}
                 </RadioGroup>
               </FormControl>
             </ListItem>{" "}
             <ListItem component="li">
-              <FormControl required>
+              <FormControl
+                required
+                disabled={
+                  store?.paperData?.master_file_exists === "" ||
+                  store?.paperData?.master_file_exists === "false"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel sx={{ my: 1 }}>
                   <b>4.3</b> Why didn't the master file run with one click?
                 </FormLabel>
@@ -162,21 +220,31 @@ const MasterScriptStepFour = () => {
                       return (
                         <>
                           <FormControlLabel
-                            disabled={
-                              store?.paperData?.authors_contacted === "" ||
-                              store?.paperData?.authors_contacted === "false"
-                                ? true
-                                : false
-                            }
                             key={index}
                             control={
                               <Checkbox
                                 name={item.label}
+                                disabled={
+                                  store?.paperData?.master_file_exists === "" ||
+                                  store?.paperData?.master_file_exists ===
+                                    "false"
+                                    ? true
+                                    : false
+                                }
+                                // disableRipple={
+                                //   store?.paperData?.master_file_exists === "" ||
+                                //   store?.paperData?.master_file_exists ===
+                                //     "false"
+                                //     ? true
+                                //     : false
+                                // }
                                 checked={
-                                  store?.paperData?.authors_response &&
-                                  store?.paperData?.authors_response.length >
+                                  store?.paperData
+                                    ?.master_file_no_one_click_reasons &&
+                                  store?.paperData
+                                    ?.master_file_no_one_click_reasons.length >
                                     0 &&
-                                  store?.paperData?.authors_response.includes(
+                                  store?.paperData?.master_file_no_one_click_reasons.includes(
                                     item?.label
                                   )
                                     ? true
@@ -208,7 +276,15 @@ const MasterScriptStepFour = () => {
               </FormControl>
             </ListItem>{" "}
             <ListItem component="li">
-              <FormControl required>
+              <FormControl
+                required
+                disabled={
+                  store?.paperData?.master_file_exists === "" ||
+                  store?.paperData?.master_file_exists === "false"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel sx={{ my: 1 }}>
                   <b>4.4</b> Is there a master file that runs all components of
                   the reproduction package in their required order?
@@ -219,43 +295,84 @@ const MasterScriptStepFour = () => {
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent installing additional packages , libraries, updates"
+                  name="num_minutes_installing_additional_packages"
+                  id="num_minutes_installing_additional_packages"
+                  disabled={
+                    store?.paperData?.master_file_exists === "" ||
+                    store?.paperData?.master_file_exists === "false"
+                      ? true
+                      : false
+                  }
+                  value={
+                    store?.paperData?.num_minutes_installing_additional_package
+                  }
                 />
                 <TextField
                   placeholder="(in minutes)"
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent changing directory paths and/or moving files"
+                  name="num_minutes_changing_directory_paths"
+                  id="num_minutes_changing_directory_paths"
+                  disabled={
+                    store?.paperData?.master_file_exists === "" ||
+                    store?.paperData?.master_file_exists === "false"
+                      ? true
+                      : false
+                  }
+                  value={store?.paperData?.num_minutes_changing_directory_paths}
                 />
                 <TextField
                   placeholder="(in minutes)"
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent doing other minor collections"
+                  name="num_minutes_other_improvements"
+                  id="num_minutes_other_improvements"
+                  disabled={
+                    store?.paperData?.master_file_exists === "" ||
+                    store?.paperData?.master_file_exists === "false"
+                      ? true
+                      : false
+                  }
+                  value={store?.paperData?.num_minutes_other_improvements}
                 />
               </FormControl>
             </ListItem>{" "}
             <ListItem component="li">
-              <FormControl required>
+              <FormControl
+                required
+                disabled={
+                  store?.paperData?.master_file_exists === "" ||
+                  store?.paperData?.master_file_exists === "false"
+                    ? true
+                    : false
+                }
+              >
                 <FormLabel sx={{ my: 1 }}>
                   <b>4.5</b> After making minor corrections, did the master file
                   run?
                 </FormLabel>
                 <RadioGroup
-                  // onChange={summerizePaperChangeHandler}
-                  name="familiarity_level"
-                  id="familiarity_level"
-                  // value={
-                  //   store?.paperData?.familiarity_level
-                  //     ? store?.paperData?.familiarity_level
-                  //     : ""
-                  // }
+                  onChange={formDataHandler}
+                  name="master_file_run_after_corrections"
+                  id="master_file_run_after_corrections"
+                  value={
+                    store?.paperData?.master_file_run_after_corrections
+                      ? store?.paperData?.master_file_run_after_corrections
+                      : ""
+                  }
                 >
                   <FormControlLabel
-                    value="Yes"
+                    value="true"
                     control={<Radio />}
-                    label="Yes"
+                    label="true"
                   />
-                  <FormControlLabel value="No" control={<Radio />} label="No" />{" "}
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="false"
+                  />{" "}
                 </RadioGroup>
               </FormControl>
             </ListItem>{" "}

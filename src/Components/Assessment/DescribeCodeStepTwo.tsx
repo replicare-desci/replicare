@@ -1,11 +1,19 @@
-import React, { useState } from "react";
 import { UserContext } from "../../context/ContextProvider";
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbar,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+
+import { createRoot } from "react-dom/client";
+import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
+
+import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
+import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
+
 import {
   Typography,
   Grid,
@@ -22,7 +30,47 @@ import {
 } from "@mui/material";
 
 const DescribeCodeStepTwo = () => {
-  const columns: GridColDef[] = [
+  const gridRef = useRef<AgGridReact<any>>(null);
+  // const columns: GridColDef[] = [
+
+  // ];
+
+  const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+
+  // DefaultColDef sets props common to all Columns
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      resizable: true,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 130,
+      autoHeight: false,
+    }),
+    []
+  );
+
+  // Example of consuming Grid Event
+  const cellClickedListener = useCallback((event: any) => {
+    console.log("cellClicked", event);
+  }, []);
+
+  // Example load data from server
+  useEffect(() => {
+    fetch("https://www.ag-grid.com/example-assets/row-data.json")
+      .then((result) => result.json())
+      .then((rowData) => setRowData(rowData));
+  }, []);
+
+  // Example using Grid's API
+  const buttonListener = useCallback((e: any) => {
+    if (gridRef.current) {
+      gridRef.current.api.deselectAll();
+    }
+  }, []);
+  // Each Column Definition results in one Column.
+  const [columnDefs, setColumnDefs] = useState([
     { field: "id", headerName: "ID", width: 90 },
     {
       field: "fileName",
@@ -75,7 +123,7 @@ const DescribeCodeStepTwo = () => {
     //   valueGetter: (params: GridValueGetterParams) =>
     //     `${params.row.fileName || ""} ${params.row.inputs || ""}`,
     // },
-  ];
+  ]);
 
   const rows = [
     {
@@ -276,21 +324,25 @@ const DescribeCodeStepTwo = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ height: 400, width: "100%" }}>
-                  <DataGrid
-                    rows={rows}
-                    slots={{ toolbar: GridToolbar }}
-                    columns={columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 5,
-                        },
-                      },
-                    }}
-                    pageSizeOptions={[5]}
-                    // checkboxSelection
-                    disableRowSelectionOnClick
-                  />
+                  {/* Example using Grid's API */}
+                  <button onClick={buttonListener}>Push Me</button>
+
+                  {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
+                  <div
+                    className="ag-theme-alpine"
+                    style={{ width: "100%", height: 300 }}
+                  >
+                    <AgGridReact
+                      ref={gridRef} // Ref for accessing Grid's API
+                      rowData={rowData} // Row Data for Rows
+                      editType="fullRow"
+                      columnDefs={columnDefs} // Column Defs for Columns
+                      defaultColDef={defaultColDef} // Default Column Properties
+                      animateRows={true} // Optional - set to 'true' to have rows animate when sorted
+                      rowSelection="multiple" // Options - allows click selection of rows
+                      onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+                    />
+                  </div>
                 </Box>
                 {/* <TextField
                   label="e.g. Railroads of the Rah Attempt #1- Jan 2021"
