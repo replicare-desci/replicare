@@ -258,7 +258,7 @@ export default function RainbowWallet() {
     }
   }, [
     address,
-    connectMetamaskWallet,
+    // connectMetamaskWallet,
     isConnecting,
     isDisconnected,
     setStore,
