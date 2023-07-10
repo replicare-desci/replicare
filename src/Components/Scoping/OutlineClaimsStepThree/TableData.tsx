@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import Box from "@mui/material/Box";
-import { createRoot } from "react-dom/client";
+
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
@@ -142,7 +142,7 @@ export default function TableData() {
   return (
     <Box sx={{ width: "100%" }}>
       {/* Example using Grid's API */}
-      <button onClick={buttonListener}>Push Me</button>
+      <button onClick={buttonListener}>Deselect</button>
 
       {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
       <div className="ag-theme-alpine" style={{ width: "100%", height: 300 }}>

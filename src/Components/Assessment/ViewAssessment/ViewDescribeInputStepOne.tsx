@@ -349,7 +349,6 @@ const ViewDescribeInputStepOne = () => {
 
           {/* <Stepper /> */}
         </Grid>
-        ``
       </Box>
     </>
   );

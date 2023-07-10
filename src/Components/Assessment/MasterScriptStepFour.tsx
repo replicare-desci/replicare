@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserContext } from "../../context/ContextProvider";
 import {
   Typography,
@@ -19,8 +19,12 @@ import {
 const MasterScriptStepFour = () => {
   const { store, setStore } = UserContext();
 
-  // const [disabled, setDisabled] = useState<boolean>(true);
-  // const [disabledSecond, setDisabledSecond] = useState<boolean>(true);
+  const [isFormDisabled, setIsFormDisabled] = useState<boolean>(true);
+  useEffect(() => {
+    if (store?.paperData?.master_file_exists) {
+      setIsFormDisabled(false); // Enable the rest of the form controls when master_file_exists value is present
+    }
+  }, [setIsFormDisabled, store?.paperData?.master_file_exists]);
 
   type checkBoxOption = {
     label: string;
@@ -88,7 +92,7 @@ const MasterScriptStepFour = () => {
   // const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
 
   // // handle change
-  // const summerizePaperChangeHandler = (
+  // const masterScriptChangeHandler = (
   //   event: React.ChangeEvent<HTMLInputElement>
   // ) => {
   //   const { name, value } = event.target;
@@ -151,6 +155,7 @@ const MasterScriptStepFour = () => {
               <FormControl
                 required
                 disabled={
+                  isFormDisabled ||
                   store?.paperData?.master_file_exists === "" ||
                   store?.paperData?.master_file_exists === "false"
                     ? true
@@ -171,13 +176,8 @@ const MasterScriptStepFour = () => {
                   }
                 >
                   <FormControlLabel
-                    // disabled={
-                    //   store?.paperData?.master_file_one_click === "" ||
-                    //   store?.paperData?.master_file_one_click === "false"
-                    //     ? true
-                    //     : false
-                    // }
                     disabled={
+                      isFormDisabled ||
                       store?.paperData?.master_file_exists === "" ||
                       store?.paperData?.master_file_exists === "false"
                         ? true
@@ -189,6 +189,7 @@ const MasterScriptStepFour = () => {
                   />
                   <FormControlLabel
                     disabled={
+                      isFormDisabled ||
                       store?.paperData?.master_file_exists === "" ||
                       store?.paperData?.master_file_exists === "false"
                         ? true
@@ -205,6 +206,7 @@ const MasterScriptStepFour = () => {
               <FormControl
                 required
                 disabled={
+                  isFormDisabled ||
                   store?.paperData?.master_file_exists === "" ||
                   store?.paperData?.master_file_exists === "false"
                     ? true
@@ -225,19 +227,15 @@ const MasterScriptStepFour = () => {
                               <Checkbox
                                 name={item.label}
                                 disabled={
+                                  isFormDisabled ||
                                   store?.paperData?.master_file_exists === "" ||
+                                  store?.paperData.master_file_one_click ===
+                                    "true" ||
                                   store?.paperData?.master_file_exists ===
                                     "false"
                                     ? true
                                     : false
                                 }
-                                // disableRipple={
-                                //   store?.paperData?.master_file_exists === "" ||
-                                //   store?.paperData?.master_file_exists ===
-                                //     "false"
-                                //     ? true
-                                //     : false
-                                // }
                                 checked={
                                   store?.paperData
                                     ?.master_file_no_one_click_reasons &&
@@ -279,7 +277,9 @@ const MasterScriptStepFour = () => {
               <FormControl
                 required
                 disabled={
+                  isFormDisabled ||
                   store?.paperData?.master_file_exists === "" ||
+                  store?.paperData.master_file_one_click === "true" ||
                   store?.paperData?.master_file_exists === "false"
                     ? true
                     : false
@@ -295,10 +295,12 @@ const MasterScriptStepFour = () => {
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent installing additional packages , libraries, updates"
-                  name="num_minutes_installing_additional_packages"
-                  id="num_minutes_installing_additional_packages"
+                  name="num_minutes_installing_additional_package"
+                  id="num_minutes_installing_additional_package"
                   disabled={
+                    isFormDisabled ||
                     store?.paperData?.master_file_exists === "" ||
+                    store?.paperData.master_file_one_click === "true" ||
                     store?.paperData?.master_file_exists === "false"
                       ? true
                       : false
@@ -306,16 +308,20 @@ const MasterScriptStepFour = () => {
                   value={
                     store?.paperData?.num_minutes_installing_additional_package
                   }
+                  onChange={formDataHandler}
                 />
                 <TextField
                   placeholder="(in minutes)"
+                  onChange={formDataHandler}
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent changing directory paths and/or moving files"
                   name="num_minutes_changing_directory_paths"
                   id="num_minutes_changing_directory_paths"
                   disabled={
+                    isFormDisabled ||
                     store?.paperData?.master_file_exists === "" ||
+                    store?.paperData.master_file_one_click === "true" ||
                     store?.paperData?.master_file_exists === "false"
                       ? true
                       : false
@@ -327,10 +333,13 @@ const MasterScriptStepFour = () => {
                   variant="standard"
                   sx={{ my: 1 }}
                   label="Time spent doing other minor collections"
+                  onChange={formDataHandler}
                   name="num_minutes_other_improvements"
                   id="num_minutes_other_improvements"
                   disabled={
+                    isFormDisabled ||
                     store?.paperData?.master_file_exists === "" ||
+                    store?.paperData.master_file_one_click === "true" ||
                     store?.paperData?.master_file_exists === "false"
                       ? true
                       : false
@@ -343,7 +352,9 @@ const MasterScriptStepFour = () => {
               <FormControl
                 required
                 disabled={
+                  isFormDisabled ||
                   store?.paperData?.master_file_exists === "" ||
+                  store?.paperData.master_file_one_click === "true" ||
                   store?.paperData?.master_file_exists === "false"
                     ? true
                     : false
@@ -380,7 +391,6 @@ const MasterScriptStepFour = () => {
 
           <Stepper />
         </Grid>
-        ``
       </Box>
     </>
   );

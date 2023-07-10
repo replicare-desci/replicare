@@ -85,7 +85,6 @@ const ViewDiagramBuilderStepThree = () => {
 
           {/* <Stepper /> */}
         </Grid>
-        ``
       </Box>
     </>
   );
