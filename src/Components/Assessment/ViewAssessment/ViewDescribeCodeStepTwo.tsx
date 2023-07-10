@@ -303,7 +303,6 @@ const ViewDescribeCodeStepTwo = () => {
 
           {/* <Stepper /> */}
         </Grid>
-        ``
       </Box>
     </>
   );

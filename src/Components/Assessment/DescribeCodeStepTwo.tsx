@@ -1,5 +1,3 @@
-import { UserContext } from "../../context/ContextProvider";
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import React, {
   useState,
   useRef,
@@ -8,7 +6,6 @@ import React, {
   useCallback,
 } from "react";
 
-import { createRoot } from "react-dom/client";
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
@@ -21,12 +18,7 @@ import {
   ListItem,
   FormControl,
   FormLabel,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Box,
-  Stepper,
 } from "@mui/material";
 
 const DescribeCodeStepTwo = () => {
@@ -325,7 +317,7 @@ const DescribeCodeStepTwo = () => {
                 </Box>
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Push Me</button>
+                  <button onClick={buttonListener}>Deselect</button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
@@ -360,7 +352,6 @@ const DescribeCodeStepTwo = () => {
 
           {/* <Stepper /> */}
         </Grid>
-        ``
       </Box>
     </>
   );

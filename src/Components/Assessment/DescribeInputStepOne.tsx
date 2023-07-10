@@ -1,5 +1,5 @@
 import { UserContext } from "../../context/ContextProvider";
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+
 import React, {
   useState,
   useRef,
@@ -8,7 +8,6 @@ import React, {
   useCallback,
 } from "react";
 
-import { createRoot } from "react-dom/client";
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
@@ -24,6 +23,45 @@ import {
 } from "@mui/material";
 
 const DescribeInputStepOne = () => {
+  function deleteCellRenderer(params: any) {
+    let eGui = document.createElement("div");
+
+    let editingCells = params.api.getEditingCells();
+    // checks if the rowIndex matches in at least one of the editing cells
+    let isCurrentRowEditing = editingCells.some((cell: any) => {
+      return cell.rowIndex === params.node.rowIndex;
+    });
+
+    if (isCurrentRowEditing) {
+      eGui.innerHTML = `
+  <button  class="action-button update"  data-action="update"> update  </button>
+  <button  class="action-button cancel"  data-action="cancel" > cancel </button>
+  `;
+    } else {
+      eGui.innerHTML = `
+
+  <button class="action-button delete" data-action="delete" > delete </button>
+  `;
+    }
+
+    return eGui;
+  }
+
+  const onRowEditingStarted = (params: any) => {
+    params.api.refreshCells({
+      columns: ["delete"],
+      rowNodes: [params.node],
+      force: true,
+    });
+  };
+
+  const onRowEditingStopped = (params: any) => {
+    params.api.refreshCells({
+      columns: ["delete"],
+      rowNodes: [params.node],
+      force: true,
+    });
+  };
   const gridRef = useRef<AgGridReact<any>>(null);
   // const columns: GridColDef[] = [
 
@@ -66,17 +104,17 @@ const DescribeInputStepOne = () => {
   // Each Column Definition results in one Column.
 
   const [columnDefs, setColumnDefs] = useState([
-    { field: "id", headerName: "ID", width: 90 },
+    // { field: "id", headerName: "ID", width: 90 },
     {
       field: "dataSource",
       headerName: "Data Source",
-      width: 150,
+
       editable: true,
     },
     {
       field: "page",
       headerName: "Page",
-      width: 150,
+
       editable: true,
     },
     {
@@ -113,16 +151,13 @@ const DescribeInputStepOne = () => {
       editable: true,
       // type: "singleSelect",
     },
-    { field: "delete", headerName: "Delete", width: 110, editable: true },
-    // {
-    //   field: "fullName",
-    //   headerName: "Full name",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (params: GridValueGetterParams) =>
-    //     `${params.row.dataSource || ""} ${params.row.page || ""}`,
-    // },
+    {
+      headerName: "delete",
+      minWidth: 150,
+      // cellRenderer: deleteCellRenderer,
+      editable: false,
+      colId: "delete",
+    },
   ]);
 
   const { store, setStore } = UserContext();
@@ -195,7 +230,7 @@ const DescribeInputStepOne = () => {
                 </Box>
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Push Me</button>
+                  <button onClick={buttonListener}>Deselect</button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
@@ -205,6 +240,8 @@ const DescribeInputStepOne = () => {
                     <AgGridReact
                       ref={gridRef} // Ref for accessing Grid's API
                       rowData={rowData} // Row Data for Rows
+                      onRowEditingStopped={onRowEditingStopped}
+                      onRowEditingStarted={onRowEditingStarted}
                       editType="fullRow"
                       columnDefs={columnDefs} // Column Defs for Columns
                       defaultColDef={defaultColDef} // Default Column Properties
@@ -257,7 +294,7 @@ const DescribeInputStepOne = () => {
                 </FormLabel>{" "}
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Push Me</button>
+                  <button onClick={buttonListener}>Deselect</button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
@@ -280,7 +317,6 @@ const DescribeInputStepOne = () => {
             </ListItem>
           </List>
         </Grid>
-        ``
       </Box>
     </>
   );

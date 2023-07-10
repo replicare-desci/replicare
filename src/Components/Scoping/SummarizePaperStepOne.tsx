@@ -636,7 +636,6 @@ const SummarizePaperStepOne = () => {
           </ListItem>
           <Stepper />
         </Grid>
-        ``
       </Box>
     </>
   );

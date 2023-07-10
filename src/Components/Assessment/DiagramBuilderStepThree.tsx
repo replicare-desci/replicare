@@ -1,19 +1,12 @@
-import React, { useState } from "react";
-import { UserContext } from "../../context/ContextProvider";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import React from "react";
+
 import {
   Typography,
   Grid,
   List,
   ListItem,
   FormControl,
-  FormLabel,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Box,
-  Stepper,
 } from "@mui/material";
 
 const DiagramBuilderStepThree = () => {
@@ -75,24 +68,12 @@ const DiagramBuilderStepThree = () => {
                   <Typography variant="h6">Unused data sources:</Typography>
                   <Typography variant="h6">Unused analytic data:</Typography>
                 </Box>
-
-                {/* <TextField
-                  label="e.g. Railroads of the Rah Attempt #1- Jan 2021"
-                  type={"text"}
-                  variant="standard"
-                  fullWidth
-                  required
-                  name="project_nickname"
-                  id="project_nickname"
-                  // onChange={summerizePaperChangeHandler}
-                /> */}
               </FormControl>
             </ListItem>{" "}
           </List>
 
           {/* <Stepper /> */}
         </Grid>
-        ``
       </Box>
     </>
   );
