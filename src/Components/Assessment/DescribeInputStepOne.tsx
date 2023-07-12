@@ -1,14 +1,9 @@
 import { UserContext } from "../../context/ContextProvider";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
+import AgridTablesFile from "./AgridTablesFile";
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
@@ -20,54 +15,70 @@ import {
   FormControl,
   FormLabel,
   Box,
+  Button,
 } from "@mui/material";
+export type dataSourceType = {
+  id: number;
+  dataSource: string;
+  page: string;
+  dataFiles: string;
+  location: string;
+  notes: string;
+  provided: boolean;
+  cited: boolean;
+};
+
+const DeleteCellRenderer = (props: any) => {
+  const { api, node } = props;
+  const editingCells = api.getEditingCells();
+  const isCurrentRowEditing = editingCells.some(
+    (cell: any) => cell.rowIndex === node.rowIndex
+  );
+
+  if (isCurrentRowEditing) {
+    return (
+      <div>
+        <button className="action-button update" data-action="update">
+          Update
+        </button>
+        <button className="action-button cancel" data-action="cancel">
+          Cancel
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <button className="action-button delete" data-action="delete">
+          Delete
+        </button>
+      </div>
+    );
+  }
+};
 
 const DescribeInputStepOne = () => {
-  function deleteCellRenderer(params: any) {
-    let eGui = document.createElement("div");
+  // const onRowEditingStarted = (params: any) => {
+  //   params.api.refreshCells({
+  //     columns: ["delete"],
+  //     rowNodes: [params.node],
+  //     force: true,
+  //   });
 
-    let editingCells = params.api.getEditingCells();
-    // checks if the rowIndex matches in at least one of the editing cells
-    let isCurrentRowEditing = editingCells.some((cell: any) => {
-      return cell.rowIndex === params.node.rowIndex;
-    });
+  //   console.log("row editing started: ", params.data);
+  // };
 
-    if (isCurrentRowEditing) {
-      eGui.innerHTML = `
-  <button  class="action-button update"  data-action="update"> update  </button>
-  <button  class="action-button cancel"  data-action="cancel" > cancel </button>
-  `;
-    } else {
-      eGui.innerHTML = `
+  // const onRowEditingStopped = (params: any) => {
+  //   params.api.refreshCells({
+  //     columns: ["delete"],
+  //     rowNodes: [params.node],
+  //     force: true,
+  //   });
+  // };
 
-  <button class="action-button delete" data-action="delete" > delete </button>
-  `;
-    }
-
-    return eGui;
-  }
-
-  const onRowEditingStarted = (params: any) => {
-    params.api.refreshCells({
-      columns: ["delete"],
-      rowNodes: [params.node],
-      force: true,
-    });
-  };
-
-  const onRowEditingStopped = (params: any) => {
-    params.api.refreshCells({
-      columns: ["delete"],
-      rowNodes: [params.node],
-      force: true,
-    });
-  };
   const gridRef = useRef<AgGridReact<any>>(null);
-  // const columns: GridColDef[] = [
 
-  // ];
-
-  const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+  const [rowData, setRowData] = useState<dataSourceType[]>([]); // Set rowData to Array of Objects, one Object per Row
 
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(
@@ -76,35 +87,59 @@ const DescribeInputStepOne = () => {
       filter: true,
       resizable: true,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 120,
+      minWidth: 140,
+      maxWidth: 170,
       autoHeight: false,
     }),
     []
   );
 
+  const { store, setStore } = UserContext();
   // Example of consuming Grid Event
-  const cellClickedListener = useCallback((event: any) => {
-    console.log("cellClicked", event);
-  }, []);
+  const cellClickedListener = useCallback(
+    (params: any) => {
+      console.log("click listener data:", params.data);
 
-  // Example load data from server
-  useEffect(() => {
-    fetch("https://www.ag-grid.com/example-assets/row-data.json")
-      .then((result) => result.json())
-      .then((rowData) => setRowData(rowData));
-  }, []);
+      const fieldId = params.data?.id;
+      console.log("row id:", fieldId);
 
-  // Example using Grid's API
-  const buttonListener = useCallback((e: any) => {
-    if (gridRef.current) {
-      gridRef.current.api.deselectAll();
-    }
-  }, []);
-  // Each Column Definition results in one Column.
+      setStore((prev: any) => {
+        // Ensure paperData and data_source_rows exist
+        const paperData = prev?.paperData || {};
+        let data_source_rows = paperData?.data_source_rows || [];
 
-  const [columnDefs, setColumnDefs] = useState([
-    // { field: "id", headerName: "ID", width: 90 },
+        // Check if the row already exists
+        const existingRow = data_source_rows.find(
+          (item: any) => item.id === fieldId
+        );
+
+        if (existingRow) {
+          data_source_rows = data_source_rows.map((item: any) => {
+            if (item.id === fieldId) {
+              return params.data;
+            } else {
+              return item;
+            }
+          });
+        } else {
+          data_source_rows.push(params.data);
+        }
+
+        return {
+          ...prev,
+          paperData: {
+            ...paperData,
+            data_source_rows: data_source_rows,
+          },
+        };
+      });
+    },
+    [setStore]
+  );
+
+  // TODO: update column
+  const [dataSourceColumnDefs, setDataSourceColumnDefs] = useState([
+    { field: "id", headerName: "ID", width: 90 },
     {
       field: "dataSource",
       headerName: "Data Source",
@@ -120,21 +155,21 @@ const DescribeInputStepOne = () => {
     {
       field: "dataFiles",
       headerName: "Data Files",
-      // type: "number",
+      type: "number",
 
       editable: true,
     },
     {
       field: "location",
       headerName: "Location",
-      // type: "number",
+      type: "string",
 
       editable: true,
     },
     {
       field: "notes",
       headerName: "Notes",
-      // type: "number",
+      type: "string",
 
       editable: true,
     },
@@ -149,38 +184,91 @@ const DescribeInputStepOne = () => {
       headerName: "Cited",
 
       editable: true,
-      // type: "singleSelect",
+      type: "singleSelect",
     },
     {
-      headerName: "delete",
+      headerName: "Delete",
       minWidth: 150,
-      // cellRenderer: deleteCellRenderer,
+      cellRenderer: "DeleteCellRenderer",
+      cellRendererParams: {
+        reactContainer: true,
+      },
+
+      editable: false,
+      colId: "delete",
+    },
+  ]);
+  const [analyticDataColumnDefs, setAnalyticDataColumnDefs] = useState([
+    { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "analyticData",
+      headerName: "Analytic Data",
+
+      editable: true,
+    },
+
+    {
+      field: "location",
+      headerName: "Location",
+      type: "string",
+
+      editable: true,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      type: "string",
+
+      editable: true,
+    },
+
+    {
+      headerName: "Delete",
+      // minWidth: 150,
+      cellRenderer: "DeleteCellRenderer",
+      cellRendererParams: {
+        reactContainer: true,
+      },
+
       editable: false,
       colId: "delete",
     },
   ]);
 
-  const { store, setStore } = UserContext();
-  // const [claimTypeOther, setClaimTypeOther] = useState<string>("");
-  // const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
+  function addRowToGrid() {
+    let maxId: number =
+      rowData.length > 0 ? Math.max(...rowData.map((row) => row.id)) : 0;
 
-  // // handle change
-  // const DescribeInputStepOneChangeHandler = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const { name, value } = event.target;
+    let newId: number = maxId + 1;
 
-  //   setStore((prev: any) => {
-  //     return {
-  //       ...prev,
-  //       paperData: {
-  //         ...prev.paperData,
-  //         [name]: value,
-  //       },
-  //     };
-  //   });
-  // };
-  // console.log(store.paperData);
+    const newRow = {
+      id: newId,
+      dataSource: "",
+      page: "",
+      dataFiles: "",
+      location: "",
+      notes: "",
+      provided: false,
+      cited: false,
+    };
+
+    setRowData((prev: any) => {
+      return [...prev, newRow];
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const data_source_rows = paperData?.data_source_rows || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          data_source_rows: [...data_source_rows, newRow],
+        },
+      };
+    });
+  }
 
   return (
     <>
@@ -230,26 +318,17 @@ const DescribeInputStepOne = () => {
                 </Box>
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Deselect</button>
+
+                  <Button onClick={addRowToGrid}>add row</Button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-                  <div
-                    className="ag-theme-alpine"
-                    style={{ width: "100%", height: 300 }}
-                  >
-                    <AgGridReact
-                      ref={gridRef} // Ref for accessing Grid's API
-                      rowData={rowData} // Row Data for Rows
-                      onRowEditingStopped={onRowEditingStopped}
-                      onRowEditingStarted={onRowEditingStarted}
-                      editType="fullRow"
-                      columnDefs={columnDefs} // Column Defs for Columns
-                      defaultColDef={defaultColDef} // Default Column Properties
-                      animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-                      rowSelection="multiple" // Options - allows click selection of rows
-                      onCellClicked={cellClickedListener} // Optional - registering for Grid Event
-                    />
-                  </div>
+                  <AgridTablesFile
+                    gridRef={gridRef}
+                    rowData={rowData}
+                    columnDefs={dataSourceColumnDefs}
+                    defaultColDef={defaultColDef}
+                    cellClickedListener={cellClickedListener}
+                  />
                 </Box>
               </FormControl>
             </ListItem>{" "}
@@ -294,22 +373,18 @@ const DescribeInputStepOne = () => {
                 </FormLabel>{" "}
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Deselect</button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
                     className="ag-theme-alpine"
                     style={{ width: "100%", height: 300 }}
                   >
-                    <AgGridReact
-                      ref={gridRef} // Ref for accessing Grid's API
-                      rowData={rowData} // Row Data for Rows
-                      editType="fullRow"
-                      columnDefs={columnDefs} // Column Defs for Columns
-                      defaultColDef={defaultColDef} // Default Column Properties
-                      animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-                      rowSelection="multiple" // Options - allows click selection of rows
-                      onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+                    <AgridTablesFile
+                      gridRef={gridRef}
+                      rowData={rowData}
+                      defaultColDef={defaultColDef}
+                      cellClickedListener={cellClickedListener}
+                      columnDefs={analyticDataColumnDefs} // Column Defs for Columns
                     />
                   </div>
                 </Box>
