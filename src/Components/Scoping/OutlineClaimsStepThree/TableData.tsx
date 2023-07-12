@@ -6,11 +6,22 @@ import React, {
   useCallback,
 } from "react";
 import Box from "@mui/material/Box";
+import AgridTablesFile from "../../Assessment/AgridTablesFile";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
+import { UserContext } from "../../../context/ContextProvider";
+type outlineTableType = {
+  id: number;
+  description: string;
+  file_name: string;
+  location: string;
+  primary_types: string;
+  inputs: string;
+  outputs: string;
+};
 // const columns: GridColDef[] = [
 //
 // ];
@@ -58,12 +69,16 @@ import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
 // ];
 
 export default function TableData() {
+  const { store, setStore } = UserContext();
   const gridRef = useRef<AgGridReact<any>>(null);
+  // const columns: GridColDef[] = [
 
-  const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+  // ];
+
+  const [rowData, setRowData] = useState<outlineTableType[]>([]);
 
   // Each Column Definition results in one Column.
-  const [columnDefs, setColumnDefs] = useState([
+  const [outlineClaimsColumnDefs, setOutlineClaimsColumnDefs] = useState([
     {
       field: "firstName",
       headerName: "Preferred Specification",
@@ -120,10 +135,46 @@ export default function TableData() {
     []
   );
 
-  // Example of consuming Grid Event
-  const cellClickedListener = useCallback((event: any) => {
-    console.log("cellClicked", event);
-  }, []);
+  const cellClickedListener = useCallback(
+    (params: any) => {
+      console.log("click listener data:", params.data);
+
+      const fieldId = params.data?.id;
+      console.log("row id:", fieldId);
+
+      setStore((prev: any) => {
+        // Ensure paperData and data_source_rows exist
+        const paperData = prev?.paperData || {};
+        let data_source_rows = paperData?.data_source_rows || [];
+
+        // Check if the row already exists
+        const existingRow = data_source_rows.find(
+          (item: any) => item.id === fieldId
+        );
+
+        if (existingRow) {
+          data_source_rows = data_source_rows.map((item: any) => {
+            if (item.id === fieldId) {
+              return params.data;
+            } else {
+              return item;
+            }
+          });
+        } else {
+          data_source_rows.push(params.data);
+        }
+
+        return {
+          ...prev,
+          paperData: {
+            ...paperData,
+            data_source_rows: data_source_rows,
+          },
+        };
+      });
+    },
+    [setStore]
+  );
 
   // Example load data from server
   useEffect(() => {
@@ -146,15 +197,12 @@ export default function TableData() {
 
       {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
       <div className="ag-theme-alpine" style={{ width: "100%", height: 300 }}>
-        <AgGridReact
-          ref={gridRef} // Ref for accessing Grid's API
-          rowData={rowData} // Row Data for Rows
-          editType="fullRow"
-          columnDefs={columnDefs} // Column Defs for Columns
-          defaultColDef={defaultColDef} // Default Column Properties
-          animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-          rowSelection="multiple" // Options - allows click selection of rows
-          onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+        <AgridTablesFile
+          gridRef={gridRef}
+          rowData={rowData}
+          columnDefs={outlineClaimsColumnDefs}
+          defaultColDef={defaultColDef}
+          cellClickedListener={cellClickedListener}
         />
       </div>
     </Box>

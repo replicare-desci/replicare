@@ -63,7 +63,7 @@ export type data_source_rows = {
   id?: number;
   location?: string;
   notes?: string;
-  page_provided?: string;
+  provided?: boolean;
 };
 export type analytic_data_rows = {
   analytic_data?: string;

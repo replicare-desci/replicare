@@ -10,6 +10,7 @@ import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
+import AgridTablesFile from "./AgridTablesFile";
 
 import {
   Typography,
@@ -19,15 +20,26 @@ import {
   FormControl,
   FormLabel,
   Box,
+  Button,
 } from "@mui/material";
-
+import { UserContext } from "../../context/ContextProvider";
+type codeScriptDataType = {
+  id: number;
+  description: string;
+  file_name: string;
+  location: string;
+  primary_types: string;
+  inputs: string;
+  outputs: string;
+};
 const DescribeCodeStepTwo = () => {
+  const { store, setStore } = UserContext();
   const gridRef = useRef<AgGridReact<any>>(null);
   // const columns: GridColDef[] = [
 
   // ];
 
-  const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+  const [rowData, setRowData] = useState<codeScriptDataType[]>([]);
 
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(
@@ -42,18 +54,91 @@ const DescribeCodeStepTwo = () => {
     }),
     []
   );
+  const cellClickedListener = useCallback(
+    (params: any) => {
+      console.log("click listener data:", params.data);
 
+      const fieldId = params.data?.id;
+      console.log("row id:", fieldId);
+
+      setStore((prev: any) => {
+        // Ensure paperData and data_source_rows exist
+        const paperData = prev?.paperData || {};
+        let data_source_rows = paperData?.data_source_rows || [];
+
+        // Check if the row already exists
+        const existingRow = data_source_rows.find(
+          (item: any) => item.id === fieldId
+        );
+
+        if (existingRow) {
+          data_source_rows = data_source_rows.map((item: any) => {
+            if (item.id === fieldId) {
+              return params.data;
+            } else {
+              return item;
+            }
+          });
+        } else {
+          data_source_rows.push(params.data);
+        }
+
+        return {
+          ...prev,
+          paperData: {
+            ...paperData,
+            data_source_rows: data_source_rows,
+          },
+        };
+      });
+    },
+    [setStore]
+  );
   // Example of consuming Grid Event
-  const cellClickedListener = useCallback((event: any) => {
-    console.log("cellClicked", event);
-  }, []);
+  // const cellClickedListener = useCallback((event: any) => {
+  //   console.log("cellClicked", event);
+  // }, []);
 
   // Example load data from server
-  useEffect(() => {
-    fetch("https://www.ag-grid.com/example-assets/row-data.json")
-      .then((result) => result.json())
-      .then((rowData) => setRowData(rowData));
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://www.ag-grid.com/example-assets/row-data.json")
+  //     .then((result) => result.json())
+  //     .then((rowData) => setRowData(rowData));
+  // }, []);
+
+  function addRowToGrid() {
+    let maxId: number =
+      rowData.length > 0 ? Math.max(...rowData.map((row) => row.id)) : 0;
+
+    let newId: number = maxId + 1;
+
+    const newRow = {
+      id: newId,
+      description: "",
+      file_name: "",
+      location: "",
+      primary_types: "",
+      inputs: "",
+      outputs: "",
+    };
+
+    setRowData((prev: any) => {
+      return [...prev, newRow];
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const data_source_rows = paperData?.data_source_rows || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          data_source_rows: [...data_source_rows, newRow],
+        },
+      };
+    });
+  }
 
   // Example using Grid's API
   const buttonListener = useCallback((e: any) => {
@@ -62,7 +147,7 @@ const DescribeCodeStepTwo = () => {
     }
   }, []);
   // Each Column Definition results in one Column.
-  const [columnDefs, setColumnDefs] = useState([
+  const [codeScriptColumnDefs, setCodeScriptColumnDefs] = useState([
     { field: "id", headerName: "ID", width: 90 },
     {
       field: "fileName",
@@ -106,139 +191,7 @@ const DescribeCodeStepTwo = () => {
     },
 
     { field: "delete", headerName: "Delete", width: 110, editable: true },
-    // {
-    //   field: "fullName",
-    //   headerName: "Full name",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (params: GridValueGetterParams) =>
-    //     `${params.row.fileName || ""} ${params.row.inputs || ""}`,
-    // },
   ]);
-
-  const rows = [
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-    {
-      id: "",
-      inputs: "",
-      fileName: "",
-      outputs: "",
-      location: "",
-      description: "",
-      primaryType: "",
-
-      delete: "",
-    },
-  ];
-  // const { store, setStore } = UserContext();
-  // const [claimTypeOther, setClaimTypeOther] = useState<string>("");
-  // const [otherTypeChecked, otherTypeSetChecked] = useState<boolean>(false);
-
-  // // handle change
-  // const summerizePaperChangeHandler = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const { name, value } = event.target;
-
-  //   setStore((prev: any) => {
-  //     return {
-  //       ...prev,
-  //       paperData: {
-  //         ...prev.paperData,
-  //         [name]: value,
-  //       },
-  //     };
-  //   });
-  // };
-  // console.log(store.paperData);
 
   return (
     <>
@@ -317,35 +270,26 @@ const DescribeCodeStepTwo = () => {
                 </Box>
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
-                  <button onClick={buttonListener}>Deselect</button>
+                  {/* <button onClick={buttonListener}>Deselect</button> */}
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
                     className="ag-theme-alpine"
                     style={{ width: "100%", height: 300 }}
                   >
-                    <AgGridReact
-                      ref={gridRef} // Ref for accessing Grid's API
-                      rowData={rowData} // Row Data for Rows
-                      editType="fullRow"
-                      columnDefs={columnDefs} // Column Defs for Columns
-                      defaultColDef={defaultColDef} // Default Column Properties
-                      animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-                      rowSelection="multiple" // Options - allows click selection of rows
-                      onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+                    {" "}
+                    <Button variant="contained" onClick={addRowToGrid}>
+                      add row
+                    </Button>
+                    <AgridTablesFile
+                      gridRef={gridRef}
+                      rowData={rowData}
+                      columnDefs={codeScriptColumnDefs}
+                      defaultColDef={defaultColDef}
+                      cellClickedListener={cellClickedListener}
                     />
                   </div>
                 </Box>
-                {/* <TextField
-                  label="e.g. Railroads of the Rah Attempt #1- Jan 2021"
-                  type={"text"}
-                  variant="standard"
-                  fullWidth
-                  required
-                  name="project_nickname"
-                  id="project_nickname"
-                  // onChange={summerizePaperChangeHandler}
-                /> */}
               </FormControl>
             </ListItem>{" "}
           </List>
