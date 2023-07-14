@@ -4,9 +4,10 @@ import React, { useState, useRef, useMemo, useCallback } from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import AgridTablesFile from "./AgridTablesFile";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
-import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
+import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
 import {
   Typography,
   Grid,
@@ -16,6 +17,7 @@ import {
   FormLabel,
   Box,
   Button,
+  IconButton,
 } from "@mui/material";
 export type dataSourceType = {
   id: number;
@@ -26,6 +28,13 @@ export type dataSourceType = {
   notes: string;
   provided: boolean;
   cited: boolean;
+};
+export type analyticDataType = {
+  id: number;
+  analytic_data: string;
+  description: string;
+
+  location: string;
 };
 
 const DeleteCellRenderer = (props: any) => {
@@ -78,17 +87,30 @@ const DescribeInputStepOne = () => {
 
   const gridRef = useRef<AgGridReact<any>>(null);
 
-  const [rowData, setRowData] = useState<dataSourceType[]>([]); // Set rowData to Array of Objects, one Object per Row
+  const [dataSourceRowData, setDataSourceRowData] = useState<dataSourceType[]>(
+    []
+  ); // Set rowData to Array of Objects, one Object per Row
+  const [analyticRowData, setAnalyticRowData] = useState<analyticDataType[]>(
+    []
+  ); // Set rowData to Array of Objects, one Object per Row
 
-  // DefaultColDef sets props common to all Columns
-  const defaultColDef = useMemo(
+  const dataSourceColDef = useMemo(
     () => ({
-      sortable: true,
-      filter: true,
       resizable: true,
       flex: 1,
-      minWidth: 140,
-      maxWidth: 170,
+      // minWidth: 110,
+      // maxWidth: 130,
+      autoHeight: false,
+    }),
+    []
+  );
+
+  const analyticDataColDef = useMemo(
+    () => ({
+      resizable: true,
+      flex: 1,
+      // minWidth: 200,
+      // maxWidth: 240,
       autoHeight: false,
     }),
     []
@@ -96,7 +118,7 @@ const DescribeInputStepOne = () => {
 
   const { store, setStore } = UserContext();
   // Example of consuming Grid Event
-  const cellClickedListener = useCallback(
+  const dataSourceCellClickedListener = useCallback(
     (params: any) => {
       console.log("click listener data:", params.data);
 
@@ -136,6 +158,157 @@ const DescribeInputStepOne = () => {
     },
     [setStore]
   );
+  const analyticDataCellClickedListener = useCallback(
+    (params: any) => {
+      console.log("Analytic data click listener data:", params.data);
+
+      const fieldId = params.data?.id;
+      console.log("row id:", fieldId);
+
+      setStore((prev: any) => {
+        // Ensure paperData and data_source_rows exist
+        const paperData = prev?.paperData || {};
+        let analytic_data_rows = paperData?.analytic_data_rows || [];
+
+        // Check if the row already exists
+        const existingRow = analytic_data_rows.find(
+          (item: any) => item.id === fieldId
+        );
+
+        if (existingRow) {
+          analytic_data_rows = analytic_data_rows.map((item: any) => {
+            if (item.id === fieldId) {
+              return params.data;
+            } else {
+              return item;
+            }
+          });
+        } else {
+          analytic_data_rows.push(params.data);
+        }
+
+        return {
+          ...prev,
+          paperData: {
+            ...paperData,
+            analytic_data_rows: analytic_data_rows,
+          },
+        };
+      });
+    },
+    [setStore]
+  );
+  function addRowToGridDataSource() {
+    let maxId: number =
+      dataSourceRowData.length > 0
+        ? Math.max(...dataSourceRowData.map((row) => row.id))
+        : 0;
+
+    let newId: number = maxId + 1;
+
+    const dataSourcenewRow = {
+      id: newId,
+      dataSource: "",
+      page: "",
+      dataFiles: "",
+      location: "",
+      notes: "",
+      provided: false,
+      cited: false,
+    };
+
+    setDataSourceRowData((prev: any) => {
+      return [...prev, dataSourcenewRow];
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const data_source_rows = paperData?.data_source_rows || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          data_source_rows: [...data_source_rows, dataSourcenewRow],
+        },
+      };
+    });
+  }
+  function addRowToGridAnalyticData() {
+    let maxId: number =
+      analyticRowData.length > 0
+        ? Math.max(...analyticRowData.map((row) => row.id))
+        : 0;
+
+    let newId: number = maxId + 1;
+
+    const analyticDataNewRow = {
+      id: newId,
+      dataSource: "",
+      page: "",
+      dataFiles: "",
+      location: "",
+      notes: "",
+      provided: false,
+      cited: false,
+    };
+
+    setAnalyticRowData((prev: any) => {
+      return [...prev, analyticDataNewRow];
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const analytic_data_rows = paperData?.data_source_rows || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          data_source_rows: [...analytic_data_rows, analyticDataNewRow],
+        },
+      };
+    });
+  }
+
+  function dataSourceDeleteRow(id: number) {
+    setDataSourceRowData((prev) => {
+      return prev.filter((row) => row.id !== id);
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const data_source_rows =
+        paperData?.data_source_rows.filter((row: any) => row.id !== id) || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          data_source_rows: data_source_rows,
+        },
+      };
+    });
+  }
+  function analyticDataDeleteRow(id: number) {
+    setAnalyticRowData((prev) => {
+      return prev.filter((row) => row.id !== id);
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const analytic_data_rows =
+        paperData?.analytic_data_rows.filter((row: any) => row.id !== id) || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          analytic_data_rows: analytic_data_rows,
+        },
+      };
+    });
+  }
 
   // TODO: update column
   const [dataSourceColumnDefs, setDataSourceColumnDefs] = useState([
@@ -188,14 +361,20 @@ const DescribeInputStepOne = () => {
     },
     {
       headerName: "Delete",
-      minWidth: 150,
-      cellRenderer: "DeleteCellRenderer",
-      cellRendererParams: {
-        reactContainer: true,
+      field: "delete",
+      cellRenderer: function (params: any) {
+        return (
+          <IconButton
+            onClick={(event) => {
+              event.preventDefault();
+              dataSourceDeleteRow(params.data.id);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        );
       },
-
-      editable: false,
-      colId: "delete",
+      width: 100,
     },
   ]);
   const [analyticDataColumnDefs, setAnalyticDataColumnDefs] = useState([
@@ -224,51 +403,22 @@ const DescribeInputStepOne = () => {
 
     {
       headerName: "Delete",
-      // minWidth: 150,
-      cellRenderer: "DeleteCellRenderer",
-      cellRendererParams: {
-        reactContainer: true,
+      field: "delete",
+      cellRenderer: function (params: any) {
+        return (
+          <IconButton
+            onClick={(event) => {
+              event.preventDefault();
+              analyticDataDeleteRow(params.data.id);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        );
       },
-
-      editable: false,
-      colId: "delete",
+      width: 100,
     },
   ]);
-
-  function addRowToGrid() {
-    let maxId: number =
-      rowData.length > 0 ? Math.max(...rowData.map((row) => row.id)) : 0;
-
-    let newId: number = maxId + 1;
-
-    const newRow = {
-      id: newId,
-      dataSource: "",
-      page: "",
-      dataFiles: "",
-      location: "",
-      notes: "",
-      provided: false,
-      cited: false,
-    };
-
-    setRowData((prev: any) => {
-      return [...prev, newRow];
-    });
-
-    setStore((prev: any) => {
-      const paperData = prev?.paperData || {};
-      const data_source_rows = paperData?.data_source_rows || [];
-
-      return {
-        ...prev,
-        paperData: {
-          ...paperData,
-          data_source_rows: [...data_source_rows, newRow],
-        },
-      };
-    });
-  }
 
   return (
     <>
@@ -319,15 +469,21 @@ const DescribeInputStepOne = () => {
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
 
-                  <Button onClick={addRowToGrid}>add row</Button>
+                  <Button
+                    sx={{ my: 2 }}
+                    variant="contained"
+                    onClick={addRowToGridDataSource}
+                  >
+                    add row
+                  </Button>
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <AgridTablesFile
                     gridRef={gridRef}
-                    rowData={rowData}
+                    rowData={dataSourceRowData}
                     columnDefs={dataSourceColumnDefs}
-                    defaultColDef={defaultColDef}
-                    cellClickedListener={cellClickedListener}
+                    defaultColDef={dataSourceColDef}
+                    cellClickedListener={dataSourceCellClickedListener}
                   />
                 </Box>
               </FormControl>
@@ -374,16 +530,23 @@ const DescribeInputStepOne = () => {
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
 
+                  <Button
+                    sx={{ mb: 2 }}
+                    variant="contained"
+                    onClick={addRowToGridAnalyticData}
+                  >
+                    add row
+                  </Button>
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
-                    className="ag-theme-alpine"
+                    className="ag-theme-material"
                     style={{ width: "100%", height: 300 }}
                   >
                     <AgridTablesFile
                       gridRef={gridRef}
-                      rowData={rowData}
-                      defaultColDef={defaultColDef}
-                      cellClickedListener={cellClickedListener}
+                      rowData={analyticRowData}
+                      defaultColDef={analyticDataColDef}
+                      cellClickedListener={analyticDataCellClickedListener}
                       columnDefs={analyticDataColumnDefs} // Column Defs for Columns
                     />
                   </div>
