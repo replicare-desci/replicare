@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
 import AgridTablesFile from "./AgridTablesFile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
+import { IconButton, Input } from "@mui/material";import Papa from "papaparse";
 import {
   Typography,
   Grid,
@@ -29,7 +29,7 @@ type codeScriptDataType = {
 };
 const DescribeCodeStepTwo = () => {
   const { store, setStore } = UserContext();
-  const gridRef = useRef<AgGridReact<any>>(null);
+  const codeScriptGridRef = useRef<AgGridReact<any>>(null);
   // const columns: GridColDef[] = [
 
   // ];
@@ -215,7 +215,22 @@ const DescribeCodeStepTwo = () => {
       width: 100,
     },
   ]);
+  const onBtnExport = useCallback(() => {
+    if (codeScriptGridRef.current !== null) {
+      codeScriptGridRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+  const onFileUpload = (event: any) => {
+    let file = event.target.files[0];
 
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: function (results: any) {
+        setCodeScriptRowData(results.data);
+      },
+    });
+  };
   return (
     <>
       <Box p={2} my={4} boxShadow={1} border={1}>
@@ -301,15 +316,29 @@ const DescribeCodeStepTwo = () => {
                     style={{ width: "100%", height: 300 }}
                   >
                     {" "}
-                    <Button
-                      sx={{ my: 2 }}
-                      variant="contained"
-                      onClick={codeScriptAddRowToGrid}
-                    >
-                      add row
-                    </Button>
+                    <Box my={2}>
+                      {" "}
+                      <Button
+                        sx={{ my: 2 }}
+                        variant="contained"
+                        onClick={codeScriptAddRowToGrid}
+                      >
+                        add row
+                      </Button>
+                      {/* <button onClick={onBtnUpdate}>
+                    Show CSV export content text
+                  </button> */}
+                      <Button
+                        variant="contained"
+                        sx={{ mx: 1 }}
+                        onClick={onBtnExport}
+                      >
+                        Export CSV
+                      </Button>
+                      <Input type="file" onChange={onFileUpload} />
+                    </Box>
                     <AgridTablesFile
-                      gridRef={gridRef}
+                      gridRef={codeScriptGridRef}
                       rowData={codeScriptRowData}
                       columnDefs={codeScriptColumnDefs}
                       defaultColDef={codeScriptColDef}

@@ -8,6 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
+import Papa from "papaparse";
+
 import {
   Typography,
   Grid,
@@ -18,6 +20,7 @@ import {
   Box,
   Button,
   IconButton,
+  Input,
 } from "@mui/material";
 export type dataSourceType = {
   id: number;
@@ -85,7 +88,8 @@ const DescribeInputStepOne = () => {
   //   });
   // };
 
-  const gridRef = useRef<AgGridReact<any>>(null);
+  const dataSourceGridRef = useRef<AgGridReact<any>>(null);
+  const analyticDataGridRef = useRef<AgGridReact<any>>(null);
 
   const [dataSourceRowData, setDataSourceRowData] = useState<dataSourceType[]>(
     []
@@ -93,6 +97,17 @@ const DescribeInputStepOne = () => {
   const [analyticRowData, setAnalyticRowData] = useState<analyticDataType[]>(
     []
   ); // Set rowData to Array of Objects, one Object per Row
+  const onFileUpload = (event: any) => {
+    let file = event.target.files[0];
+
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: function (results: any) {
+        setDataSourceRowData(results.data);
+      },
+    });
+  };
 
   const dataSourceColDef = useMemo(
     () => ({
@@ -419,6 +434,18 @@ const DescribeInputStepOne = () => {
       width: 100,
     },
   ]);
+  const onBtnExport = useCallback(() => {
+    if (dataSourceGridRef.current !== null) {
+      dataSourceGridRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+
+  // const onBtnUpdate = useCallback(() => {
+  //   if (Object !== null) {
+  //     document.querySelector("#csvResult").value =
+  //       gridRef.current.api.getDataAsCsv();
+  //   }
+  // }, []);
 
   return (
     <>
@@ -469,17 +496,30 @@ const DescribeInputStepOne = () => {
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
 
-                  <Button
-                    sx={{ my: 2 }}
-                    variant="contained"
-                    onClick={addRowToGridDataSource}
-                  >
-                    add row
-                  </Button>
-
+                  <Box my={2}>
+                    {" "}
+                    <Button
+                      sx={{ mx: 1 }}
+                      variant="contained"
+                      onClick={addRowToGridDataSource}
+                    >
+                      add row
+                    </Button>
+                    {/* <button onClick={onBtnUpdate}>
+                    Show CSV export content text
+                  </button> */}
+                    <Button
+                      variant="contained"
+                      sx={{ mx: 1 }}
+                      onClick={onBtnExport}
+                    >
+                      Export CSV
+                    </Button>
+                    <Input type="file" onChange={onFileUpload} />
+                  </Box>
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <AgridTablesFile
-                    gridRef={gridRef}
+                    gridRef={dataSourceGridRef}
                     rowData={dataSourceRowData}
                     columnDefs={dataSourceColumnDefs}
                     defaultColDef={dataSourceColDef}
@@ -529,21 +569,34 @@ const DescribeInputStepOne = () => {
                 </FormLabel>{" "}
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
+                  <Box mb={2}>
+                    {" "}
+                    <Button
+                      variant="contained"
+                      onClick={addRowToGridAnalyticData}
+                    >
+                      add row
+                    </Button>
+                    {/* <button onClick={onBtnUpdate}>
+                    Show CSV export content text
+                  </button> */}
+                    <Button
+                      variant="contained"
+                      sx={{ mx: 1 }}
+                      onClick={onBtnExport}
+                    >
+                      Export CSV
+                    </Button>
+                    <Input type="file" onChange={onFileUpload} />
+                  </Box>
 
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    onClick={addRowToGridAnalyticData}
-                  >
-                    add row
-                  </Button>
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
                     className="ag-theme-material"
                     style={{ width: "100%", height: 300 }}
                   >
                     <AgridTablesFile
-                      gridRef={gridRef}
+                      gridRef={analyticDataGridRef}
                       rowData={analyticRowData}
                       defaultColDef={analyticDataColDef}
                       cellClickedListener={analyticDataCellClickedListener}

@@ -23,6 +23,7 @@ const AgridTablesFile = ({
       <AgGridReact
         ref={gridRef} // Ref for accessing Grid's API
         rowData={rowData} // Row Data for Rows
+        suppressExcelExport={true}
         editType="fullRow"
         columnDefs={columnDefs} // Column Defs for Columns
         defaultColDef={defaultColDef} // Default Column Properties
