@@ -1,17 +1,12 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
-import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
+import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
 import AgridTablesFile from "./AgridTablesFile";
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import { IconButton } from "@mui/material";
 import {
   Typography,
   Grid,
@@ -39,22 +34,24 @@ const DescribeCodeStepTwo = () => {
 
   // ];
 
-  const [rowData, setRowData] = useState<codeScriptDataType[]>([]);
+  const [codeScriptRowData, setCodeScriptRowData] = useState<
+    codeScriptDataType[]
+  >([]);
 
   // DefaultColDef sets props common to all Columns
-  const defaultColDef = useMemo(
+  const codeScriptColDef = useMemo(
     () => ({
-      sortable: true,
-      filter: true,
+      // sortable: true,
+      // filter: true,
       resizable: true,
       flex: 1,
-      minWidth: 200,
-      maxWidth: 130,
+      // minWidth: 200,
+      // maxWidth: 135,
       autoHeight: false,
     }),
     []
   );
-  const cellClickedListener = useCallback(
+  const codeScriptCellClickedListener = useCallback(
     (params: any) => {
       console.log("click listener data:", params.data);
 
@@ -62,17 +59,17 @@ const DescribeCodeStepTwo = () => {
       console.log("row id:", fieldId);
 
       setStore((prev: any) => {
-        // Ensure paperData and data_source_rows exist
+        // Ensure paperData and code_scripts_rows exist
         const paperData = prev?.paperData || {};
-        let data_source_rows = paperData?.data_source_rows || [];
+        let code_scripts_rows = paperData?.code_scripts_rows || [];
 
         // Check if the row already exists
-        const existingRow = data_source_rows.find(
+        const existingRow = code_scripts_rows.find(
           (item: any) => item.id === fieldId
         );
 
         if (existingRow) {
-          data_source_rows = data_source_rows.map((item: any) => {
+          code_scripts_rows = code_scripts_rows.map((item: any) => {
             if (item.id === fieldId) {
               return params.data;
             } else {
@@ -80,39 +77,30 @@ const DescribeCodeStepTwo = () => {
             }
           });
         } else {
-          data_source_rows.push(params.data);
+          code_scripts_rows.push(params.data);
         }
 
         return {
           ...prev,
           paperData: {
             ...paperData,
-            data_source_rows: data_source_rows,
+            code_scripts_rows: code_scripts_rows,
           },
         };
       });
     },
     [setStore]
   );
-  // Example of consuming Grid Event
-  // const cellClickedListener = useCallback((event: any) => {
-  //   console.log("cellClicked", event);
-  // }, []);
 
-  // Example load data from server
-  // useEffect(() => {
-  //   fetch("https://www.ag-grid.com/example-assets/row-data.json")
-  //     .then((result) => result.json())
-  //     .then((rowData) => setRowData(rowData));
-  // }, []);
-
-  function addRowToGrid() {
+  function codeScriptAddRowToGrid() {
     let maxId: number =
-      rowData.length > 0 ? Math.max(...rowData.map((row) => row.id)) : 0;
+      codeScriptRowData.length > 0
+        ? Math.max(...codeScriptRowData.map((row) => row.id))
+        : 0;
 
     let newId: number = maxId + 1;
 
-    const newRow = {
+    const codeScriptNewRow = {
       id: newId,
       description: "",
       file_name: "",
@@ -122,31 +110,50 @@ const DescribeCodeStepTwo = () => {
       outputs: "",
     };
 
-    setRowData((prev: any) => {
-      return [...prev, newRow];
+    setCodeScriptRowData((prev: any) => {
+      return [...prev, codeScriptNewRow];
     });
 
     setStore((prev: any) => {
       const paperData = prev?.paperData || {};
-      const data_source_rows = paperData?.data_source_rows || [];
+      const code_scripts_rows = paperData?.code_scripts_rows || [];
 
       return {
         ...prev,
         paperData: {
           ...paperData,
-          data_source_rows: [...data_source_rows, newRow],
+          code_scripts_rows: [...code_scripts_rows, codeScriptNewRow],
         },
       };
     });
   }
 
-  // Example using Grid's API
-  const buttonListener = useCallback((e: any) => {
-    if (gridRef.current) {
-      gridRef.current.api.deselectAll();
-    }
-  }, []);
+  // // Example using Grid's API
+  // const buttonListener = useCallback((e: any) => {
+  //   if (gridRef.current) {
+  //     gridRef.current.api.deselectAll();
+  //   }
+  // }, []);
   // Each Column Definition results in one Column.
+  function codeScriptDeleteRow(id: number) {
+    setCodeScriptRowData((prev) => {
+      return prev.filter((row) => row.id !== id);
+    });
+
+    setStore((prev: any) => {
+      const paperData = prev?.paperData || {};
+      const code_scripts_rows =
+        paperData?.code_scripts_rows.filter((row: any) => row.id !== id) || [];
+
+      return {
+        ...prev,
+        paperData: {
+          ...paperData,
+          code_scripts_rows: code_scripts_rows,
+        },
+      };
+    });
+  }
   const [codeScriptColumnDefs, setCodeScriptColumnDefs] = useState([
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -190,7 +197,23 @@ const DescribeCodeStepTwo = () => {
       editable: true,
     },
 
-    { field: "delete", headerName: "Delete", width: 110, editable: true },
+    {
+      headerName: "Delete",
+      field: "delete",
+      cellRenderer: function (params: any) {
+        return (
+          <IconButton
+            onClick={(event) => {
+              event.preventDefault();
+              codeScriptDeleteRow(params.data.id);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        );
+      },
+      width: 100,
+    },
   ]);
 
   return (
@@ -274,19 +297,23 @@ const DescribeCodeStepTwo = () => {
 
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
-                    className="ag-theme-alpine"
+                    className="ag-theme-material"
                     style={{ width: "100%", height: 300 }}
                   >
                     {" "}
-                    <Button variant="contained" onClick={addRowToGrid}>
+                    <Button
+                      sx={{ my: 2 }}
+                      variant="contained"
+                      onClick={codeScriptAddRowToGrid}
+                    >
                       add row
                     </Button>
                     <AgridTablesFile
                       gridRef={gridRef}
-                      rowData={rowData}
+                      rowData={codeScriptRowData}
                       columnDefs={codeScriptColumnDefs}
-                      defaultColDef={defaultColDef}
-                      cellClickedListener={cellClickedListener}
+                      defaultColDef={codeScriptColDef}
+                      cellClickedListener={codeScriptCellClickedListener}
                     />
                   </div>
                 </Box>
