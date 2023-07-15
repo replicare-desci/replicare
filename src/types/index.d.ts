@@ -57,10 +57,12 @@ export type claims = {
   estimates: estimates;
 };
 export type data_source_rows = {
+  page?: string;
+
   cited?: boolean;
   data_files?: string;
   data_source?: string;
-  id?: number;
+  id: number;
   location?: string;
   notes?: string;
   provided?: boolean;
@@ -68,7 +70,7 @@ export type data_source_rows = {
 export type analytic_data_rows = {
   analytic_data?: string;
   description?: string;
-  id?: number;
+  id: number;
   location?: string;
 };
 export type code_scripts_rows = {

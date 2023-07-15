@@ -1,4 +1,10 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
@@ -6,7 +12,8 @@ import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
 import AgridTablesFile from "./AgridTablesFile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton, Input } from "@mui/material";import Papa from "papaparse";
+import { IconButton, Input } from "@mui/material";
+import Papa from "papaparse";
 import {
   Typography,
   Grid,
@@ -18,15 +25,8 @@ import {
   Button,
 } from "@mui/material";
 import { UserContext } from "../../context/ContextProvider";
-type codeScriptDataType = {
-  id: number;
-  description: string;
-  file_name: string;
-  location: string;
-  primary_types: string;
-  inputs: string;
-  outputs: string;
-};
+import codeScriptCSV from "../../assets/example_code_script.csv";
+import { code_scripts_rows } from "../../types";
 const DescribeCodeStepTwo = () => {
   const { store, setStore } = UserContext();
   const codeScriptGridRef = useRef<AgGridReact<any>>(null);
@@ -35,7 +35,7 @@ const DescribeCodeStepTwo = () => {
   // ];
 
   const [codeScriptRowData, setCodeScriptRowData] = useState<
-    codeScriptDataType[]
+    code_scripts_rows[]
   >([]);
 
   // DefaultColDef sets props common to all Columns
@@ -220,17 +220,53 @@ const DescribeCodeStepTwo = () => {
       codeScriptGridRef.current.api.exportDataAsCsv();
     }
   }, []);
-  const onFileUpload = (event: any) => {
+  const codeScriptUpload = (event: any) => {
     let file = event.target.files[0];
 
     Papa.parse(file, {
       header: true,
+
       dynamicTyping: true,
       complete: function (results: any) {
+        let maxId: number =
+          codeScriptRowData.length > 0
+            ? Math.max(...codeScriptRowData.map((row) => row.id))
+            : 0;
+
+        let newResult = results.data.map((row: any) => {
+          return { ...row, id: ++maxId };
+        });
+
+        setStore((prev: any) => {
+          const paperData = prev?.paperData || {};
+          const code_scripts_rows = paperData?.code_scripts_rows || [];
+
+          return {
+            ...prev,
+            paperData: {
+              ...paperData,
+              code_scripts_rows: [...code_scripts_rows, ...newResult],
+            },
+          };
+        });
+
         setCodeScriptRowData(results.data);
+        // setDataSourceRowData([
+        //   ...store?.paperData?.data_source_rows!,
+        //   ...newResult,
+        // ]);
+        console.log("File Uploaded", store?.paperData?.code_scripts_rows!);
       },
     });
   };
+  useEffect(() => {
+    if (
+      store?.paperData?.code_scripts_rows !== undefined &&
+      store?.paperData?.code_scripts_rows.length > 0
+    ) {
+      setCodeScriptRowData(store?.paperData?.code_scripts_rows!);
+    }
+  }, [store?.paperData?.code_scripts_rows]);
   return (
     <>
       <Box p={2} my={4} boxShadow={1} border={1}>
@@ -335,7 +371,15 @@ const DescribeCodeStepTwo = () => {
                       >
                         Export CSV
                       </Button>
-                      <Input type="file" onChange={onFileUpload} />
+                      <Input type="file" onChange={codeScriptUpload} />
+                      <Button
+                        variant="outlined"
+                        href={codeScriptCSV}
+                        sx={{ mx: 1 }}
+                        download={true}
+                      >
+                        Download example file
+                      </Button>
                     </Box>
                     <AgridTablesFile
                       gridRef={codeScriptGridRef}

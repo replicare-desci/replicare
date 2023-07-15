@@ -122,6 +122,7 @@ const defaultState: ContextInterface = {
           location: "",
           notes: "",
           provided: false,
+          page: "",
         },
       ],
       analytic_data_rows: [
