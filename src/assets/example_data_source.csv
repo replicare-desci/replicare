@@ -1,0 +1,4 @@
+﻿id,dataSource,page,dataFiles,location,notes,provided,cited
+1,ds1,p1,df1,l1,n1,FALSE,FALSE
+2,ds2,p2,df2,l2,n2,TRUE,TRUE
+3,ds3,p3,df3,l3,n3,FALSE,FALSE

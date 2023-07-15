@@ -1,6 +1,12 @@
 import { UserContext } from "../../context/ContextProvider";
 
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import AgridTablesFile from "./AgridTablesFile";
@@ -8,6 +14,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
+import Papa from "papaparse";
+
 import {
   Typography,
   Grid,
@@ -18,24 +26,11 @@ import {
   Box,
   Button,
   IconButton,
+  Input,
 } from "@mui/material";
-export type dataSourceType = {
-  id: number;
-  dataSource: string;
-  page: string;
-  dataFiles: string;
-  location: string;
-  notes: string;
-  provided: boolean;
-  cited: boolean;
-};
-export type analyticDataType = {
-  id: number;
-  analytic_data: string;
-  description: string;
-
-  location: string;
-};
+import analyticDataCSV from "../../assets/example_analytic_data.csv";
+import dataSorceCSV from "../../assets/example_data_source.csv";
+import { data_source_rows, analytic_data_rows } from "../../types";
 
 const DeleteCellRenderer = (props: any) => {
   const { api, node } = props;
@@ -85,15 +80,93 @@ const DescribeInputStepOne = () => {
   //   });
   // };
 
-  const gridRef = useRef<AgGridReact<any>>(null);
+  const dataSourceGridRef = useRef<AgGridReact<any>>(null);
+  const analyticDataGridRef = useRef<AgGridReact<any>>(null);
 
-  const [dataSourceRowData, setDataSourceRowData] = useState<dataSourceType[]>(
+  const [dataSourceRowData, setDataSourceRowData] = useState<
+    data_source_rows[]
+  >([]); // Set rowData to Array of Objects, one Object per Row
+  const [analyticRowData, setAnalyticRowData] = useState<analytic_data_rows[]>(
     []
   ); // Set rowData to Array of Objects, one Object per Row
-  const [analyticRowData, setAnalyticRowData] = useState<analyticDataType[]>(
-    []
-  ); // Set rowData to Array of Objects, one Object per Row
+  const dataSourceUpload = (event: any) => {
+    let file = event.target.files[0];
 
+    Papa.parse(file, {
+      header: true,
+
+      dynamicTyping: true,
+      complete: function (results: any) {
+        let maxId: number =
+          dataSourceRowData.length > 0
+            ? Math.max(...dataSourceRowData.map((row) => row.id))
+            : 0;
+
+        let newResult = results.data.map((row: any) => {
+          return { ...row, id: ++maxId };
+        });
+
+        setStore((prev: any) => {
+          const paperData = prev?.paperData || {};
+          const data_source_rows = paperData?.data_source_rows || [];
+
+          return {
+            ...prev,
+            paperData: {
+              ...paperData,
+              data_source_rows: [...data_source_rows, ...newResult],
+            },
+          };
+        });
+
+        setDataSourceRowData(results.data);
+        // setDataSourceRowData([
+        //   ...store?.paperData?.data_source_rows!,
+        //   ...newResult,
+        // ]);
+        console.log("File Uploaded", store?.paperData?.data_source_rows!);
+      },
+    });
+  };
+  const analyticDataUpload = (event: any) => {
+    let file = event.target.files[0];
+
+    Papa.parse(file, {
+      header: true,
+
+      dynamicTyping: true,
+      complete: function (results: any) {
+        let maxId: number =
+          analyticRowData.length > 0
+            ? Math.max(...analyticRowData.map((row) => row.id))
+            : 0;
+
+        let newResult = results.data.map((row: any) => {
+          return { ...row, id: ++maxId };
+        });
+
+        setStore((prev: any) => {
+          const paperData = prev?.paperData || {};
+          const analytic_data_rows = paperData?.analytic_data_rows || [];
+
+          return {
+            ...prev,
+            paperData: {
+              ...paperData,
+              analytic_data_rows: [...analytic_data_rows, ...newResult],
+            },
+          };
+        });
+
+        setAnalyticRowData(results.data);
+        // setDataSourceRowData([
+        //   ...store?.paperData?.data_source_rows!,
+        //   ...newResult,
+        // ]);
+        console.log("File Uploaded", store?.paperData?.analytic_data_rows!);
+      },
+    });
+  };
   const dataSourceColDef = useMemo(
     () => ({
       resizable: true,
@@ -117,6 +190,10 @@ const DescribeInputStepOne = () => {
   );
 
   const { store, setStore } = UserContext();
+
+  console.log("Rows", store?.paperData?.data_source_rows);
+  console.log("Rows", store?.paperData?.analytic_data_rows);
+
   // Example of consuming Grid Event
   const dataSourceCellClickedListener = useCallback(
     (params: any) => {
@@ -312,7 +389,7 @@ const DescribeInputStepOne = () => {
 
   // TODO: update column
   const [dataSourceColumnDefs, setDataSourceColumnDefs] = useState([
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID" },
     {
       field: "dataSource",
       headerName: "Data Source",
@@ -419,6 +496,41 @@ const DescribeInputStepOne = () => {
       width: 100,
     },
   ]);
+  const dataSourceExport = useCallback(() => {
+    if (dataSourceGridRef.current !== null) {
+      dataSourceGridRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+  const analyticDataExport = useCallback(() => {
+    if (analyticDataGridRef.current !== null) {
+      analyticDataGridRef.current.api.exportDataAsCsv();
+    }
+  }, []);
+  // useffect to fill setDataSourceRowData on component mount
+  useEffect(() => {
+    if (
+      store?.paperData?.data_source_rows !== undefined &&
+      store?.paperData?.data_source_rows.length > 0
+    ) {
+      setDataSourceRowData(store?.paperData?.data_source_rows!);
+    }
+    if (
+      store?.paperData?.analytic_data_rows !== undefined &&
+      store?.paperData?.analytic_data_rows.length > 0
+    ) {
+      setAnalyticRowData(store?.paperData?.analytic_data_rows!);
+    }
+  }, [
+    store?.paperData?.data_source_rows,
+    store?.paperData?.analytic_data_rows,
+  ]);
+
+  // const onBtnUpdate = useCallback(() => {
+  //   if (Object !== null) {
+  //     document.querySelector("#csvResult").value =
+  //       gridRef.current.api.getDataAsCsv();
+  //   }
+  // }, []);
 
   return (
     <>
@@ -469,17 +581,38 @@ const DescribeInputStepOne = () => {
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
 
-                  <Button
-                    sx={{ my: 2 }}
-                    variant="contained"
-                    onClick={addRowToGridDataSource}
-                  >
-                    add row
-                  </Button>
-
+                  <Box my={2}>
+                    {" "}
+                    <Button
+                      sx={{ mx: 1 }}
+                      variant="contained"
+                      onClick={addRowToGridDataSource}
+                    >
+                      add row
+                    </Button>
+                    {/* <button onClick={onBtnUpdate}>
+                    Show CSV export content text
+                  </button> */}
+                    <Button
+                      variant="contained"
+                      sx={{ mx: 1 }}
+                      onClick={dataSourceExport}
+                    >
+                      Export CSV
+                    </Button>
+                    <Input type="file" onChange={dataSourceUpload} />
+                    <Button
+                      variant="outlined"
+                      href={dataSorceCSV}
+                      sx={{ mx: 1 }}
+                      download={true}
+                    >
+                      Download example file
+                    </Button>
+                  </Box>
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <AgridTablesFile
-                    gridRef={gridRef}
+                    gridRef={dataSourceGridRef}
                     rowData={dataSourceRowData}
                     columnDefs={dataSourceColumnDefs}
                     defaultColDef={dataSourceColDef}
@@ -529,21 +662,39 @@ const DescribeInputStepOne = () => {
                 </FormLabel>{" "}
                 <Box sx={{ height: 400, width: "100%" }}>
                   {/* Example using Grid's API */}
+                  <Box mb={2}>
+                    {" "}
+                    <Button
+                      variant="contained"
+                      onClick={addRowToGridAnalyticData}
+                    >
+                      add row
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ mx: 1 }}
+                      onClick={analyticDataExport}
+                    >
+                      Export CSV
+                    </Button>
+                    <Input type="file" onChange={analyticDataUpload} />
+                    <Button
+                      variant="outlined"
+                      sx={{ mx: 1 }}
+                      href={analyticDataCSV}
+                      download={true}
+                    >
+                      Download example file
+                    </Button>
+                  </Box>
 
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    onClick={addRowToGridAnalyticData}
-                  >
-                    add row
-                  </Button>
                   {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
                   <div
                     className="ag-theme-material"
                     style={{ width: "100%", height: 300 }}
                   >
                     <AgridTablesFile
-                      gridRef={gridRef}
+                      gridRef={analyticDataGridRef}
                       rowData={analyticRowData}
                       defaultColDef={analyticDataColDef}
                       cellClickedListener={analyticDataCellClickedListener}
