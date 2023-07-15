@@ -32,34 +32,34 @@ import analyticDataCSV from "../../assets/example_analytic_data.csv";
 import dataSorceCSV from "../../assets/example_data_source.csv";
 import { data_source_rows, analytic_data_rows } from "../../types";
 
-const DeleteCellRenderer = (props: any) => {
-  const { api, node } = props;
-  const editingCells = api.getEditingCells();
-  const isCurrentRowEditing = editingCells.some(
-    (cell: any) => cell.rowIndex === node.rowIndex
-  );
+// const DeleteCellRenderer = (props: any) => {
+//   const { api, node } = props;
+//   const editingCells = api.getEditingCells();
+//   const isCurrentRowEditing = editingCells.some(
+//     (cell: any) => cell.rowIndex === node.rowIndex
+//   );
 
-  if (isCurrentRowEditing) {
-    return (
-      <div>
-        <button className="action-button update" data-action="update">
-          Update
-        </button>
-        <button className="action-button cancel" data-action="cancel">
-          Cancel
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <button className="action-button delete" data-action="delete">
-          Delete
-        </button>
-      </div>
-    );
-  }
-};
+//   if (isCurrentRowEditing) {
+//     return (
+//       <div>
+//         <button className="action-button update" data-action="update">
+//           Update
+//         </button>
+//         <button className="action-button cancel" data-action="cancel">
+//           Cancel
+//         </button>
+//       </div>
+//     );
+//   } else {
+//     return (
+//       <div>
+//         <button className="action-button delete" data-action="delete">
+//           Delete
+//         </button>
+//       </div>
+//     );
+//   }
+// };
 
 const DescribeInputStepOne = () => {
   // const onRowEditingStarted = (params: any) => {
@@ -192,7 +192,7 @@ const DescribeInputStepOne = () => {
   const { store, setStore } = UserContext();
 
   console.log("Rows", store?.paperData?.data_source_rows);
-  console.log("Rows", store?.paperData?.analytic_data_rows);
+  console.log("Rows analytic_data_rows", store?.paperData?.analytic_data_rows);
 
   // Example of consuming Grid Event
   const dataSourceCellClickedListener = useCallback(
@@ -336,13 +336,13 @@ const DescribeInputStepOne = () => {
 
     setStore((prev: any) => {
       const paperData = prev?.paperData || {};
-      const analytic_data_rows = paperData?.data_source_rows || [];
+      const analytic_data_rows = paperData?.analytic_data_rows || [];
 
       return {
         ...prev,
         paperData: {
           ...paperData,
-          data_source_rows: [...analytic_data_rows, analyticDataNewRow],
+          analytic_data_rows: [...analytic_data_rows, analyticDataNewRow],
         },
       };
     });
@@ -352,6 +352,7 @@ const DescribeInputStepOne = () => {
     setDataSourceRowData((prev) => {
       return prev.filter((row) => row.id !== id);
     });
+    console.log(id);
 
     setStore((prev: any) => {
       const paperData = prev?.paperData || {};
