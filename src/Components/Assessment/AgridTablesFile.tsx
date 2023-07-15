@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
-
+import { AgGridLoading } from "./AgGridLoading";
 const AgridTablesFile = ({
   gridRef,
   rowData,
@@ -29,7 +29,8 @@ const AgridTablesFile = ({
         defaultColDef={defaultColDef} // Default Column Properties
         animateRows={true} // Optional - set to 'true' to have rows animate when sorted
         rowSelection="multiple" // Options - allows click selection of rows
-        onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+        // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+        onCellValueChanged={cellClickedListener}
       />
     </div>
   );
