@@ -47,22 +47,35 @@ const { chains, provider } = configureChains(
 );
 
 const popularWallets = [
-  metaMaskWallet({ chains }),
+  metaMaskWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
+    chains,
+  }),
   coinbaseWallet({ appName: "Replicare", chains }),
   rainbowWallet({
-    projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
     chains,
   }),
-  zerionWallet({ chains }),
-  trustWallet({ chains }),
-];
+  zerionWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
 
+    chains,
+  }),
+  trustWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
+
+    chains,
+  }),
+];
 const otherWallets = [
   walletConnectWallet({
-    projectId: process.env.REACT_APP_WALLET_CONNECT_ID,
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
     chains,
   }),
-  ledgerWallet({ chains }),
+  ledgerWallet({
+    projectId: process.env.REACT_APP_WALLET_CONNECT_ID as string,
+    chains,
+  }),
 ];
 
 const connectors = connectorsForWallets([
@@ -76,11 +89,14 @@ const wagmiClient = createClient({
   provider,
 });
 
-export default function RainbowWallet() {
-  const provider = useMemo(
-    () => new providers.Web3Provider(window.ethereum as any),
-    []
-  );
+function RainbowWallet() {
+  const provider = useMemo(() => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      return new providers.Web3Provider(window.ethereum as any);
+    } else {
+      return null;
+    }
+  }, []);
 
   const { store, setStore } = UserContext();
   const { address, isConnecting, isDisconnected } = useAccount();
@@ -113,6 +129,10 @@ export default function RainbowWallet() {
 
   const signInWithEthereum = useCallback(async () => {
     try {
+      if (!provider) {
+        // Render some fallback content or error message
+        return <div>Ethereum provider is not available.</div>;
+      }
       const signer = provider.getSigner();
       if ((await signer.getAddress()).length === 42) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nonce`, {
@@ -158,8 +178,9 @@ export default function RainbowWallet() {
           }
         }
       }
-    } catch (error: any) {
-      toast.error("User rejected signing");
+    } catch (error) {
+      console.error("Error while signing in:", error);
+      toast.error("An error occurred while signing in.");
     }
     // return {
     //   status: false,
@@ -258,7 +279,7 @@ export default function RainbowWallet() {
     }
   }, [
     address,
-    // connectMetamaskWallet,
+    connectMetamaskWallet,
     isConnecting,
     isDisconnected,
     setStore,
@@ -461,3 +482,5 @@ export default function RainbowWallet() {
     </WagmiConfig>
   );
 }
+
+export default RainbowWallet;
